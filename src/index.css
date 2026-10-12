@@ -1,6 +1,8 @@
 @import "tailwindcss";
+@import "tw-animate-css";
 
 @theme {
+  --breakpoint-xs: 30rem;
   --font-serif: "Cormorant Garamond", Georgia, serif;
   --font-sans: "Plus Jakarta Sans", system-ui, -apple-system, sans-serif;
   --color-wws-beige: #F7F5EE;
@@ -18,4 +20,15 @@ html {
 
 h1, h2, h3, .font-serif-title {
   font-family: var(--font-serif);
+}
+
+/* Visible keyboard focus everywhere */
+:where(a, button, input, select, textarea, [tabindex]):focus-visible {
+  outline: 2px solid #0284c7;
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
 }

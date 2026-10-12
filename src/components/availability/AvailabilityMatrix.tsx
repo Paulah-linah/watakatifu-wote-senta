@@ -1,331 +1,182 @@
-import React, { useState, useEffect } from 'react';
-import {
-  Calendar,
-  Clock,
-  CheckCircle2,
-  AlertCircle,
-  XCircle,
-  MinusCircle,
-  ArrowRight,
-  Filter,
-  Users,
-  Info,
-  CalendarDays,
-} from 'lucide-react';
-import { AvailabilityEntry, ConferenceFacility, AvailabilityStatus } from '../../types';
-import { StorageService } from '../../services/storageService';
+import React, { useState } from 'react';
+import { ArrowRight, Calendar, CalendarDays, Filter, Info, Users } from 'lucide-react';
+import { useFacilities } from '@/services/content';
+import { dayStatus, PART_SLOTS, useAvailability, type BookingStatus, type DayStatus } from '@/services/availability';
+import { useInquiryModal } from '@/context/InquiryModalContext';
+import { addDays, formatDate, todayISO } from '@/lib/dates';
+import { formatKes, shortHallName, TIME_SLOT_LABELS } from '@/lib/format';
+import { ErrorState, LoadingGrid } from '@/components/common/States';
 
-interface AvailabilityMatrixProps {
-  onSelectDateAndFacility?: (facilityName: string, date: string) => void;
-  compact?: boolean;
-}
+const STATUS_STYLE: Record<DayStatus, { label: string; badge: string; dot: string }> = {
+  AVAILABLE: { label: 'Available', badge: 'bg-emerald-100 text-emerald-800 border-emerald-200', dot: 'bg-emerald-500' },
+  PARTIAL: { label: 'Partly booked', badge: 'bg-sky-100 text-sky-800 border-sky-200', dot: 'bg-sky-500' },
+  PENDING: { label: 'Pending', badge: 'bg-amber-100 text-amber-800 border-amber-200', dot: 'bg-amber-500' },
+  BOOKED: { label: 'Booked', badge: 'bg-rose-100 text-rose-800 border-rose-200', dot: 'bg-rose-500' },
+  BLOCKED: { label: 'Unavailable', badge: 'bg-stone-200 text-stone-700 border-stone-300', dot: 'bg-stone-400' },
+};
 
-export const AvailabilityMatrix: React.FC<AvailabilityMatrixProps> = ({
-  onSelectDateAndFacility,
-  compact = false,
-}) => {
-  const [facilities, setFacilities] = useState<ConferenceFacility[]>([]);
-  const [availability, setAvailability] = useState<AvailabilityEntry[]>([]);
+const slotStyle = (s: BookingStatus | null) => (s ? STATUS_STYLE[s] : STATUS_STYLE.AVAILABLE);
+
+export const AvailabilityMatrix: React.FC = () => {
+  const { openInquiry } = useInquiryModal();
+  const facilities = useFacilities();
+  const today = todayISO();
   const [selectedFacilityId, setSelectedFacilityId] = useState<string>('all');
-  const [selectedDate, setSelectedDate] = useState<string>(
-    new Date().toISOString().split('T')[0]
-  );
+  const [selectedDate, setSelectedDate] = useState<string>(today);
 
-  useEffect(() => {
-    const load = () => {
-      setFacilities(StorageService.getFacilities());
-      setAvailability(StorageService.getAvailability());
-    };
-    load();
-    return StorageService.subscribe(load);
-  }, []);
+  const stripDates = Array.from({ length: 7 }, (_, i) => addDays(today, i));
+  const rangeEnd = selectedDate > stripDates[6] ? selectedDate : stripDates[6];
+  const availability = useAvailability(today, rangeEnd);
 
-  // Generate next 7 days for quick tab viewing
-  const dateRange = Array.from({ length: 7 }).map((_, i) => {
-    const d = new Date();
-    d.setDate(d.getDate() + i);
-    return d.toISOString().split('T')[0];
-  });
-
-  const getStatusForFacilityAndDate = (
-    facilityId: string,
-    dateStr: string
-  ): { status: AvailabilityStatus; notes?: string } => {
-    const entry = availability.find(
-      (a) => a.facilityId === facilityId && a.date === dateStr
-    );
-    if (entry) {
-      return { status: entry.status, notes: entry.notes };
-    }
-    // Default to AVAILABLE if not explicitly flagged
-    return { status: 'AVAILABLE' };
-  };
-
-  const renderStatusBadge = (status: AvailabilityStatus) => {
-    switch (status) {
-      case 'AVAILABLE':
-        return (
-          <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-800 border border-emerald-200">
-            <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
-            AVAILABLE
-          </span>
-        );
-      case 'PENDING':
-        return (
-          <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-amber-100 text-amber-800 border border-amber-200">
-            <AlertCircle className="w-3.5 h-3.5 text-amber-600" />
-            PENDING
-          </span>
-        );
-      case 'BOOKED':
-        return (
-          <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-rose-100 text-rose-800 border border-rose-200">
-            <XCircle className="w-3.5 h-3.5 text-rose-600" />
-            BOOKED
-          </span>
-        );
-      case 'BLOCKED':
-        return (
-          <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-stone-200 text-stone-700 border border-stone-300">
-            <MinusCircle className="w-3.5 h-3.5 text-stone-500" />
-            BLOCKED
-          </span>
-        );
-      default:
-        return null;
-    }
-  };
-
-  const filteredFacilities =
-    selectedFacilityId === 'all'
-      ? facilities
-      : facilities.filter((f) => f.id === selectedFacilityId);
+  const halls = (facilities.data ?? []).filter((f) => selectedFacilityId === 'all' || f.id === selectedFacilityId);
 
   return (
-    <div className="bg-[#FAF8F5] rounded-2xl border border-[#E3DAC9] p-5 sm:p-7 shadow-xs">
-      {/* Header & Description */}
+    <section aria-labelledby="availability-heading" className="bg-[#FAF8F5] rounded-2xl border border-[#E3DAC9] p-4 sm:p-7 shadow-xs">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-6 border-b border-stone-200">
         <div>
           <div className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-sky-800 bg-sky-100/70 px-2.5 py-1 rounded-md mb-2">
             <CalendarDays className="w-3.5 h-3.5" />
-            <span>Live Availability Matrix</span>
+            <span>Live availability</span>
           </div>
-          <h3 className="font-serif text-2xl font-bold text-stone-900">
-            Conference Facility Availability
-          </h3>
-          <p className="text-sm text-stone-600 mt-1">
-            Check real-time status across our three conference spaces in Ngong. Updated regularly by the administration.
-          </p>
+          <h2 id="availability-heading" className="font-serif text-2xl font-bold text-stone-900">
+            Conference hall availability
+          </h2>
+          <p className="text-sm text-stone-600 mt-1">Check morning, afternoon and evening sessions across our three halls.</p>
         </div>
 
-        {/* Legend */}
         <div className="flex items-center gap-2.5 flex-wrap bg-white px-3.5 py-2 rounded-xl border border-stone-200 text-xs text-stone-600 shadow-2xs">
-          <span className="font-medium text-stone-800 mr-1">Status:</span>
-          <span className="flex items-center gap-1 text-emerald-700 font-medium">
-            <span className="w-2 h-2 rounded-full bg-emerald-500"></span> Available
-          </span>
-          <span className="flex items-center gap-1 text-amber-700 font-medium">
-            <span className="w-2 h-2 rounded-full bg-amber-500"></span> Pending
-          </span>
-          <span className="flex items-center gap-1 text-rose-700 font-medium">
-            <span className="w-2 h-2 rounded-full bg-rose-500"></span> Booked
-          </span>
-          <span className="flex items-center gap-1 text-stone-600 font-medium">
-            <span className="w-2 h-2 rounded-full bg-stone-400"></span> Blocked
-          </span>
+          <span className="font-medium text-stone-800 mr-1">Key:</span>
+          {(['AVAILABLE', 'PARTIAL', 'PENDING', 'BOOKED', 'BLOCKED'] as DayStatus[]).map((s) => (
+            <span key={s} className="flex items-center gap-1 font-medium">
+              <span className={`w-2 h-2 rounded-full ${STATUS_STYLE[s].dot}`} /> {STATUS_STYLE[s].label}
+            </span>
+          ))}
         </div>
       </div>
 
-      {/* Filter Toolbar */}
-      <div className="flex flex-col sm:flex-row items-center justify-between gap-4 py-4">
-        {/* Facility Filter Pills */}
-        <div className="flex items-center gap-2 w-full sm:w-auto overflow-x-auto pb-1 sm:pb-0">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 py-4">
+        <div className="flex items-center gap-2 w-full sm:w-auto overflow-x-auto pb-1 sm:pb-0" role="group" aria-label="Filter by hall">
           <span className="text-xs font-semibold text-stone-500 flex items-center gap-1 shrink-0">
-            <Filter className="w-3.5 h-3.5" /> Room:
+            <Filter className="w-3.5 h-3.5" /> Hall:
           </span>
-          <button
-            onClick={() => setSelectedFacilityId('all')}
-            className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors shrink-0 ${
-              selectedFacilityId === 'all'
-                ? 'bg-sky-700 text-white shadow-xs'
-                : 'bg-white text-stone-700 hover:bg-stone-100 border border-stone-200'
-            }`}
-          >
-            All 3 Halls
-          </button>
-          {facilities.map((fac) => (
+          {[{ id: 'all', name: 'All halls' }, ...(facilities.data ?? [])].map((f) => (
             <button
-              key={fac.id}
-              onClick={() => setSelectedFacilityId(fac.id)}
+              key={f.id}
+              type="button"
+              aria-pressed={selectedFacilityId === f.id}
+              onClick={() => setSelectedFacilityId(f.id)}
               className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors shrink-0 ${
-                selectedFacilityId === fac.id
-                  ? 'bg-sky-700 text-white shadow-xs'
-                  : 'bg-white text-stone-700 hover:bg-stone-100 border border-stone-200'
+                selectedFacilityId === f.id ? 'bg-sky-700 text-white shadow-xs' : 'bg-white text-stone-700 hover:bg-stone-100 border border-stone-200'
               }`}
             >
-              {fac.name.replace(' Conference Hall', '').replace(' Main Hall', '')}
+              {shortHallName(f.name)}
             </button>
           ))}
         </div>
 
-        {/* Date Selector input */}
-        <div className="flex items-center gap-2 w-full sm:w-auto justify-end">
-          <span className="text-xs font-semibold text-stone-600 shrink-0 flex items-center gap-1">
-            <Calendar className="w-3.5 h-3.5 text-stone-400" />
-            Pick Date:
-          </span>
+        <label className="flex items-center gap-2 w-full sm:w-auto sm:justify-end text-xs font-semibold text-stone-600">
+          <Calendar className="w-3.5 h-3.5 text-stone-400" />
+          <span className="shrink-0">Pick a date:</span>
           <input
             type="date"
             value={selectedDate}
-            min={new Date().toISOString().split('T')[0]}
-            onChange={(e) => setSelectedDate(e.target.value)}
+            min={today}
+            onChange={(e) => e.target.value && setSelectedDate(e.target.value)}
             className="px-3 py-1.5 text-xs rounded-lg border border-stone-300 bg-white text-stone-800 font-medium shadow-2xs focus:ring-2 focus:ring-sky-500 focus:outline-hidden"
           />
-        </div>
+        </label>
       </div>
 
-      {/* 7-Day Quick Strip */}
-      <div className="grid grid-cols-2 xs:grid-cols-4 sm:grid-cols-7 gap-2 mb-5">
-        {dateRange.map((dateStr) => {
-          const d = new Date(dateStr + 'T00:00:00');
-          const dayName = d.toLocaleDateString('en-US', { weekday: 'short' });
-          const dayNum = d.toLocaleDateString('en-US', { day: 'numeric', month: 'short' });
-          const isSelected = selectedDate === dateStr;
-
+      <div className="grid grid-cols-4 xs:grid-cols-7 gap-1.5 sm:gap-2 mb-5" role="group" aria-label="Next 7 days">
+        {stripDates.map((iso, i) => {
+          const isSelected = selectedDate === iso;
           return (
             <button
-              key={dateStr}
-              onClick={() => setSelectedDate(dateStr)}
-              className={`p-2.5 rounded-xl border text-center transition-all ${
-                isSelected
-                  ? 'bg-sky-700 text-white border-sky-800 shadow-sm ring-2 ring-sky-300/40'
-                  : 'bg-white hover:bg-stone-50 border-stone-200 text-stone-700'
+              key={iso}
+              type="button"
+              aria-pressed={isSelected}
+              onClick={() => setSelectedDate(iso)}
+              className={`p-2 rounded-xl border text-center transition-all ${i > 3 ? 'hidden xs:block' : ''} ${
+                isSelected ? 'bg-sky-700 text-white border-sky-800 shadow-sm ring-2 ring-sky-300/40' : 'bg-white hover:bg-stone-50 border-stone-200 text-stone-700'
               }`}
             >
               <div className={`text-[11px] font-medium uppercase ${isSelected ? 'text-sky-200' : 'text-stone-400'}`}>
-                {dayName}
+                {i === 0 ? 'Today' : formatDate(iso, { weekday: 'short' })}
               </div>
-              <div className="text-sm font-bold mt-0.5">{dayNum}</div>
+              <div className="text-sm font-bold mt-0.5">{formatDate(iso, { day: 'numeric', month: 'short' })}</div>
             </button>
           );
         })}
       </div>
 
-      {/* Facilities Availability Grid for Selected Date */}
-      <div className="space-y-3.5">
-        <div className="text-xs font-semibold text-stone-500 uppercase tracking-wider flex items-center justify-between">
-          <span>
-            Status for{' '}
-            <strong className="text-stone-800">
-              {new Date(selectedDate + 'T00:00:00').toLocaleDateString('en-US', {
-                weekday: 'long',
-                month: 'long',
-                day: 'numeric',
-                year: 'numeric',
-              })}
-            </strong>
-          </span>
-          <span className="text-[11px] text-stone-400">
-            {filteredFacilities.length} {filteredFacilities.length === 1 ? 'room' : 'rooms'} listed
-          </span>
-        </div>
+      <div className="text-xs font-semibold text-stone-500 uppercase tracking-wider mb-3">
+        Status for <strong className="text-stone-800">{formatDate(selectedDate, { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}</strong>
+      </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          {filteredFacilities.map((facility) => {
-            const { status, notes } = getStatusForFacilityAndDate(
-              facility.id,
-              selectedDate
-            );
-
+      {facilities.isPending || availability.isPending ? (
+        <LoadingGrid itemClassName="h-56" />
+      ) : facilities.isError || availability.isError ? (
+        <ErrorState
+          onRetry={() => {
+            facilities.refetch();
+            availability.refetch();
+          }}
+        />
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4" aria-live="polite">
+          {halls.map((facility) => {
+            const { status, slots } = dayStatus(availability.data ?? [], facility.id, selectedDate);
+            const style = STATUS_STYLE[status];
+            const canRequest = status === 'AVAILABLE' || status === 'PARTIAL';
             return (
-              <div
-                key={facility.id}
-                className="bg-white rounded-xl border border-stone-200/90 p-4 shadow-2xs hover:shadow-xs transition-shadow flex flex-col justify-between"
-              >
+              <article key={facility.id} className="bg-white rounded-xl border border-stone-200/90 p-4 shadow-2xs flex flex-col justify-between">
                 <div>
                   <div className="flex items-start justify-between gap-2 mb-2">
-                    <h4 className="font-serif font-bold text-stone-900 text-base">
-                      {facility.name}
-                    </h4>
-                    {renderStatusBadge(status)}
+                    <h3 className="font-serif font-bold text-stone-900 text-base">{facility.name}</h3>
+                    <span className={`shrink-0 inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-semibold border ${style.badge}`}>
+                      {style.label}
+                    </span>
                   </div>
-
                   <div className="flex items-center gap-3 text-xs text-stone-600 mb-3 pb-2 border-b border-stone-100">
                     <span className="inline-flex items-center gap-1 font-medium">
                       <Users className="w-3.5 h-3.5 text-stone-400" />
-                      {facility.capacityMin}–{facility.capacityMax} Pax
+                      {facility.capacity_min}–{facility.capacity_max} people
                     </span>
-                    <span>•</span>
-                    <span className="font-bold text-sky-800">
-                      KES {facility.priceKes.toLocaleString()}
-                    </span>
+                    <span aria-hidden>•</span>
+                    <span className="font-bold text-sky-800">{formatKes(facility.price_kes)}</span>
                   </div>
-
-                  <p className="text-xs text-stone-500 line-clamp-2 mb-3">
-                    {facility.description}
-                  </p>
-
-                  {notes && (
-                    <div className="mb-3 p-2 rounded-lg bg-stone-50 border border-stone-200 text-[11px] text-stone-600 flex items-start gap-1.5">
-                      <Info className="w-3.5 h-3.5 text-stone-400 shrink-0 mt-0.5" />
-                      <span>{notes}</span>
-                    </div>
-                  )}
+                  <ul className="grid grid-cols-3 gap-1.5 mb-3" aria-label="Sessions">
+                    {PART_SLOTS.map((slot) => {
+                      const s = slotStyle(slots[slot as keyof typeof slots]);
+                      return (
+                        <li key={slot} className={`text-center rounded-lg border px-1 py-1.5 ${s.badge}`}>
+                          <div className="text-[10px] font-bold uppercase">{TIME_SLOT_LABELS[slot]}</div>
+                          <div className="text-[10px]">{s.label}</div>
+                        </li>
+                      );
+                    })}
+                  </ul>
                 </div>
-
-                <div className="pt-2">
-                  {status === 'AVAILABLE' ? (
-                    <button
-                      onClick={() =>
-                        onSelectDateAndFacility &&
-                        onSelectDateAndFacility(facility.name, selectedDate)
-                      }
-                      className="w-full inline-flex items-center justify-center gap-1.5 py-2 px-3 rounded-lg bg-sky-700 hover:bg-sky-800 text-white text-xs font-semibold transition-colors shadow-2xs"
-                    >
-                      <span>Request This Room</span>
-                      <ArrowRight className="w-3.5 h-3.5" />
-                    </button>
-                  ) : status === 'PENDING' ? (
-                    <button
-                      onClick={() =>
-                        onSelectDateAndFacility &&
-                        onSelectDateAndFacility(facility.name, selectedDate)
-                      }
-                      className="w-full inline-flex items-center justify-center gap-1.5 py-2 px-3 rounded-lg bg-amber-600 hover:bg-amber-700 text-white text-xs font-semibold transition-colors shadow-2xs"
-                    >
-                      <span>Inquire for Alternate Slot</span>
-                      <ArrowRight className="w-3.5 h-3.5" />
-                    </button>
-                  ) : (
-                    <button
-                      onClick={() =>
-                        onSelectDateAndFacility &&
-                        onSelectDateAndFacility(facility.name, selectedDate)
-                      }
-                      className="w-full inline-flex items-center justify-center gap-1.5 py-2 px-3 rounded-lg bg-stone-100 hover:bg-stone-200 text-stone-700 text-xs font-semibold transition-colors border border-stone-200"
-                    >
-                      <span>Inquire Other Dates</span>
-                    </button>
-                  )}
-                </div>
-              </div>
+                <button
+                  type="button"
+                  onClick={() => openInquiry('conference', { facilityId: facility.id, date: selectedDate })}
+                  className={`w-full inline-flex items-center justify-center gap-1.5 py-2 px-3 rounded-lg text-xs font-semibold transition-colors ${
+                    canRequest ? 'bg-sky-700 hover:bg-sky-800 text-white' : 'bg-stone-100 hover:bg-stone-200 text-stone-700 border border-stone-200'
+                  }`}
+                >
+                  <span>{canRequest ? 'Request this hall' : 'Ask about other dates'}</span>
+                  <ArrowRight className="w-3.5 h-3.5" />
+                </button>
+              </article>
             );
           })}
         </div>
-      </div>
+      )}
 
-      {/* Footer reassurance note */}
-      <div className="mt-5 pt-4 border-t border-stone-200/80 flex flex-col sm:flex-row items-center justify-between text-xs text-stone-500 gap-2">
-        <p className="flex items-center gap-1.5">
-          <Info className="w-4 h-4 text-sky-700 shrink-0" />
-          <span>
-            Equipped with 1 projector, 1 PA sound system, Wi-Fi, 155 chairs & tables, and clean water dispensers.
-          </span>
-        </p>
-        <span className="text-[11px] text-stone-400">
-          Booking inquiries undergo review by David Inoti (Hospitality Services).
-        </span>
+      <div className="mt-5 pt-4 border-t border-stone-200/80 text-xs text-stone-500 flex items-start gap-1.5">
+        <Info className="w-4 h-4 text-sky-700 shrink-0" />
+        <span>Availability updates automatically. Requests are confirmed by the hospitality office after review.</span>
       </div>
-    </div>
+    </section>
   );
 };

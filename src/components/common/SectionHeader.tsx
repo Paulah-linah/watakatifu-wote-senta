@@ -6,15 +6,12 @@ interface SectionHeaderProps {
   subtitle?: string;
   centered?: boolean;
   className?: string;
+  /** Use 1 for the main heading of a page. */
+  level?: 1 | 2;
 }
 
-export const SectionHeader: React.FC<SectionHeaderProps> = ({
-  badge,
-  title,
-  subtitle,
-  centered = true,
-  className = '',
-}) => {
+export const SectionHeader: React.FC<SectionHeaderProps> = ({ badge, title, subtitle, centered = true, className = '', level = 2 }) => {
+  const Heading = level === 1 ? 'h1' : 'h2';
   return (
     <div className={`mb-10 sm:mb-12 ${centered ? 'text-center max-w-3xl mx-auto' : ''} ${className}`}>
       {badge && (
@@ -22,14 +19,8 @@ export const SectionHeader: React.FC<SectionHeaderProps> = ({
           {badge}
         </span>
       )}
-      <h2 className="font-serif text-3xl sm:text-4xl lg:text-4xl font-bold tracking-tight text-stone-900 leading-tight">
-        {title}
-      </h2>
-      {subtitle && (
-        <p className="mt-3 text-base sm:text-lg text-stone-600 leading-relaxed">
-          {subtitle}
-        </p>
-      )}
+      <Heading className="font-serif text-3xl sm:text-4xl font-bold tracking-tight text-stone-900 leading-tight">{title}</Heading>
+      {subtitle && <p className="mt-3 text-base sm:text-lg text-stone-600 leading-relaxed">{subtitle}</p>}
     </div>
   );
 };

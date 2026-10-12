@@ -1,5 +1,6 @@
-import React, { useEffect } from 'react';
+import React, { useId } from 'react';
 import { X } from 'lucide-react';
+import { useDialog } from './useDialog';
 
 interface ModalProps {
   isOpen: boolean;
@@ -9,60 +10,51 @@ interface ModalProps {
   maxWidth?: 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl' | '4xl';
 }
 
-export const Modal: React.FC<ModalProps> = ({
-  isOpen,
-  onClose,
-  title,
-  children,
-  maxWidth = '2xl',
-}) => {
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose();
-    };
-    if (isOpen) {
-      document.body.style.overflow = 'hidden';
-      window.addEventListener('keydown', handleKeyDown);
-    }
-    return () => {
-      document.body.style.overflow = 'unset';
-      window.removeEventListener('keydown', handleKeyDown);
-    };
-  }, [isOpen, onClose]);
+const maxWidthClasses = {
+  sm: 'max-w-sm',
+  md: 'max-w-md',
+  lg: 'max-w-lg',
+  xl: 'max-w-xl',
+  '2xl': 'max-w-2xl',
+  '3xl': 'max-w-3xl',
+  '4xl': 'max-w-4xl',
+};
+
+export const Modal: React.FC<ModalProps> = ({ isOpen, onClose, title, children, maxWidth = '2xl' }) => {
+  const ref = useDialog(isOpen, onClose);
+  const titleId = useId();
 
   if (!isOpen) return null;
 
-  const maxWidthClasses = {
-    sm: 'max-w-sm',
-    md: 'max-w-md',
-    lg: 'max-w-lg',
-    xl: 'max-w-xl',
-    '2xl': 'max-w-2xl',
-    '3xl': 'max-w-3xl',
-    '4xl': 'max-w-4xl',
-  }[maxWidth];
-
   return (
-    <div className="fixed inset-0 z-50 overflow-y-auto bg-stone-950/60 backdrop-blur-xs flex items-center justify-center p-4 sm:p-6 animate-in fade-in duration-200">
+    <div
+      className="fixed inset-0 z-50 overflow-y-auto bg-stone-950/60 backdrop-blur-xs flex items-center justify-center p-3 sm:p-6 animate-in fade-in duration-200"
+      onMouseDown={(e) => {
+        if (e.target === e.currentTarget) onClose();
+      }}
+    >
       <div
-        className={`relative w-full ${maxWidthClasses} bg-white rounded-2xl shadow-2xl border border-stone-200 overflow-hidden transform transition-all animate-in zoom-in-95 duration-150 max-h-[90vh] flex flex-col`}
+        ref={ref}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby={titleId}
+        tabIndex={-1}
+        className={`relative w-full ${maxWidthClasses[maxWidth]} bg-white rounded-2xl shadow-2xl border border-stone-200 overflow-hidden animate-in zoom-in-95 duration-150 max-h-[92vh] flex flex-col focus:outline-hidden`}
       >
-        {/* Header */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-stone-200 bg-stone-50/70">
-          <h3 className="font-serif text-lg font-bold text-stone-900 truncate">
+        <div className="flex items-center justify-between gap-4 px-5 sm:px-6 py-4 border-b border-stone-200 bg-stone-50/70">
+          <h2 id={titleId} className="font-serif text-lg font-bold text-stone-900 truncate">
             {title || 'Information'}
-          </h3>
+          </h2>
           <button
+            type="button"
             onClick={onClose}
-            className="p-1.5 rounded-lg text-stone-400 hover:text-stone-700 hover:bg-stone-200/60 transition-colors focus:outline-hidden"
-            aria-label="Close modal"
+            className="p-1.5 rounded-lg text-stone-500 hover:text-stone-800 hover:bg-stone-200/60 transition-colors"
+            aria-label="Close dialog"
           >
             <X className="w-5 h-5" />
           </button>
         </div>
-
-        {/* Body */}
-        <div className="p-6 overflow-y-auto flex-1">{children}</div>
+        <div className="p-4 sm:p-6 overflow-y-auto flex-1">{children}</div>
       </div>
     </div>
   );
