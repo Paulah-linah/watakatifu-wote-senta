@@ -6,6 +6,26 @@
 
 ---
 
+## Progress (updated 12 October 2026)
+
+**Done and verified:**
+- **Phase 0:** git, strict TypeScript, unused dependencies removed, env template, `vercel.json`.
+- **Phase 1:** React Router rebuild. Tabs come from the URL; there is a 404 page; navigation uses real links; the mobile menu is complete; the admin is lazy-loaded.
+- **Phase 2:** Supabase project `lzphdqkpswzhxlwqwxbp`. 7 migrations, row-level security on every table, `submit_inquiry` RPC with honeypot and rate limit, half-day booking conflict rule, `media` storage bucket, seed content, public sign-up disabled.
+- **Phase 3:** all public pages read live data, with loading, empty and error states; Nairobi-timezone dates; the localStorage layer is deleted.
+- **Phase 4:** rebuilt inquiry form, reference codes, and the `notify-inquiry` Edge Function + pg_net trigger (emails send once Resend is configured).
+- **Phase 5–6:** staff login/reset, role-based portal, inquiries inbox and detail with timeline, hall calendar, CRUD for all 11 content types with image upload, staff accounts (`admin-users` Edge Function), site settings.
+- **Tests:** `npm run test:rls` (19 checks) and `npm run test:roles` (25 checks) pass; browser end-to-end checks run on public and admin flows, including mobile at 375px.
+
+**Still to do:**
+1. Create the real staff accounts (Staff accounts page, signed in as the first primary admin). The first admin has to be created with the service role; see the README.
+2. Resend: create an account, verify the sending domain, set `RESEND_API_KEY` / `RESEND_FROM`. Also configure Resend as custom SMTP in Supabase Auth so password-reset emails reach staff.
+3. Deploy to Vercel, then set the Auth Site URL / redirect URLs and the `SITE_URL` secret.
+4. Replace stock photos with real photos of the centre (P-1); add `sitemap.xml` and `og:image` once the domain is known.
+5. Revoke the Supabase personal access token that was shared in chat, and use a new one locally.
+
+---
+
 ## 1. Executive Summary
 
 The site looks finished, but it has **no backend**. Every inquiry, booking and catalogue edit is saved only in the `localStorage` of the browser where it was made. As a result:

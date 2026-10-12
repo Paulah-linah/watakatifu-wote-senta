@@ -39,7 +39,7 @@ const SIMPLE: NavItem[] = [
   { to: '/contact', label: 'Contact' },
 ];
 
-const linkBase = 'px-2.5 xl:px-3 py-2 rounded-lg text-sm font-medium transition-colors whitespace-nowrap';
+const linkBase = 'px-2.5 2xl:px-3 py-2 rounded-lg text-sm font-medium transition-colors whitespace-nowrap';
 const linkIdle = 'text-stone-700 hover:text-stone-900 hover:bg-stone-200/50';
 const linkActive = 'text-sky-900 bg-sky-100/70';
 
@@ -99,7 +99,7 @@ const Dropdown: React.FC<{ label: string; base: string; items: NavItem[]; width?
 };
 
 const Logo: React.FC = () => (
-  <Link to="/" className="flex items-center gap-3 group select-none min-w-0" aria-label="Watakatifu Wote Senta home">
+  <Link to="/" className="flex items-center gap-3 group select-none min-w-0 xl:shrink-0" aria-label="Watakatifu Wote Senta home">
     <div className="w-11 h-11 sm:w-12 sm:h-12 shrink-0 rounded-xl bg-linear-to-br from-[#0284C7] to-[#0369A1] p-0.5 shadow-md flex items-center justify-center ring-2 ring-sky-200/60 transition-transform group-hover:scale-105">
       <div className="w-full h-full rounded-[10px] bg-linear-to-b from-[#0284C7] to-[#0c4a6e] flex items-center justify-center border border-sky-300/30">
         <div className="relative flex flex-col items-center justify-center" aria-hidden>
@@ -109,7 +109,7 @@ const Logo: React.FC = () => (
       </div>
     </div>
     <div className="flex flex-col min-w-0">
-      <span className="font-serif text-lg sm:text-2xl lg:text-xl xl:text-2xl font-bold tracking-tight text-stone-900 leading-tight whitespace-nowrap">
+      <span className="font-serif text-lg sm:text-2xl xl:text-xl 2xl:text-2xl font-bold tracking-tight text-stone-900 leading-tight whitespace-nowrap">
         WATAKATIFU WOTE SENTA
       </span>
       <span className="text-[11px] sm:text-xs font-medium tracking-wide text-sky-800 uppercase whitespace-nowrap truncate">
@@ -198,7 +198,7 @@ export const Navbar: React.FC = () => {
         <div className="flex items-center justify-between gap-4 h-18 sm:h-20">
           <Logo />
 
-          <nav aria-label="Main" className="hidden lg:flex items-center gap-0.5 xl:gap-1">
+          <nav aria-label="Main" className="hidden xl:flex items-center gap-0.5 2xl:gap-1">
             <NavLink to="/" end className={({ isActive }) => `${linkBase} ${isActive ? linkActive : linkIdle}`}>
               Home
             </NavLink>
@@ -223,7 +223,7 @@ export const Navbar: React.FC = () => {
             <button
               type="button"
               onClick={() => setMobileOpen((o) => !o)}
-              className="lg:hidden p-2 rounded-lg text-stone-700 hover:bg-stone-200/60"
+              className="xl:hidden p-2 rounded-lg text-stone-700 hover:bg-stone-200/60"
               aria-label={mobileOpen ? 'Close menu' : 'Open menu'}
               aria-expanded={mobileOpen}
               aria-controls="mobile-menu"
@@ -239,7 +239,7 @@ export const Navbar: React.FC = () => {
         <nav
           id="mobile-menu"
           aria-label="Mobile"
-          className="lg:hidden border-t border-stone-200 bg-[#F7F5EE] px-4 pt-3 pb-6 max-h-[calc(100vh-7rem)] overflow-y-auto space-y-3"
+          className="xl:hidden border-t border-stone-200 bg-[#F7F5EE] px-4 pt-3 pb-6 max-h-[calc(100vh-7rem)] overflow-y-auto space-y-3"
         >
           <div className="grid grid-cols-2 gap-2 pb-2 border-b border-stone-300/70">
             {[{ to: '/', label: 'Home' }, ...SIMPLE].map((item) => (

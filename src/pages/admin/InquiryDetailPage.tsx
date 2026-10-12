@@ -59,7 +59,7 @@ function ConvertToBookingDialog({ inquiry, open, onClose }: { inquiry: InquiryWi
         }}
       >
         <FieldLabel label="Hall" htmlFor="cv-hall" required>
-          <select id="cv-hall" required className={inputCls} value={facilityId} onChange={(e) => setFacilityId(e.target.value)}>
+          <select id="cv-hall" required disabled={facilities.isPending} className={inputCls} value={facilityId} onChange={(e) => setFacilityId(e.target.value)}>
             <option value="">Choose a hall</option>
             {facilities.data?.map((f) => (
               <option key={f.id} value={f.id}>
@@ -92,7 +92,7 @@ function ConvertToBookingDialog({ inquiry, open, onClose }: { inquiry: InquiryWi
           <Button variant="secondary" onClick={onClose}>
             Cancel
           </Button>
-          <Button type="submit" loading={create.isPending}>
+          <Button type="submit" loading={create.isPending} disabled={facilities.isPending || !facilityId || !date}>
             Add booking
           </Button>
         </div>
