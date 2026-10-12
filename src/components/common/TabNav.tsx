@@ -13,7 +13,7 @@ export interface TabItem {
  * Sticks under the site header while the section is scrolled.
  */
 export const TabNav: React.FC<{ basePath: string; items: TabItem[]; active: string; label: string }> = ({ basePath, items, active, label }) => (
-  <nav aria-label={label} className="sticky top-[5rem] sm:top-[5.5rem] z-20 -mt-7 mb-10">
+  <nav aria-label={label} className="sticky top-[5.25rem] sm:top-[6.5rem] z-20 -mt-7 mb-10">
     <div className="container-page">
       <div className="flex justify-start md:justify-center">
         <div className="inline-flex max-w-full gap-1 overflow-x-auto rounded-full bg-white/95 backdrop-blur p-1.5 shadow-lift border border-sand/70 [scrollbar-width:none]">

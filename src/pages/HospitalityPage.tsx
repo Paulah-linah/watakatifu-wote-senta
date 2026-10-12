@@ -176,8 +176,8 @@ function CateringTab() {
     <div className="space-y-8">
       <Intro badge="Wholesome dining" badgeTone="text-orange-800 bg-orange-100" title="Hospitality Catering Services">
         <p>
-          Our kitchen prepares fresh meals for conference delegates, retreatants, parish celebrations and private committees: Kenyan dishes, tea
-          and coffee breaks, and special diets on prior arrangement.
+          Our kitchen prepares fresh meals for conference delegates, retreatants, events and private functions, at the centre or as outside
+          catering at your venue. Kenyan dishes, tea and coffee breaks, and special diets on prior arrangement.
         </p>
       </Intro>
       <QueryState query={services}>
@@ -220,7 +220,7 @@ function LaundryTab() {
   return (
     <div className="space-y-8">
       <Intro badge="Care & comfort" badgeTone="text-sky-800 bg-sky-100" title="Campus Laundry Services">
-        <p>Dedicated laundry facilities for overnight retreatants, long-stay guests, visiting priests and conference linen.</p>
+        <p>A well-equipped laundry is available to guests staying at the centre. Please ask at the office when you book.</p>
       </Intro>
       <QueryState query={services}>
         {(items) =>

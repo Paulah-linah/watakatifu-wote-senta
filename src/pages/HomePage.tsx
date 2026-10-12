@@ -12,30 +12,43 @@ import { usePageMeta } from '@/lib/usePageMeta';
 
 const img = (id: string, w = 1200) => `https://images.unsplash.com/${id}?auto=format&fit=crop&w=${w}&q=80`;
 
+// The six services named in the client questionnaire.
 const SERVICES = [
   {
     to: '/hospitality/conference',
-    title: 'Conference halls',
-    text: 'Three equipped halls for 8 to 100 people.',
+    title: 'Conference facilities',
+    text: 'Three halls for 8 to 100 people, with projector, sound system and Wi-Fi.',
     image: img('photo-1431540015161-0bf868a2d407', 900),
   },
   {
     to: '/hospitality/accommodation',
     title: 'Accommodation',
-    text: 'Quiet rooms and six guest apartments.',
+    text: '62 beds and a guest house with six self-contained apartments.',
     image: img('photo-1590490360182-c33d57733427', 900),
   },
   {
+    to: '/ministry/retreats',
+    title: 'Retreats',
+    text: 'Individual and group retreats, planned around your request.',
+    image: img('photo-1479648230934-2ab6525f4847', 900),
+  },
+  {
+    to: '/ministry/prayer',
+    title: 'Spiritual counselling',
+    text: 'Quiet time and spiritual guidance in our chapel.',
+    image: img('photo-1430747562296-5556d17a15a5', 900),
+  },
+  {
     to: '/hospitality/catering',
-    title: 'Catering',
-    text: 'Tea breaks, buffets and feast-day meals.',
+    title: 'Outside catering',
+    text: 'Meals for conferences, retreats, events and private functions.',
     image: img('photo-1555244162-803834f70033', 900),
   },
   {
-    to: '/ministry',
-    title: 'Catholic ministry',
-    text: 'Daily Mass, retreats and formation.',
-    image: img('photo-1698822079732-501a7e06860f', 900),
+    to: '/products',
+    title: 'Catholic bookshop',
+    text: 'Bibles, missals, prayer materials and devotional gifts.',
+    image: img('photo-1544716278-ca5e3f4abd8c', 900),
   },
 ];
 
@@ -114,7 +127,7 @@ function Welcome() {
             loading="lazy"
           />
           <div className="col-span-2 flex flex-col gap-4 pt-10">
-            <img src={img('photo-1511632765486-a01980e01a18', 600)} alt="A group meeting outdoors on the grounds" className="h-44 sm:h-52 w-full object-cover rounded-3xl" loading="lazy" />
+            <img src={img('photo-1535756736290-ec9480a7eaf0', 600)} alt="Green hills near Ngong" className="h-44 sm:h-52 w-full object-cover rounded-3xl" loading="lazy" />
             <div className="rounded-3xl bg-sky-900 text-white p-5">
               <p className="font-serif text-3xl font-semibold text-gold-300">{new Date().getFullYear() - 1986}</p>
               <p className="text-xs text-sky-100/80 mt-1">years of welcome since All Saints Day 1986</p>
@@ -128,8 +141,8 @@ function Welcome() {
           Serving the Diocese of Ngong and groups from across Kenya
         </h2>
         <p className="mt-5 text-stone-600 leading-relaxed text-pretty">
-          Watakatifu Wote Senta, Swahili for <em>All Saints Centre</em>, opened on the Solemnity of All Saints in 1986. Parishes, religious
-          congregations, schools, organisations and government teams come here to meet, pray and rest.
+          Watakatifu Wote Senta, the All Saints Conference Centre, was opened on the Feast of All Saints, 1 November 1986. Diocesan programmes come
+          first, but the centre welcomes any group: Diocesan or non-Diocesan, Catholic or non-Catholic, even Government.
         </p>
         {settings.mission && (
           <figure className="mt-8 border-l-2 border-gold-400 pl-5">
@@ -149,10 +162,10 @@ function Welcome() {
 function Services() {
   return (
     <section className="container-page">
-      <SectionHeader badge="What we offer" title="Everything your group needs, in one peaceful place" />
-      <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
+      <SectionHeader badge="Our services" title="Everything your group needs, in one peaceful place" />
+      <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
         {SERVICES.map((s) => (
-          <Link key={s.to} to={s.to} className="group relative isolate h-96 overflow-hidden rounded-3xl shadow-soft">
+          <Link key={s.title} to={s.to} className="group relative isolate h-80 overflow-hidden rounded-3xl shadow-soft">
             <img src={s.image} alt="" className="absolute inset-0 -z-10 w-full h-full object-cover img-zoom" loading="lazy" />
             <div className="absolute inset-0 -z-10 bg-linear-to-t from-sky-950/95 via-sky-950/30 to-transparent" aria-hidden />
             <div className="absolute inset-x-0 bottom-0 p-6 text-white">

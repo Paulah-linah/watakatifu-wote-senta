@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { ArrowRight, Clock, Mail, MapPin, MessageSquare, Phone } from 'lucide-react';
 import { useSiteSettings } from '@/services/content';
 import { telHref, whatsappHref } from '@/lib/format';
-import { Emblem } from '@/components/common/Emblem';
+import { Logo } from '@/components/common/Logo';
 
 const COLUMNS = [
   {
@@ -22,7 +22,7 @@ const COLUMNS = [
       { to: '/ministry/mass', label: 'Mass schedule' },
       { to: '/ministry/retreats', label: 'Retreats' },
       { to: '/ministry/formation', label: 'Formation' },
-      { to: '/ministry/prayer', label: 'Chapel & grounds' },
+      { to: '/ministry/prayer', label: 'Chapel & counselling' },
       { to: '/events', label: 'Events' },
     ],
   },
@@ -30,7 +30,7 @@ const COLUMNS = [
     title: 'Centre',
     links: [
       { to: '/about', label: 'About us' },
-      { to: '/products', label: 'Books & gifts' },
+      { to: '/products', label: 'Catholic bookshop' },
       { to: '/gallery', label: 'Gallery' },
       { to: '/contact', label: 'Contact & directions' },
       { to: '/admin', label: 'Staff login' },
@@ -64,8 +64,8 @@ export const Footer: React.FC = () => {
       <div className="container-page pt-14 pb-10">
         <div className="grid grid-cols-2 lg:grid-cols-12 gap-x-8 gap-y-10">
           <div className="col-span-2 lg:col-span-3 space-y-5">
-            <div className="flex items-center gap-3">
-              <Emblem className="w-10 h-12" />
+            <div className="space-y-4">
+              <Logo framed className="h-28 w-auto" />
               <div>
                 <p className="font-serif text-2xl font-semibold text-white leading-none">Watakatifu Wote Senta</p>
                 <p className="mt-1.5 text-[0.7rem] uppercase tracking-[0.18em] text-gold-300">All Saints Centre · Ngong</p>

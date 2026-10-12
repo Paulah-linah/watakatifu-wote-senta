@@ -42,11 +42,11 @@ export const ProductsPage: React.FC = () => {
   return (
     <div>
       <PageHero
-        eyebrow="Books & devotional gifts"
+        eyebrow="Catholic bookshop"
         title="Bibles, missals, rosaries and gifts"
         subtitle="Browse Catholic books and devotional items, then ask us about an item or buy it at the centre in Ngong."
         image="https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=1800&q=70"
-        crumbs={[{ label: "Books & gifts" }]}
+        crumbs={[{ label: "Bookshop" }]}
       />
       <div className="container-page py-12 sm:py-16 space-y-10">
 

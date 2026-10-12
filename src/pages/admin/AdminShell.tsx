@@ -28,7 +28,7 @@ import { useAuth, ROLE_LABELS, type Area } from '@/context/AuthContext';
 import { supabase } from '@/lib/supabase';
 import { usePageMeta } from '@/lib/usePageMeta';
 import { Modal } from '@/components/common/Modal';
-import { Emblem } from '@/components/common/Emblem';
+import { Logo } from '@/components/common/Logo';
 import { Button, FieldLabel, inputCls, Spinner, ToastProvider, useToast, errorMessage } from './ui';
 
 interface NavEntry {
@@ -204,7 +204,7 @@ export function AdminShell() {
         <div className="p-4 border-b border-white/10 flex items-center justify-between">
           <Link to="/admin" className="block">
             <div className="flex items-center gap-2.5">
-              <Emblem className="w-8 h-10" />
+              <Logo framed className="h-9 w-auto" />
               <div>
                 <div className="font-serif text-lg font-semibold leading-tight">Staff Portal</div>
                 <div className="text-[10px] text-gold-300 uppercase tracking-[0.16em]">Watakatifu Wote Senta</div>

@@ -3,7 +3,7 @@ import { Link, NavLink, useLocation } from 'react-router-dom';
 import { ArrowRight, ChevronDown, Clock, MapPin, Menu, MessageSquare, Phone, X } from 'lucide-react';
 import { useSiteSettings } from '@/services/content';
 import { telHref, whatsappHref } from '@/lib/format';
-import { Emblem } from '@/components/common/Emblem';
+import { Logo } from '@/components/common/Logo';
 
 interface NavItem {
   to: string;
@@ -30,12 +30,12 @@ const MINISTRY: NavItem[] = [
   { to: '/ministry/mass', label: 'Mass Schedule', description: 'Daily Mass in the chapel' },
   { to: '/ministry/retreats', label: 'Retreats', description: 'Individual & group retreats' },
   { to: '/ministry/formation', label: 'Formation', description: 'Seminars & catechesis' },
-  { to: '/ministry/prayer', label: 'Chapel & Grounds', description: 'Adoration & quiet prayer' },
+  { to: '/ministry/prayer', label: 'Chapel & Counselling', description: 'Spiritual counselling & quiet prayer' },
 ];
 
 const SIMPLE: NavItem[] = [
   { to: '/events', label: 'Events' },
-  { to: '/products', label: 'Shop' },
+  { to: '/products', label: 'Bookshop' },
   { to: '/gallery', label: 'Gallery' },
   { to: '/contact', label: 'Contact' },
 ];
@@ -99,12 +99,12 @@ const Dropdown: React.FC<{ label: string; base: string; items: NavItem[] }> = ({
 
 const Brand: React.FC<{ light?: boolean }> = ({ light }) => (
   <Link to="/" className="flex items-center gap-3 min-w-0 group" aria-label="Watakatifu Wote Senta home">
-    <Emblem className="w-9 h-[2.6rem] sm:w-10 sm:h-12 shrink-0 transition-transform group-hover:-translate-y-0.5" />
+    <Logo className="h-[3.75rem] sm:h-[5rem] xl:h-[4.25rem] 2xl:h-[5rem] w-auto shrink-0" />
     <span className="min-w-0 leading-none">
-      <span className={`block font-serif text-[clamp(1.05rem,4.4vw,1.6rem)] font-semibold tracking-tight whitespace-nowrap ${light ? 'text-white' : 'text-sky-950'}`}>
+      <span className={`block font-serif text-[clamp(1.05rem,4.4vw,1.6rem)] xl:text-[1.3rem] 2xl:text-[1.6rem] font-semibold tracking-tight whitespace-nowrap ${light ? 'text-white' : 'text-sky-950'}`}>
         Watakatifu Wote Senta
       </span>
-      <span className={`mt-1 block text-[0.65rem] sm:text-[0.7rem] font-semibold uppercase tracking-[0.18em] truncate ${light ? 'text-gold-300' : 'text-gold-600'}`}>
+      <span className={`mt-1 block text-[0.65rem] sm:text-[0.7rem] font-semibold uppercase tracking-[0.18em] xl:tracking-[0.1em] 2xl:tracking-[0.18em] whitespace-nowrap ${light ? 'text-gold-300' : 'text-gold-600'}`}>
         All Saints Centre · Ngong
       </span>
     </span>
@@ -165,10 +165,10 @@ export const Navbar: React.FC = () => {
       {/* Main bar (sticky) */}
       <header
         className={`sticky top-0 z-40 transition-[background-color,box-shadow,border-color] duration-300 border-b ${
-          scrolled || mobileOpen ? 'bg-parchment/95 backdrop-blur-md border-sand shadow-soft' : 'bg-parchment border-transparent'
+          scrolled || mobileOpen ? 'bg-white/95 backdrop-blur-md border-sand shadow-soft' : 'bg-white border-sand/60'
         }`}
       >
-        <div className="container-page flex items-center justify-between gap-4 h-[4.5rem] sm:h-20">
+        <div className="container-page flex items-center justify-between gap-4 h-[4.75rem] sm:h-24">
           <Brand />
 
           <nav aria-label="Main" className="hidden xl:flex items-center">
@@ -207,7 +207,7 @@ export const Navbar: React.FC = () => {
           <nav
             id="mobile-menu"
             aria-label="Mobile"
-            className="xl:hidden border-t border-sand bg-parchment h-[calc(100dvh-4.5rem)] sm:h-[calc(100dvh-5rem)] overflow-y-auto animate-in fade-in slide-in-from-top-2 duration-200"
+            className="xl:hidden border-t border-sand bg-parchment h-[calc(100dvh-4.75rem)] sm:h-[calc(100dvh-6rem)] overflow-y-auto animate-in fade-in slide-in-from-top-2 duration-200"
           >
             <div className="container-page py-6 space-y-7">
               <div className="grid grid-cols-2 gap-2">

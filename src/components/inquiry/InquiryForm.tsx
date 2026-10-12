@@ -479,7 +479,7 @@ export const InquiryForm: React.FC<InquiryFormProps> = ({ initialType = 'confere
             </Field>
             <Field label="Seating arrangement" name="seating_arrangement">
               <select {...reg('seating_arrangement')}>
-                {(selectedFacility?.seating_styles.length ? selectedFacility.seating_styles : ['Classroom', 'Boardroom', 'Theater', 'U-Shape']).map((s) => (
+                {(selectedFacility?.seating_styles.length ? selectedFacility.seating_styles : ['Classroom', 'Boardroom']).map((s) => (
                   <option key={s} value={s}>
                     {s}
                   </option>

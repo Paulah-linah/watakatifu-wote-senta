@@ -13,33 +13,25 @@
   --text-sm: 0.9375rem;
   --text-sm--line-height: 1.6;
 
-  /* "Marian blue" replaces Tailwind's bright sky palette everywhere it is used. */
-  --color-sky-50: #f3f6fb;
-  --color-sky-100: #e3ebf6;
-  --color-sky-200: #c6d6ec;
-  --color-sky-300: #9db8dc;
-  --color-sky-400: #6f93c4;
-  --color-sky-500: #4a72a9;
-  --color-sky-600: #365c91;
-  --color-sky-700: #294a79;
-  --color-sky-800: #223e65;
-  --color-sky-900: #1d3454;
-  --color-sky-950: #121f33;
+  /* Brand colours from the questionnaire: beige (primary) and sky blue (secondary).
+     Tailwind's own sky palette is used for the blues; "gold" is the warm beige/tan accent ramp. */
+  --color-gold-50: #fbf8f2;
+  --color-gold-100: #f4ecdc;
+  --color-gold-200: #e9dcc0;
+  --color-gold-300: #dccaa3;
+  --color-gold-400: #cbb283;
+  --color-gold-500: #b0925f;
+  --color-gold-600: #8c7044;
+  --color-gold-700: #6c5534;
 
-  /* Liturgical gold accent */
-  --color-gold-50: #fbf7ec;
-  --color-gold-100: #f5ebcd;
-  --color-gold-200: #ecd89d;
-  --color-gold-300: #e0c06c;
-  --color-gold-400: #d3a947;
-  --color-gold-500: #bd8f2f;
-  --color-gold-600: #9c7124;
-  --color-gold-700: #7b5720;
+  /* Logo accents */
+  --color-cross: #c8102e;
+  --color-ribbon: #6cc9ec;
 
   /* Warm paper neutrals */
-  --color-parchment: #faf7f1;
-  --color-parchment-deep: #f3ede1;
-  --color-sand: #e7dcc7;
+  --color-parchment: #f8f4ea;
+  --color-parchment-deep: #efe6d3;
+  --color-sand: #e3d6bc;
   --color-ink: #1b1a17;
 
   --shadow-soft: 0 1px 2px rgb(27 26 23 / 0.04), 0 8px 24px -12px rgb(27 26 23 / 0.12);
@@ -139,14 +131,14 @@
 @utility btn-primary {
   background: var(--color-sky-800);
   color: #fff;
-  box-shadow: 0 6px 16px -8px rgb(29 52 84 / 0.6);
+  box-shadow: 0 6px 16px -8px rgb(7 89 133 / 0.55);
   &:hover { background: var(--color-sky-900); }
 }
 
 @utility btn-gold {
   background: var(--color-gold-400);
   color: var(--color-ink);
-  box-shadow: 0 6px 16px -8px rgb(189 143 47 / 0.7);
+  box-shadow: 0 6px 16px -8px rgb(140 112 68 / 0.5);
   &:hover { background: var(--color-gold-300); }
 }
 

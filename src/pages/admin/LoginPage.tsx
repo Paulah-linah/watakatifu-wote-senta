@@ -3,7 +3,7 @@ import { Link, Navigate, useNavigate, useSearchParams } from 'react-router-dom';
 import { ArrowLeft, Lock } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 import { supabase } from '@/lib/supabase';
-import { Emblem } from '@/components/common/Emblem';
+import { Logo } from '@/components/common/Logo';
 import { Button, FieldLabel, inputCls, Spinner, errorMessage } from './ui';
 
 const Frame: React.FC<{ title: string; children: React.ReactNode }> = ({ title, children }) => (
@@ -16,7 +16,7 @@ const Frame: React.FC<{ title: string; children: React.ReactNode }> = ({ title, 
       />
       <div className="absolute inset-0 bg-linear-to-t from-sky-950 via-sky-950/70 to-sky-950/30" aria-hidden />
       <Link to="/" className="relative flex items-center gap-3">
-        <Emblem className="w-10 h-12" />
+        <Logo framed className="h-16 w-auto" />
         <span>
           <span className="block font-serif text-2xl font-semibold leading-none">Watakatifu Wote Senta</span>
           <span className="mt-1.5 block text-[0.7rem] uppercase tracking-[0.18em] text-gold-300">Staff portal</span>
@@ -30,7 +30,9 @@ const Frame: React.FC<{ title: string; children: React.ReactNode }> = ({ title, 
     <div className="flex items-center justify-center px-5 py-12">
       <div className="w-full max-w-sm">
         <div className="mb-8">
-          <Emblem className="w-10 h-12 lg:hidden mb-5" />
+          <div className="lg:hidden mb-6">
+            <Logo framed className="h-16 w-auto" />
+          </div>
           <p className="eyebrow">
             <Lock className="w-3.5 h-3.5" /> Staff only
           </p>

@@ -1,6 +1,6 @@
 import React from 'react';
 import { useParams } from 'react-router-dom';
-import { BookOpen, CheckCircle2, Clock, GraduationCap, MapPin, Sparkles, TreePine } from 'lucide-react';
+import { BookOpen, CheckCircle2, Clock, GraduationCap, Heart, MapPin, Sparkles, TreePine } from 'lucide-react';
 import { isCurrentRetreat, useFormation, useMassSchedules, useRetreats, useSiteSettings } from '@/services/content';
 import { useInquiryModal } from '@/context/InquiryModalContext';
 import { PageHero } from '@/components/common/PageHero';
@@ -15,7 +15,7 @@ const TABS = [
   { key: 'mass', label: 'Mass Schedule', icon: Clock },
   { key: 'retreats', label: 'Retreats', icon: BookOpen },
   { key: 'formation', label: 'Formation & Seminars', icon: GraduationCap },
-  { key: 'prayer', label: 'Chapel & Prayer Grounds', icon: Sparkles },
+  { key: 'prayer', label: 'Chapel & Counselling', icon: Sparkles },
 ];
 
 const Intro: React.FC<{ badge: string; badgeTone: string; title: string; text: string }> = ({ badge, badgeTone, title, text }) => (
@@ -108,7 +108,7 @@ function RetreatsTab() {
         badge="Spiritual accompaniment"
         badgeTone="text-sky-800 bg-sky-100"
         title="Individual & Group Retreats in Ngong"
-        text="Silent retreats, guided Ignatian exercises, parish council retreats and clergy recollections. Groups can bring their own programme or join one of ours."
+        text="We welcome individual retreats, group retreats and religious formation and seminars. Each group's retreat is arranged according to its own plan and request. Contact us with your dates and group size."
       />
       <QueryState query={retreats}>
         {(all) => {
@@ -229,38 +229,48 @@ function FormationTab() {
 
 function PrayerTab() {
   const { settings } = useSiteSettings();
+  const { openInquiry } = useInquiryModal();
   return (
     <div className="space-y-8">
       <Intro
         badge="A place of quiet"
-        badgeTone="text-emerald-800 bg-emerald-100"
-        title="Chapel, Adoration & Prayer Grounds"
-        text="A peaceful setting on Kahara Road in Ngong, with clean air, native trees and quiet walking paths for adoration, meditation and spiritual renewal."
+        badgeTone=""
+        title="Chapel, spiritual counselling & prayer grounds"
+        text="A peaceful setting on Kahara Road in Ngong, with a chapel for daily Mass and well-kept grounds for reflection and prayer."
       />
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <article className="card p-6 sm:p-8 space-y-3">
-          <div className="w-10 h-10 rounded-xl bg-sky-100 text-sky-800 flex items-center justify-center">
+          <div className="w-11 h-11 rounded-xl bg-sky-50 text-sky-700 flex items-center justify-center">
             <Sparkles className="w-5 h-5" />
           </div>
-          <h3 className="font-serif text-xl font-semibold text-sky-950">The Chapel</h3>
-          <p className="text-xs sm:text-sm text-stone-600 leading-relaxed">
-            The heart of Watakatifu Wote Senta. The Blessed Sacrament is reserved in the tabernacle for private adoration and prayer throughout the day.
+          <h3 className="font-serif text-2xl font-semibold text-sky-950">The chapel</h3>
+          <p className="text-sm text-stone-600 leading-relaxed">
+            Our chapel holds about 70 people and is used for daily Mass, staff Masses, retreats and courses with a religious orientation.
           </p>
           <div className="rounded-xl bg-parchment px-4 py-3 text-sm text-stone-600">
-            <strong>Schedule:</strong> Daily Mass at {settings.daily_mass_time}; open for quiet prayer during the day.
+            <strong>Mass:</strong> every morning at {settings.daily_mass_time}
           </div>
         </article>
+        <article className="card p-6 sm:p-8 space-y-3 flex flex-col">
+          <div className="w-11 h-11 rounded-xl bg-sky-50 text-sky-700 flex items-center justify-center">
+            <Heart className="w-5 h-5" />
+          </div>
+          <h3 className="font-serif text-2xl font-semibold text-sky-950">Spiritual counselling</h3>
+          <p className="text-sm text-stone-600 leading-relaxed grow">
+            Time to talk, pray and receive spiritual guidance in the quiet of the chapel. Contact us to arrange a time.
+          </p>
+          <button type="button" onClick={() => openInquiry('general', { subject: 'Spiritual counselling' })} className="btn btn-primary w-full mt-2">
+            Ask about spiritual counselling
+          </button>
+        </article>
         <article className="card p-6 sm:p-8 space-y-3">
-          <div className="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-800 flex items-center justify-center">
+          <div className="w-11 h-11 rounded-xl bg-sky-50 text-sky-700 flex items-center justify-center">
             <TreePine className="w-5 h-5" />
           </div>
-          <h3 className="font-serif text-xl font-semibold text-sky-950">Prayer Grounds & Amphitheatre</h3>
-          <p className="text-xs sm:text-sm text-stone-600 leading-relaxed">
-            Lawns, shaded benches and an outdoor amphitheatre for Stations of the Cross, group Rosaries and open-air discussions.
+          <h3 className="font-serif text-2xl font-semibold text-sky-950">Grounds & amphitheatre</h3>
+          <p className="text-sm text-stone-600 leading-relaxed">
+            Well-kept grounds for reflection and prayer, and a natural amphitheatre with a raised platform for large celebrations and outdoor gatherings.
           </p>
-          <div className="rounded-xl bg-parchment px-4 py-3 text-sm text-stone-600">
-            <strong>Philosophy:</strong> &ldquo;Integrity of Creation&rdquo;, caring for God&apos;s natural environment in Ngong.
-          </div>
         </article>
       </div>
     </div>
