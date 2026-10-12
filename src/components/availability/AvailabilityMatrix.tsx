@@ -31,20 +31,19 @@ export const AvailabilityMatrix: React.FC = () => {
   const halls = (facilities.data ?? []).filter((f) => selectedFacilityId === 'all' || f.id === selectedFacilityId);
 
   return (
-    <section aria-labelledby="availability-heading" className="bg-[#FAF8F5] rounded-2xl border border-[#E3DAC9] p-4 sm:p-7 shadow-xs">
+    <section aria-labelledby="availability-heading" className="card p-5 sm:p-8">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-6 border-b border-stone-200">
         <div>
-          <div className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-sky-800 bg-sky-100/70 px-2.5 py-1 rounded-md mb-2">
-            <CalendarDays className="w-3.5 h-3.5" />
-            <span>Live availability</span>
-          </div>
-          <h2 id="availability-heading" className="font-serif text-2xl font-bold text-stone-900">
+          <p className="eyebrow">
+            <CalendarDays className="w-3.5 h-3.5" /> Live availability
+          </p>
+          <h2 id="availability-heading" className="mt-2 font-serif text-3xl sm:text-4xl font-semibold text-sky-950">
             Conference hall availability
           </h2>
           <p className="text-sm text-stone-600 mt-1">Check morning, afternoon and evening sessions across our three halls.</p>
         </div>
 
-        <div className="flex items-center gap-2.5 flex-wrap bg-white px-3.5 py-2 rounded-xl border border-stone-200 text-xs text-stone-600 shadow-2xs">
+        <div className="flex items-center gap-x-3 gap-y-1.5 flex-wrap rounded-2xl bg-parchment px-4 py-2.5 text-xs text-stone-600">
           <span className="font-medium text-stone-800 mr-1">Key:</span>
           {(['AVAILABLE', 'PARTIAL', 'PENDING', 'BOOKED', 'BLOCKED'] as DayStatus[]).map((s) => (
             <span key={s} className="flex items-center gap-1 font-medium">
@@ -65,8 +64,8 @@ export const AvailabilityMatrix: React.FC = () => {
               type="button"
               aria-pressed={selectedFacilityId === f.id}
               onClick={() => setSelectedFacilityId(f.id)}
-              className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors shrink-0 ${
-                selectedFacilityId === f.id ? 'bg-sky-700 text-white shadow-xs' : 'bg-white text-stone-700 hover:bg-stone-100 border border-stone-200'
+              className={`px-3.5 py-1.5 rounded-full text-xs font-semibold transition-colors shrink-0 ${
+                selectedFacilityId === f.id ? 'bg-sky-900 text-white' : 'bg-white text-stone-700 hover:border-sky-300 border border-sand'
               }`}
             >
               {shortHallName(f.name)}
@@ -82,7 +81,7 @@ export const AvailabilityMatrix: React.FC = () => {
             value={selectedDate}
             min={today}
             onChange={(e) => e.target.value && setSelectedDate(e.target.value)}
-            className="px-3 py-1.5 text-xs rounded-lg border border-stone-300 bg-white text-stone-800 font-medium shadow-2xs focus:ring-2 focus:ring-sky-500 focus:outline-hidden"
+            className="px-3 py-1.5 text-sm rounded-full border border-sand bg-white text-stone-800 font-medium shadow-2xs focus:ring-2 focus:ring-sky-500 focus:outline-hidden"
           />
         </label>
       </div>
@@ -96,11 +95,11 @@ export const AvailabilityMatrix: React.FC = () => {
               type="button"
               aria-pressed={isSelected}
               onClick={() => setSelectedDate(iso)}
-              className={`p-2 rounded-xl border text-center transition-all ${i > 3 ? 'hidden xs:block' : ''} ${
-                isSelected ? 'bg-sky-700 text-white border-sky-800 shadow-sm ring-2 ring-sky-300/40' : 'bg-white hover:bg-stone-50 border-stone-200 text-stone-700'
+              className={`p-2.5 rounded-2xl border text-center transition-all ${i > 3 ? 'hidden xs:block' : ''} ${
+                isSelected ? 'bg-sky-900 text-white border-sky-900 shadow-soft' : 'bg-parchment hover:bg-white border-sand/70 text-stone-700'
               }`}
             >
-              <div className={`text-[11px] font-medium uppercase ${isSelected ? 'text-sky-200' : 'text-stone-400'}`}>
+              <div className={`text-[11px] font-medium uppercase ${isSelected ? 'text-gold-300' : 'text-stone-400'}`}>
                 {i === 0 ? 'Today' : formatDate(iso, { weekday: 'short' })}
               </div>
               <div className="text-sm font-bold mt-0.5">{formatDate(iso, { day: 'numeric', month: 'short' })}</div>
@@ -129,10 +128,10 @@ export const AvailabilityMatrix: React.FC = () => {
             const style = STATUS_STYLE[status];
             const canRequest = status === 'AVAILABLE' || status === 'PARTIAL';
             return (
-              <article key={facility.id} className="bg-white rounded-xl border border-stone-200/90 p-4 shadow-2xs flex flex-col justify-between">
+              <article key={facility.id} className="rounded-2xl border border-sand/70 bg-parchment/60 p-5 flex flex-col justify-between">
                 <div>
                   <div className="flex items-start justify-between gap-2 mb-2">
-                    <h3 className="font-serif font-bold text-stone-900 text-base">{facility.name}</h3>
+                    <h3 className="font-serif font-semibold text-sky-950 text-xl leading-tight">{facility.name}</h3>
                     <span className={`shrink-0 inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-semibold border ${style.badge}`}>
                       {style.label}
                     </span>
@@ -149,7 +148,7 @@ export const AvailabilityMatrix: React.FC = () => {
                     {PART_SLOTS.map((slot) => {
                       const s = slotStyle(slots[slot as keyof typeof slots]);
                       return (
-                        <li key={slot} className={`text-center rounded-lg border px-1 py-1.5 ${s.badge}`}>
+                        <li key={slot} className={`text-center rounded-xl border px-1 py-2 ${s.badge}`}>
                           <div className="text-[10px] font-bold uppercase">{TIME_SLOT_LABELS[slot]}</div>
                           <div className="text-[10px]">{s.label}</div>
                         </li>
@@ -160,9 +159,7 @@ export const AvailabilityMatrix: React.FC = () => {
                 <button
                   type="button"
                   onClick={() => openInquiry('conference', { facilityId: facility.id, date: selectedDate })}
-                  className={`w-full inline-flex items-center justify-center gap-1.5 py-2 px-3 rounded-lg text-xs font-semibold transition-colors ${
-                    canRequest ? 'bg-sky-700 hover:bg-sky-800 text-white' : 'bg-stone-100 hover:bg-stone-200 text-stone-700 border border-stone-200'
-                  }`}
+                  className={`btn w-full ${canRequest ? 'btn-primary' : 'btn-outline'}`}
                 >
                   <span>{canRequest ? 'Request this hall' : 'Ask about other dates'}</span>
                   <ArrowRight className="w-3.5 h-3.5" />

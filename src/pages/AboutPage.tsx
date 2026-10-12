@@ -12,7 +12,7 @@ import {
   MapPin,
   Calendar,
 } from 'lucide-react';
-import { SectionHeader } from '@/components/common/SectionHeader';
+import { PageHero } from '@/components/common/PageHero';
 import { TabNav } from '@/components/common/TabNav';
 import { coreValuesOf, useSiteSettings } from '@/services/content';
 import { usePageMeta } from '@/lib/usePageMeta';
@@ -33,57 +33,58 @@ export const AboutPage: React.FC = () => {
   if (!current) return <NotFoundPage />;
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14 space-y-12">
-      <SectionHeader
-        level={1}
-        badge="About Watakatifu Wote Senta"
-        title="Our Institutional Identity & Catholic Heritage"
-        subtitle="Serving the Diocese of Ngong and the broader community with pastoral dedication, peace, and professional hospitality since 1986."
+    <div>
+      <PageHero
+        eyebrow="About us"
+        title="Four decades of welcome in Ngong"
+        subtitle="An institution of the Catholic Diocese of Ngong, opened on the Solemnity of All Saints in 1986."
+        image="https://images.unsplash.com/photo-1535756736290-ec9480a7eaf0?auto=format&fit=crop&w=1800&q=70"
+        crumbs={[{ label: 'About', to: '/about' }, { label: current.label }]}
       />
-
       <TabNav basePath="/about" items={TABS} active={tab} label="About sections" />
+      <div key={tab} className="container-page space-y-12">
 
       {/* Tab 1: Our Story */}
       {tab === 'story' && (
         <div className="space-y-8 animate-in fade-in duration-200">
-          <div className="bg-[#FAF8F5] rounded-3xl p-6 sm:p-10 border border-[#E3DAC9] grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-center">
             <div className="lg:col-span-7 space-y-4">
-              <div className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-amber-800 bg-amber-100 px-3 py-1 rounded">
+              <div className="eyebrow">
                 <Calendar className="w-3.5 h-3.5" />
                 <span>Founded 1 November 1986</span>
               </div>
-              <h3 className="font-serif text-3xl font-bold text-stone-900">
+              <h3 className="font-serif text-3xl font-semibold text-sky-950">
                 Four Decades of Grace, Community & Hospitality
               </h3>
-              <p className="text-sm sm:text-base text-stone-600 leading-relaxed">
+              <p className="text-base text-stone-600 leading-relaxed">
                 Watakatifu Wote Senta (Swahili for <em>All Saints Centre</em>) was officially opened on <strong>1 November 1986</strong>, on the liturgical Feast of All Saints, as a spiritual and hospitality facility under the Catholic Diocese of Ngong.
               </p>
-              <p className="text-sm sm:text-base text-stone-600 leading-relaxed">
+              <p className="text-base text-stone-600 leading-relaxed">
                 Established to serve both Diocesan and non-Diocesan groups, the centre has welcomed Catholic parish councils, clergy, religious congregations, non-Catholic Christian communities, civil society organizations, and government delegations across Kenya.
               </p>
-              <p className="text-sm sm:text-base text-stone-600 leading-relaxed">
+              <p className="text-base text-stone-600 leading-relaxed">
                 Our peaceful campus along Kahara Road in Ngong features three main conference facilities (St. Bakhita, St. Julian, St. Bernard), residential wings with historical capacity reaching 62 beds, six self-contained guest apartments, an outdoor amphitheatre, and a consecrated daily Mass chapel.
               </p>
             </div>
 
             <div className="lg:col-span-5">
-              <div className="rounded-2xl overflow-hidden shadow-md border-4 border-white">
+              <div className="rounded-3xl overflow-hidden shadow-lift">
                 <img
-                  src="https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&w=1000&q=80"
+                  src="https://images.unsplash.com/photo-1720383857984-7e9a9b11eba4?auto=format&fit=crop&w=1000&q=80"
                   alt="Watakatifu Wote Chapel and grounds"
-                  className="w-full h-80 object-cover"
+                  className="w-full h-80 sm:h-[28rem] object-cover"
                 />
               </div>
             </div>
           </div>
 
           {/* Diocese Context Card */}
-          <div className="bg-white rounded-2xl p-6 sm:p-8 border border-stone-200">
+          <div className="card p-6 sm:p-10">
             <div className="flex items-center gap-2.5 text-xs font-bold uppercase tracking-wider text-sky-800 mb-2">
               <Building className="w-4 h-4" />
               <span>Catholic Diocese of Ngong Context</span>
             </div>
-            <h4 className="font-serif text-2xl font-bold text-stone-900 mb-3">
+            <h4 className="font-serif text-2xl font-semibold text-sky-950 mb-3">
               Serving Kajiado and Narok Counties
             </h4>
             <p className="text-sm text-stone-600 leading-relaxed mb-6">
@@ -111,15 +112,15 @@ export const AboutPage: React.FC = () => {
       {/* Tab 2: Mission & Vision */}
       {tab === 'mission-vision' && (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 animate-in fade-in duration-200">
-          <div className="bg-white rounded-3xl p-8 border border-stone-200 shadow-xs flex flex-col justify-between">
+          <div className="card p-6 sm:p-8 flex flex-col justify-between">
             <div className="space-y-4">
               <div className="w-12 h-12 rounded-xl bg-sky-100 text-sky-800 flex items-center justify-center">
                 <Compass className="w-6 h-6" />
               </div>
-              <span className="text-xs font-bold uppercase tracking-wider text-sky-800">
+              <span className="eyebrow">
                 Our Shared Destination
               </span>
-              <h3 className="font-serif text-3xl font-bold text-stone-900">
+              <h3 className="font-serif text-3xl font-semibold text-sky-950">
                 Vision Statement
               </h3>
               <blockquote className="font-serif text-2xl text-stone-800 italic border-l-4 border-sky-600 pl-4 py-2 leading-relaxed">
@@ -131,15 +132,15 @@ export const AboutPage: React.FC = () => {
             </div>
           </div>
 
-          <div className="bg-white rounded-3xl p-8 border border-stone-200 shadow-xs flex flex-col justify-between">
+          <div className="card p-6 sm:p-8 flex flex-col justify-between">
             <div className="space-y-4">
               <div className="w-12 h-12 rounded-xl bg-amber-100 text-amber-800 flex items-center justify-center">
                 <Heart className="w-6 h-6" />
               </div>
-              <span className="text-xs font-bold uppercase tracking-wider text-amber-800">
+              <span className="eyebrow">
                 Our Purpose in Action
               </span>
-              <h3 className="font-serif text-3xl font-bold text-stone-900">
+              <h3 className="font-serif text-3xl font-semibold text-sky-950">
                 Mission Statement
               </h3>
               <blockquote className="font-serif text-2xl text-stone-800 italic border-l-4 border-amber-500 pl-4 py-2 leading-relaxed">
@@ -155,36 +156,36 @@ export const AboutPage: React.FC = () => {
 
       {/* Tab 3: Philosophy */}
       {tab === 'philosophy' && (
-        <div className="bg-[#FAF8F5] rounded-3xl p-8 sm:p-12 border border-[#E3DAC9] animate-in fade-in duration-200">
+        <div className="rounded-3xl bg-parchment-deep p-8 sm:p-14 animate-in fade-in duration-200">
           <div className="max-w-3xl space-y-6">
-            <span className="text-xs font-bold uppercase tracking-wider text-emerald-800 bg-emerald-100 px-3 py-1 rounded">
+            <span className="eyebrow">
               Ecclesial Foundation
             </span>
-            <h3 className="font-serif text-3xl sm:text-4xl font-bold text-stone-900 leading-tight">
+            <h3 className="font-serif text-3xl sm:text-4xl font-semibold text-sky-950 leading-tight">
               Philosophy of Service & Creation
             </h3>
             <p className="font-serif text-xl sm:text-2xl text-stone-800 italic border-l-4 border-emerald-600 pl-4 py-2">
               &ldquo;{settings.philosophy}&rdquo;
             </p>
-            <div className="space-y-4 text-sm sm:text-base text-stone-600 leading-relaxed pt-2">
+            <div className="space-y-4 text-base text-stone-600 leading-relaxed pt-2">
               <p>
                 At Watakatifu Wote Senta, our operational work is fundamentally viewed through the lens of Catholic stewardship. We believe that:
               </p>
               <ul className="space-y-3">
                 <li className="flex items-start gap-3">
-                  <CheckCircle className="w-5 h-5 text-emerald-600 shrink-0 mt-0.5" />
+                  <CheckCircle className="w-5 h-5 text-gold-500 shrink-0 mt-0.5" />
                   <div>
                     <strong className="text-stone-900">Sanctity of Human Life:</strong> Every visitor, delegate, and retreatant is received as a person made in the image and likeness of God, entitled to dignity, comfort, and restorative quiet.
                   </div>
                 </li>
                 <li className="flex items-start gap-3">
-                  <CheckCircle className="w-5 h-5 text-emerald-600 shrink-0 mt-0.5" />
+                  <CheckCircle className="w-5 h-5 text-gold-500 shrink-0 mt-0.5" />
                   <div>
                     <strong className="text-stone-900">Care for Creation (Laudato Si’):</strong> Our landscaped gardens and grounds in Ngong are maintained as an eco-sanctuary supporting reflection, fresh air, and biodiversity.
                   </div>
                 </li>
                 <li className="flex items-start gap-3">
-                  <CheckCircle className="w-5 h-5 text-emerald-600 shrink-0 mt-0.5" />
+                  <CheckCircle className="w-5 h-5 text-gold-500 shrink-0 mt-0.5" />
                   <div>
                     <strong className="text-stone-900">Service to Humanity as Service to God:</strong> Hospitality is not treated merely as a commercial transaction, but as a Gospel calling of welcoming the stranger.
                   </div>
@@ -202,12 +203,12 @@ export const AboutPage: React.FC = () => {
             {coreValuesOf(settings).map((val, idx) => (
               <div
                 key={idx}
-                className="bg-white rounded-2xl p-6 border border-stone-200 shadow-2xs hover:shadow-sm transition-shadow"
+                className="card p-6 sm:p-8"
               >
                 <div className="w-10 h-10 rounded-xl bg-sky-100 text-sky-800 font-bold flex items-center justify-center mb-3">
                   {idx + 1}
                 </div>
-                <h4 className="font-serif text-xl font-bold text-stone-900 mb-2">
+                <h4 className="font-serif text-xl font-semibold text-sky-950 mb-2">
                   {val.title}
                 </h4>
                 <p className="text-xs sm:text-sm text-stone-600 leading-relaxed">
@@ -218,8 +219,7 @@ export const AboutPage: React.FC = () => {
           </div>
         </div>
       )}
-
-      
+      </div>
     </div>
   );
 };

@@ -135,7 +135,7 @@ const TYPE_TABS: { type: InquiryType; icon: React.ComponentType<{ className?: st
 // Small field helpers
 // ---------------------------------------------------------------------------
 const inputClass =
-  'w-full px-3 py-2 rounded-lg border border-stone-300 bg-white text-stone-800 text-sm sm:text-xs focus:outline-hidden focus:ring-2 focus:ring-sky-500 aria-[invalid=true]:border-rose-400';
+  'w-full px-3.5 py-2.5 rounded-xl border border-sand bg-white text-stone-800 text-sm placeholder:text-stone-400 focus:outline-hidden focus:border-sky-500 focus:ring-4 focus:ring-sky-500/15 aria-[invalid=true]:border-rose-400';
 
 const Field: React.FC<{ label: string; name: string; required?: boolean; error?: string; hint?: string; children: React.ReactNode }> = ({
   label,
@@ -146,7 +146,7 @@ const Field: React.FC<{ label: string; name: string; required?: boolean; error?:
   children,
 }) => (
   <div>
-    <label htmlFor={`inq-${name}`} className="block font-semibold text-stone-700 mb-1 text-xs">
+    <label htmlFor={`inq-${name}`} className="block font-semibold text-stone-700 mb-1.5 text-sm">
       {label} {required && <span className="text-rose-500" aria-hidden>*</span>}
     </label>
     {children}
@@ -174,10 +174,10 @@ const Section: React.FC<{ tone: string; title: string; icon: React.ComponentType
   children,
   note,
 }) => (
-  <fieldset className={`p-4 rounded-xl border space-y-4 ${tone}`}>
+  <fieldset className={`p-4 sm:p-6 rounded-2xl border space-y-5 ${tone}`}>
     <legend className="sr-only">{title}</legend>
-    <h3 className="font-serif font-bold text-stone-900 text-base flex items-center gap-2" aria-hidden>
-      <Icon className="w-4 h-4 text-sky-700" />
+    <h3 className="font-serif font-semibold text-sky-950 text-xl flex items-center gap-2.5" aria-hidden>
+      <Icon className="w-5 h-5 text-gold-500" />
       <span>{title}</span>
     </h3>
     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">{children}</div>
@@ -343,13 +343,13 @@ export const InquiryForm: React.FC<InquiryFormProps> = ({ initialType = 'confere
         <div className="w-16 h-16 bg-emerald-100 text-emerald-700 rounded-full flex items-center justify-center mx-auto mb-4 ring-8 ring-emerald-50">
           <CheckCircle className="w-9 h-9" />
         </div>
-        <h3 className="font-serif text-2xl font-bold text-stone-900 mb-2">Inquiry received</h3>
+        <h3 className="font-serif text-3xl font-semibold text-sky-950 mb-2">Inquiry received</h3>
         <p className="text-sm text-stone-600 mb-4 leading-relaxed">
           Thank you, <strong>{result.name}</strong>. Our team at Watakatifu Wote Senta has received your inquiry and will contact you by phone or
           email.
         </p>
-        <div className="inline-block mb-6 px-4 py-2 rounded-xl bg-sky-50 border border-sky-200">
-          <div className="text-[11px] uppercase tracking-wider font-bold text-sky-700">Your reference</div>
+        <div className="inline-block mb-6 px-5 py-3 rounded-2xl bg-parchment border border-gold-300">
+          <div className="text-[0.7rem] uppercase tracking-[0.16em] font-bold text-gold-600">Your reference</div>
           <div className="font-mono text-lg font-bold text-sky-950">{result.reference}</div>
         </div>
         <div className="bg-stone-50 rounded-xl p-4 border border-stone-200 text-left text-xs text-stone-600 mb-6 space-y-1.5">
@@ -375,7 +375,7 @@ export const InquiryForm: React.FC<InquiryFormProps> = ({ initialType = 'confere
               reset({ ...defaultValues, type });
               setResult(null);
             }}
-            className="px-4 py-2 text-xs font-semibold rounded-lg bg-sky-700 hover:bg-sky-800 text-white transition-colors"
+            className="btn btn-primary"
           >
             Send another inquiry
           </button>
@@ -383,7 +383,7 @@ export const InquiryForm: React.FC<InquiryFormProps> = ({ initialType = 'confere
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 text-xs font-semibold rounded-lg bg-stone-100 hover:bg-stone-200 text-stone-700 transition-colors"
+              className="btn btn-outline"
             >
               Close
             </button>
@@ -394,9 +394,9 @@ export const InquiryForm: React.FC<InquiryFormProps> = ({ initialType = 'confere
   }
 
   return (
-    <div className="bg-white rounded-2xl border border-stone-200 overflow-hidden">
+    <div className="card overflow-hidden">
       {!lockType && (
-        <div className="bg-stone-50/80 border-b border-stone-200 p-2 sm:p-3">
+        <div className="bg-parchment/70 border-b border-sand/70 p-3 sm:p-5">
           <p id="inq-type-label" className="block text-xs font-bold uppercase tracking-wider text-stone-500 mb-2 px-1">
             What would you like to inquire about?
           </p>
@@ -410,11 +410,11 @@ export const InquiryForm: React.FC<InquiryFormProps> = ({ initialType = 'confere
                   role="radio"
                   aria-checked={selected}
                   onClick={() => setValue('type', t, { shouldValidate: false })}
-                  className={`py-2 px-2.5 rounded-xl text-xs font-semibold flex items-center justify-center gap-1.5 transition-all ${
-                    selected ? 'bg-sky-700 text-white shadow-xs' : 'bg-white hover:bg-stone-100 text-stone-700 border border-stone-200'
+                  className={`py-2.5 px-3 rounded-xl text-sm font-semibold flex items-center justify-center gap-2 transition-all ${
+                    selected ? 'bg-sky-900 text-white shadow-soft' : 'bg-white hover:border-sky-300 text-stone-700 border border-sand'
                   }`}
                 >
-                  <Icon className={`w-3.5 h-3.5 shrink-0 ${selected ? 'text-sky-200' : 'text-stone-400'}`} />
+                  <Icon className={`w-3.5 h-3.5 shrink-0 ${selected ? 'text-gold-300' : 'text-stone-400'}`} />
                   <span className="truncate">{INQUIRY_TYPE_LABELS[t]}</span>
                 </button>
               );
@@ -431,7 +431,7 @@ export const InquiryForm: React.FC<InquiryFormProps> = ({ initialType = 'confere
         </div>
 
         {type === 'conference' && (
-          <Section tone="bg-sky-50/70 border-sky-200" title="Conference hall details" icon={Building2}>
+          <Section tone="bg-parchment border-sand/70" title="Conference hall details" icon={Building2}>
             <Field label="Conference hall" name="facility_id" required error={err('facility_id')}>
               <select {...reg('facility_id')} disabled={facilities.isPending}>
                 <option value="">{facilities.isPending ? 'Loading halls…' : 'Choose a hall'}</option>
@@ -494,7 +494,7 @@ export const InquiryForm: React.FC<InquiryFormProps> = ({ initialType = 'confere
 
         {type === 'accommodation' && (
           <Section
-            tone="bg-amber-50/70 border-amber-200"
+            tone="bg-parchment border-sand/70"
             title="Accommodation details"
             icon={Bed}
             note="Accommodation is booked on inquiry. Room allocation and rates are confirmed by the hospitality office."
@@ -522,7 +522,7 @@ export const InquiryForm: React.FC<InquiryFormProps> = ({ initialType = 'confere
         )}
 
         {type === 'catering' && (
-          <Section tone="bg-orange-50/70 border-orange-200" title="Catering details" icon={Utensils}>
+          <Section tone="bg-parchment border-sand/70" title="Catering details" icon={Utensils}>
             <Field label="Service" name="catering_service_id">
               <select {...reg('catering_service_id')}>
                 <option value="">Not sure / please advise</option>
@@ -546,7 +546,7 @@ export const InquiryForm: React.FC<InquiryFormProps> = ({ initialType = 'confere
         )}
 
         {type === 'retreat' && (
-          <Section tone="bg-sky-50/70 border-sky-200" title="Retreat details" icon={BookOpen}>
+          <Section tone="bg-parchment border-sand/70" title="Retreat details" icon={BookOpen}>
             <Field label="Retreat" name="retreat_id" required error={err('retreat_id')}>
               <select {...reg('retreat_id')}>
                 <option value="">Choose a retreat</option>
@@ -574,7 +574,7 @@ export const InquiryForm: React.FC<InquiryFormProps> = ({ initialType = 'confere
         )}
 
         {type === 'formation' && (
-          <Section tone="bg-sky-50/70 border-sky-200" title="Formation / seminar registration" icon={GraduationCap}>
+          <Section tone="bg-parchment border-sand/70" title="Formation / seminar registration" icon={GraduationCap}>
             <Field label="Programme" name="formation_id" required error={err('formation_id')}>
               <select {...reg('formation_id')}>
                 <option value="">Choose a programme</option>
@@ -595,7 +595,7 @@ export const InquiryForm: React.FC<InquiryFormProps> = ({ initialType = 'confere
         )}
 
         {type === 'event' && (
-          <Section tone="bg-sky-50/70 border-sky-200" title="Event registration" icon={CalendarDays}>
+          <Section tone="bg-parchment border-sand/70" title="Event registration" icon={CalendarDays}>
             <Field label="Event" name="event_id" required error={err('event_id')}>
               <select {...reg('event_id')}>
                 <option value="">{upcomingEvents.length ? 'Choose an event' : 'No events open for registration'}</option>
@@ -614,7 +614,7 @@ export const InquiryForm: React.FC<InquiryFormProps> = ({ initialType = 'confere
 
         {type === 'product' && (
           <Section
-            tone="bg-purple-50/70 border-purple-200"
+            tone="bg-parchment border-sand/70"
             title="Product inquiry"
             icon={ShoppingBag}
             note="Purchases are completed at our office in Ngong or arranged by phone or email."
@@ -636,7 +636,7 @@ export const InquiryForm: React.FC<InquiryFormProps> = ({ initialType = 'confere
         )}
 
         {type === 'general' && (
-          <Section tone="bg-stone-50 border-stone-200" title="General inquiry" icon={HelpCircle}>
+          <Section tone="bg-parchment border-sand/70" title="General inquiry" icon={HelpCircle}>
             <div className="sm:col-span-2">
               <Field label="Subject" name="subject" required error={err('subject')}>
                 <input type="text" placeholder="What would you like to ask about?" {...reg('subject')} />
@@ -646,8 +646,11 @@ export const InquiryForm: React.FC<InquiryFormProps> = ({ initialType = 'confere
         )}
 
         {/* Contact details */}
-        <fieldset className="space-y-4 pt-2 border-t border-stone-200">
-          <legend className="font-serif font-bold text-stone-900 text-base pt-3">Your contact details</legend>
+        <fieldset className="space-y-5 pt-6 border-t border-sand/70">
+          <legend className="sr-only">Your contact details</legend>
+          <h3 className="font-serif font-semibold text-sky-950 text-xl" aria-hidden>
+            Your contact details
+          </h3>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <Field label="Full name" name="full_name" required error={err('full_name')}>
               <input type="text" autoComplete="name" placeholder="e.g. John Mwangi or Sr. Mary" {...reg('full_name')} />
@@ -683,7 +686,7 @@ export const InquiryForm: React.FC<InquiryFormProps> = ({ initialType = 'confere
               <button
                 type="button"
                 onClick={onClose}
-                className="px-4 py-2.5 text-xs font-semibold rounded-lg bg-stone-100 hover:bg-stone-200 text-stone-700 w-1/2 sm:w-auto"
+                className="btn btn-outline w-1/2 sm:w-auto"
               >
                 Cancel
               </button>
@@ -691,7 +694,7 @@ export const InquiryForm: React.FC<InquiryFormProps> = ({ initialType = 'confere
             <button
               type="submit"
               disabled={isSubmitting}
-              className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-lg bg-sky-700 hover:bg-sky-800 text-white text-xs font-bold shadow-sm w-full sm:w-auto disabled:opacity-60"
+              className="btn btn-primary w-full sm:w-auto disabled:opacity-60"
             >
               {isSubmitting ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Send className="w-3.5 h-3.5" />}
               <span>{isSubmitting ? 'Sending…' : 'Send inquiry'}</span>

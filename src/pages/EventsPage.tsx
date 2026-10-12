@@ -3,7 +3,7 @@ import { useSearchParams } from 'react-router-dom';
 import { Calendar, CalendarCheck, Clock, MapPin } from 'lucide-react';
 import { useEvents } from '@/services/content';
 import { useInquiryModal } from '@/context/InquiryModalContext';
-import { SectionHeader } from '@/components/common/SectionHeader';
+import { PageHero } from '@/components/common/PageHero';
 import { EmptyState, QueryState } from '@/components/common/States';
 import { formatDate, formatTime, todayISO } from '@/lib/dates';
 import { usePageMeta } from '@/lib/usePageMeta';
@@ -25,13 +25,15 @@ export const EventsPage: React.FC = () => {
   const today = todayISO();
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14 space-y-10">
-      <SectionHeader
-        level={1}
-        badge="Liturgical & Institutional Calendar"
-        title="Events & Diocesan Gatherings"
-        subtitle="Celebrations, youth formation days, jubilees and pastoral symposiums hosted at Watakatifu Wote Senta."
+    <div>
+      <PageHero
+        eyebrow="Calendar"
+        title="Events & diocesan gatherings"
+        subtitle="Celebrations, youth days, jubilees and pastoral symposiums hosted at Watakatifu Wote Senta."
+        image="https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&w=1800&q=70"
+        crumbs={[{ label: "Events" }]}
       />
+      <div className="container-page py-12 sm:py-16 space-y-10">
 
       <div className="flex items-center justify-center">
         <div className="bg-white p-1 rounded-xl border border-stone-200 shadow-2xs flex items-center gap-1" role="group" aria-label="Show events">
@@ -69,10 +71,10 @@ export const EventsPage: React.FC = () => {
                 const past = event.event_date < today;
                 const time = event.time_label || [formatTime(event.start_time), formatTime(event.end_time)].filter(Boolean).join(' – ');
                 return (
-                  <article key={event.id} className="bg-white rounded-3xl border border-stone-200 overflow-hidden shadow-xs hover:shadow-md transition-shadow flex flex-col justify-between">
+                  <article key={event.id} className="group card card-hover overflow-hidden flex flex-col justify-between">
                     <div>
                       <div className="h-56 w-full overflow-hidden bg-stone-100 relative">
-                        {event.image_url && <img src={event.image_url} alt={event.title} className="w-full h-full object-cover" loading="lazy" />}
+                        {event.image_url && <img src={event.image_url} alt={event.title} className="w-full h-full object-cover img-zoom" loading="lazy" />}
                         <div className="absolute top-4 left-4 bg-stone-900/90 text-white px-3 py-1 rounded-xl text-xs font-bold flex items-center gap-1.5">
                           <Calendar className="w-3.5 h-3.5 text-sky-400" />
                           <time dateTime={event.event_date}>{formatDate(event.event_date)}</time>
@@ -94,7 +96,7 @@ export const EventsPage: React.FC = () => {
                             </span>
                           )}
                         </div>
-                        <h2 className="font-serif text-2xl font-bold text-stone-900 mb-3 leading-snug">{event.title}</h2>
+                        <h2 className="font-serif text-2xl font-semibold text-sky-950 mb-3 leading-snug">{event.title}</h2>
                         <p className="text-xs sm:text-sm text-stone-600 leading-relaxed">{event.description}</p>
                       </div>
                     </div>
@@ -103,7 +105,7 @@ export const EventsPage: React.FC = () => {
                         <button
                           type="button"
                           onClick={() => openInquiry('event', { eventId: event.id })}
-                          className="w-full py-2.5 px-4 rounded-xl bg-sky-700 hover:bg-sky-800 text-white text-xs font-bold flex items-center justify-center gap-1.5"
+                          className="btn btn-primary w-full"
                         >
                           <CalendarCheck className="w-4 h-4" />
                           <span>Register for this event</span>
@@ -121,6 +123,7 @@ export const EventsPage: React.FC = () => {
           );
         }}
       </QueryState>
+      </div>
     </div>
   );
 };

@@ -3,7 +3,7 @@ import { useSearchParams } from 'react-router-dom';
 import { Eye, Filter, Info, Phone, Search, ShoppingBag, X } from 'lucide-react';
 import { useProductCategories, useProducts, useSiteSettings, type Product } from '@/services/content';
 import { useInquiryModal } from '@/context/InquiryModalContext';
-import { SectionHeader } from '@/components/common/SectionHeader';
+import { PageHero } from '@/components/common/PageHero';
 import { EmptyState, LoadingGrid, QueryState } from '@/components/common/States';
 import { Modal } from '@/components/common/Modal';
 import { formatKes, telHref } from '@/lib/format';
@@ -40,15 +40,17 @@ export const ProductsPage: React.FC = () => {
   const inquire = (p: Product) => openInquiry('product', { productId: p.id, quantity: 1 });
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14 space-y-10">
-      <SectionHeader
-        level={1}
-        badge="Products Catalogue"
-        title="Catholic Books, Devotional & Gift Items"
-        subtitle="Liturgical books, Bibles, prayer companions, rosaries and sacramental gifts. Ask about an item or buy it at our centre in Ngong."
+    <div>
+      <PageHero
+        eyebrow="Books & devotional gifts"
+        title="Bibles, missals, rosaries and gifts"
+        subtitle="Browse Catholic books and devotional items, then ask us about an item or buy it at the centre in Ngong."
+        image="https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=1800&q=70"
+        crumbs={[{ label: "Books & gifts" }]}
       />
+      <div className="container-page py-12 sm:py-16 space-y-10">
 
-      <div className="bg-[#FAF8F5] border border-[#E3DAC9] rounded-2xl p-4 sm:p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 text-xs text-stone-700">
+      <div className="rounded-2xl bg-parchment-deep p-4 sm:p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 text-xs text-stone-700">
         <div className="flex items-start gap-3">
           <Info className="w-5 h-5 text-sky-700 shrink-0 mt-0.5" />
           <div>
@@ -76,8 +78,8 @@ export const ProductsPage: React.FC = () => {
               type="button"
               aria-pressed={category === cat}
               onClick={() => update('category', cat)}
-              className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition-all shrink-0 ${
-                category === cat ? 'bg-sky-700 text-white shadow-xs' : 'bg-white text-stone-700 hover:bg-stone-100 border border-stone-200'
+              className={`px-3 py-1.5 rounded-full text-xs font-semibold transition-all shrink-0 ${
+                category === cat ? 'bg-sky-900 text-white' : 'bg-white text-stone-700 border border-sand hover:border-sky-300'
               }`}
             >
               {cat}
@@ -122,11 +124,11 @@ export const ProductsPage: React.FC = () => {
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
               {filtered.map((p) => (
-                <article key={p.id} className="bg-white rounded-2xl border border-stone-200 overflow-hidden shadow-xs hover:shadow-md transition-shadow flex flex-col justify-between">
+                <article key={p.id} className="group card card-hover overflow-hidden flex flex-col justify-between">
                   <div>
                     <div className="relative h-48 w-full overflow-hidden bg-stone-100 group">
                       {p.image_url && (
-                        <img src={p.image_url} alt={p.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" loading="lazy" />
+                        <img src={p.image_url} alt={p.name} className="w-full h-full object-cover img-zoom" loading="lazy" />
                       )}
                       {p.category && (
                         <div className="absolute top-3 left-3 bg-stone-950/80 text-white text-[10px] font-bold uppercase px-2 py-0.5 rounded">{p.category.name}</div>
@@ -136,7 +138,7 @@ export const ProductsPage: React.FC = () => {
                     </div>
                     <div className="p-5">
                       <span className="text-[10px] font-mono text-stone-400 block mb-1">SKU: {p.sku}</span>
-                      <h2 className="font-serif text-lg font-bold text-stone-900 leading-snug mb-2 line-clamp-2">{p.name}</h2>
+                      <h2 className="font-serif text-lg font-semibold text-sky-950 leading-snug mb-2 line-clamp-2">{p.name}</h2>
                       <p className="text-xs text-stone-600 line-clamp-3 leading-relaxed">{p.description}</p>
                       {!p.is_available && <p className="mt-2 text-[11px] font-semibold text-rose-700">Currently out of stock: ask us about restocking</p>}
                     </div>
@@ -145,12 +147,12 @@ export const ProductsPage: React.FC = () => {
                     <button
                       type="button"
                       onClick={() => setSelected(p)}
-                      className="w-full py-2 px-3 rounded-lg bg-stone-100 hover:bg-stone-200 text-stone-800 text-xs font-semibold flex items-center justify-center gap-1.5"
+                      className="btn btn-outline w-full"
                     >
                       <Eye className="w-3.5 h-3.5" />
                       <span>View details</span>
                     </button>
-                    <button type="button" onClick={() => inquire(p)} className="w-full py-2 px-3 rounded-lg bg-sky-700 hover:bg-sky-800 text-white text-xs font-bold">
+                    <button type="button" onClick={() => inquire(p)} className="btn btn-primary w-full">
                       Ask about this item
                     </button>
                   </div>
@@ -166,7 +168,7 @@ export const ProductsPage: React.FC = () => {
           <div className="space-y-4">
             {selected.image_url && (
               <div className="h-64 w-full rounded-xl overflow-hidden bg-stone-100">
-                <img src={selected.image_url} alt={selected.name} className="w-full h-full object-cover" />
+                <img src={selected.image_url} alt={selected.name} className="w-full h-full object-cover img-zoom" />
               </div>
             )}
             <div className="flex items-center justify-between gap-3">
@@ -199,6 +201,7 @@ export const ProductsPage: React.FC = () => {
           </div>
         )}
       </Modal>
+      </div>
     </div>
   );
 };

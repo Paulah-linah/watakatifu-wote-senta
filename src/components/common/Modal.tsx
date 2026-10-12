@@ -28,7 +28,7 @@ export const Modal: React.FC<ModalProps> = ({ isOpen, onClose, title, children, 
 
   return (
     <div
-      className="fixed inset-0 z-50 overflow-y-auto bg-stone-950/60 backdrop-blur-xs flex items-center justify-center p-3 sm:p-6 animate-in fade-in duration-200"
+      className="fixed inset-0 z-50 overflow-y-auto bg-sky-950/50 backdrop-blur-sm flex items-center justify-center p-3 sm:p-6 animate-in fade-in duration-200"
       onMouseDown={(e) => {
         if (e.target === e.currentTarget) onClose();
       }}
@@ -39,10 +39,10 @@ export const Modal: React.FC<ModalProps> = ({ isOpen, onClose, title, children, 
         aria-modal="true"
         aria-labelledby={titleId}
         tabIndex={-1}
-        className={`relative w-full ${maxWidthClasses[maxWidth]} bg-white rounded-2xl shadow-2xl border border-stone-200 overflow-hidden animate-in zoom-in-95 duration-150 max-h-[92vh] flex flex-col focus:outline-hidden`}
+        className={`relative w-full ${maxWidthClasses[maxWidth]} bg-white rounded-3xl shadow-2xl border border-sand/70 overflow-hidden animate-in zoom-in-95 duration-150 max-h-[92vh] flex flex-col focus:outline-hidden`}
       >
-        <div className="flex items-center justify-between gap-4 px-5 sm:px-6 py-4 border-b border-stone-200 bg-stone-50/70">
-          <h2 id={titleId} className="font-serif text-lg font-bold text-stone-900 truncate">
+        <div className="flex items-center justify-between gap-4 px-5 sm:px-6 py-4 border-b border-sand/70 bg-parchment">
+          <h2 id={titleId} className="font-serif text-xl font-semibold text-sky-950 truncate">
             {title || 'Information'}
           </h2>
           <button

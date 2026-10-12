@@ -1,8 +1,9 @@
 import React, { useEffect, useId, useRef, useState } from 'react';
 import { Link, NavLink, useLocation } from 'react-router-dom';
-import { CalendarCheck, ChevronDown, ChevronRight, Clock, MapPin, Menu, MessageSquare, Phone, ShieldCheck, X } from 'lucide-react';
+import { ArrowRight, ChevronDown, Clock, MapPin, Menu, MessageSquare, Phone, X } from 'lucide-react';
 import { useSiteSettings } from '@/services/content';
 import { telHref, whatsappHref } from '@/lib/format';
+import { Emblem } from '@/components/common/Emblem';
 
 interface NavItem {
   to: string;
@@ -11,44 +12,44 @@ interface NavItem {
 }
 
 const ABOUT: NavItem[] = [
-  { to: '/about/story', label: 'Our Story (since 1986)' },
-  { to: '/about/mission-vision', label: 'Mission & Vision' },
-  { to: '/about/philosophy', label: 'Philosophy' },
-  { to: '/about/values', label: 'Core Values' },
+  { to: '/about/story', label: 'Our Story', description: 'Opened on All Saints Day, 1986' },
+  { to: '/about/mission-vision', label: 'Mission & Vision', description: 'Why we exist' },
+  { to: '/about/philosophy', label: 'Philosophy', description: 'Life, creation and service' },
+  { to: '/about/values', label: 'Core Values', description: 'What guides our work' },
 ];
 
 const HOSPITALITY: NavItem[] = [
-  { to: '/hospitality/conference', label: 'Conference Facilities', description: 'St. Bakhita, St. Julian & St. Bernard' },
+  { to: '/hospitality/conference', label: 'Conference Halls', description: 'Three halls for 8 to 100 people' },
   { to: '/hospitality/accommodation', label: 'Accommodation', description: 'Residential wings & guest apartments' },
-  { to: '/hospitality/catering', label: 'Catering Services', description: 'Conferences, retreats & celebrations' },
-  { to: '/hospitality/laundry', label: 'Laundry Services', description: 'Guest linen & liturgical vestments' },
+  { to: '/hospitality/catering', label: 'Catering', description: 'Tea breaks, buffets & celebrations' },
+  { to: '/hospitality/laundry', label: 'Laundry', description: 'Guest linen & vestments' },
   { to: '/hospitality/water', label: 'Water Services', description: 'Purified water in every hall' },
 ];
 
 const MINISTRY: NavItem[] = [
-  { to: '/ministry/mass', label: 'Mass Schedule' },
-  { to: '/ministry/retreats', label: 'Spiritual Retreats' },
-  { to: '/ministry/formation', label: 'Formation & Seminars' },
-  { to: '/ministry/prayer', label: 'Chapel & Prayer Grounds' },
+  { to: '/ministry/mass', label: 'Mass Schedule', description: 'Daily Mass in the chapel' },
+  { to: '/ministry/retreats', label: 'Retreats', description: 'Individual & group retreats' },
+  { to: '/ministry/formation', label: 'Formation', description: 'Seminars & catechesis' },
+  { to: '/ministry/prayer', label: 'Chapel & Grounds', description: 'Adoration & quiet prayer' },
 ];
 
 const SIMPLE: NavItem[] = [
-  { to: '/products', label: 'Products' },
   { to: '/events', label: 'Events' },
+  { to: '/products', label: 'Shop' },
   { to: '/gallery', label: 'Gallery' },
   { to: '/contact', label: 'Contact' },
 ];
 
-const linkBase = 'px-2.5 2xl:px-3 py-2 rounded-lg text-sm font-medium transition-colors whitespace-nowrap';
-const linkIdle = 'text-stone-700 hover:text-stone-900 hover:bg-stone-200/50';
-const linkActive = 'text-sky-900 bg-sky-100/70';
+const navLink = (active: boolean) =>
+  `relative px-3 py-2 text-[0.9rem] font-medium transition-colors whitespace-nowrap after:absolute after:left-3 after:right-3 after:-bottom-0.5 after:h-0.5 after:rounded-full after:transition-transform after:origin-left ${
+    active ? 'text-sky-900 after:bg-gold-400 after:scale-x-100' : 'text-stone-600 hover:text-sky-900 after:bg-gold-400 after:scale-x-0 hover:after:scale-x-100'
+  }`;
 
-const Dropdown: React.FC<{ label: string; base: string; items: NavItem[]; width?: string }> = ({ label, base, items, width = 'w-64' }) => {
+const Dropdown: React.FC<{ label: string; base: string; items: NavItem[] }> = ({ label, base, items }) => {
   const [open, setOpen] = useState(false);
   const { pathname } = useLocation();
   const ref = useRef<HTMLDivElement>(null);
   const menuId = useId();
-  const active = pathname.startsWith(base);
 
   useEffect(() => setOpen(false), [pathname]);
   useEffect(() => {
@@ -70,23 +71,21 @@ const Dropdown: React.FC<{ label: string; base: string; items: NavItem[]; width?
         aria-expanded={open}
         aria-controls={menuId}
         onClick={() => setOpen((o) => !o)}
-        className={`${linkBase} inline-flex items-center gap-1 ${active ? linkActive : linkIdle}`}
+        className={`${navLink(pathname.startsWith(base))} inline-flex items-center gap-1`}
       >
-        <span>{label}</span>
-        <ChevronDown className={`w-4 h-4 text-stone-500 transition-transform ${open ? 'rotate-180' : ''}`} />
+        {label}
+        <ChevronDown className={`w-3.5 h-3.5 opacity-60 transition-transform ${open ? 'rotate-180' : ''}`} />
       </button>
       {open && (
-        <div id={menuId} className={`absolute top-full left-0 pt-1 z-50 ${width}`}>
-          <ul className="py-2 bg-white rounded-xl shadow-xl border border-stone-200 animate-in fade-in slide-in-from-top-2 duration-150">
+        <div id={menuId} className="absolute top-full left-1/2 -translate-x-1/2 pt-3 z-50 w-72">
+          <ul className="p-2 bg-white rounded-2xl shadow-lift border border-sand/70 animate-in fade-in slide-in-from-top-1 duration-150">
             {items.map((item) => (
               <li key={item.to}>
                 <NavLink
                   to={item.to}
-                  className={({ isActive }) =>
-                    `block px-4 py-2 text-sm hover:bg-stone-50 hover:text-sky-900 ${isActive ? 'text-sky-900 bg-sky-50' : 'text-stone-700'}`
-                  }
+                  className={({ isActive }) => `block rounded-xl px-3.5 py-2.5 transition-colors ${isActive ? 'bg-sky-50' : 'hover:bg-parchment'}`}
                 >
-                  <span className={item.description ? 'block font-semibold text-stone-900' : ''}>{item.label}</span>
+                  <span className="block text-sm font-semibold text-sky-950">{item.label}</span>
                   {item.description && <span className="block text-xs text-stone-500">{item.description}</span>}
                 </NavLink>
               </li>
@@ -98,132 +97,103 @@ const Dropdown: React.FC<{ label: string; base: string; items: NavItem[]; width?
   );
 };
 
-const Logo: React.FC = () => (
-  <Link to="/" className="flex items-center gap-3 group select-none min-w-0 xl:shrink-0" aria-label="Watakatifu Wote Senta home">
-    <div className="w-11 h-11 sm:w-12 sm:h-12 shrink-0 rounded-xl bg-linear-to-br from-[#0284C7] to-[#0369A1] p-0.5 shadow-md flex items-center justify-center ring-2 ring-sky-200/60 transition-transform group-hover:scale-105">
-      <div className="w-full h-full rounded-[10px] bg-linear-to-b from-[#0284C7] to-[#0c4a6e] flex items-center justify-center border border-sky-300/30">
-        <div className="relative flex flex-col items-center justify-center" aria-hidden>
-          <div className="w-1 h-6 bg-amber-200 rounded-xs" />
-          <div className="w-4 h-1 bg-amber-200 rounded-xs absolute top-2" />
-        </div>
-      </div>
-    </div>
-    <div className="flex flex-col min-w-0">
-      <span className="font-serif text-lg sm:text-2xl xl:text-xl 2xl:text-2xl font-bold tracking-tight text-stone-900 leading-tight whitespace-nowrap">
-        WATAKATIFU WOTE SENTA
+const Brand: React.FC<{ light?: boolean }> = ({ light }) => (
+  <Link to="/" className="flex items-center gap-3 min-w-0 group" aria-label="Watakatifu Wote Senta home">
+    <Emblem className="w-9 h-[2.6rem] sm:w-10 sm:h-12 shrink-0 transition-transform group-hover:-translate-y-0.5" />
+    <span className="min-w-0 leading-none">
+      <span className={`block font-serif text-[clamp(1.05rem,4.4vw,1.6rem)] font-semibold tracking-tight whitespace-nowrap ${light ? 'text-white' : 'text-sky-950'}`}>
+        Watakatifu Wote Senta
       </span>
-      <span className="text-[11px] sm:text-xs font-medium tracking-wide text-sky-800 uppercase whitespace-nowrap truncate">
-        All Saints Conference Centre <span className="text-stone-400 font-normal">| Ngong</span>
+      <span className={`mt-1 block text-[0.65rem] sm:text-[0.7rem] font-semibold uppercase tracking-[0.18em] truncate ${light ? 'text-gold-300' : 'text-gold-600'}`}>
+        All Saints Centre · Ngong
       </span>
-    </div>
+    </span>
   </Link>
 );
 
 export const Navbar: React.FC = () => {
   const { settings } = useSiteSettings();
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
   const { pathname } = useLocation();
 
   useEffect(() => setMobileOpen(false), [pathname]);
-
-  const mobileLink = (item: NavItem) => (
-    <NavLink
-      key={item.to}
-      to={item.to}
-      className={({ isActive }) =>
-        `w-full py-2 px-3 rounded-lg text-left text-sm flex items-center justify-between ${
-          isActive ? 'bg-sky-100 text-sky-900 font-semibold' : 'text-stone-800 hover:bg-stone-200/60'
-        }`
-      }
-    >
-      <span>{item.label}</span>
-      <ChevronRight className="w-4 h-4 text-stone-400" />
-    </NavLink>
-  );
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 40);
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
+  useEffect(() => {
+    document.body.style.overflow = mobileOpen ? 'hidden' : '';
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [mobileOpen]);
 
   return (
-    <header className="sticky top-0 z-40 w-full bg-[#F7F5EE]/95 backdrop-blur-md border-b border-[#E3DAC9] shadow-xs">
-      {/* Top bar */}
-      <div className="bg-[#1C1917] text-stone-300 text-xs py-1.5 sm:py-2 px-4 border-b border-stone-800">
-        <div className="max-w-7xl mx-auto flex items-center justify-between gap-2">
-          <div className="hidden md:flex items-center gap-3">
-            <span className="inline-flex items-center gap-1.5 font-medium text-sky-400">
-              <span className="w-1.5 h-1.5 rounded-full bg-sky-400" aria-hidden />
-              {settings.diocese}
-            </span>
-            <span className="text-stone-500" aria-hidden>•</span>
-            <span className="inline-flex items-center gap-1">
-              <MapPin className="w-3.5 h-3.5 text-stone-400" />
+    <>
+      {/* Utility bar (scrolls away) */}
+      <div className="bg-ink text-stone-300 text-xs">
+        <div className="container-page flex items-center justify-between gap-3 h-9">
+          <div className="hidden md:flex items-center gap-4">
+            <span className="text-stone-400">{settings.diocese}</span>
+            <span className="inline-flex items-center gap-1.5">
+              <MapPin className="w-3.5 h-3.5 text-gold-400" />
               {settings.location}
             </span>
           </div>
-
-          <div className="flex items-center gap-3 sm:gap-4 w-full md:w-auto justify-between md:justify-end">
-            <Link to="/ministry/mass" className="inline-flex items-center gap-1.5 text-amber-200/90 font-medium hover:text-amber-100">
-              <Clock className="w-3.5 h-3.5 text-amber-300" />
-              <span>
-                <span className="hidden xs:inline">Daily Mass: </span>
-                {settings.daily_mass_time}
-              </span>
+          <Link to="/ministry/mass" className="inline-flex items-center gap-1.5 text-gold-200 hover:text-gold-100">
+            <Clock className="w-3.5 h-3.5" />
+            <span>
+              <span className="hidden xs:inline">Daily Mass </span>
+              {settings.daily_mass_time}
+            </span>
+          </Link>
+          <div className="flex items-center gap-4">
+            <a href={telHref(settings.phone)} className="inline-flex items-center gap-1.5 hover:text-white">
+              <Phone className="w-3.5 h-3.5 text-gold-400" />
+              {settings.phone_display}
+            </a>
+            <Link to="/admin" className="hidden sm:inline text-stone-400 hover:text-white">
+              Staff login
             </Link>
-            <div className="flex items-center gap-3 sm:gap-4">
-              <a href={telHref(settings.phone)} className="inline-flex items-center gap-1 hover:text-white transition-colors">
-                <Phone className="w-3.5 h-3.5 text-stone-400" />
-                <span>{settings.phone_display}</span>
-              </a>
-              <a
-                href={whatsappHref(settings)}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-1 text-emerald-400 hover:text-emerald-300 transition-colors"
-                aria-label="Chat on WhatsApp"
-              >
-                <MessageSquare className="w-3.5 h-3.5" />
-                <span className="hidden sm:inline">WhatsApp</span>
-              </a>
-              <Link
-                to="/admin"
-                className="hidden sm:inline-flex items-center gap-1 px-2 py-0.5 rounded bg-stone-800 hover:bg-stone-700 text-stone-300 text-[11px] border border-stone-700"
-              >
-                <ShieldCheck className="w-3 h-3 text-sky-400" />
-                <span>Staff Portal</span>
-              </Link>
-            </div>
           </div>
         </div>
       </div>
 
-      {/* Brand & main nav */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between gap-4 h-18 sm:h-20">
-          <Logo />
+      {/* Main bar (sticky) */}
+      <header
+        className={`sticky top-0 z-40 transition-[background-color,box-shadow,border-color] duration-300 border-b ${
+          scrolled || mobileOpen ? 'bg-parchment/95 backdrop-blur-md border-sand shadow-soft' : 'bg-parchment border-transparent'
+        }`}
+      >
+        <div className="container-page flex items-center justify-between gap-4 h-[4.5rem] sm:h-20">
+          <Brand />
 
-          <nav aria-label="Main" className="hidden xl:flex items-center gap-0.5 2xl:gap-1">
-            <NavLink to="/" end className={({ isActive }) => `${linkBase} ${isActive ? linkActive : linkIdle}`}>
+          <nav aria-label="Main" className="hidden xl:flex items-center">
+            <NavLink to="/" end className={({ isActive }) => navLink(isActive)}>
               Home
             </NavLink>
-            <Dropdown label="About" base="/about" items={ABOUT} width="w-60" />
-            <Dropdown label="Hospitality" base="/hospitality" items={HOSPITALITY} width="w-72" />
+            <Dropdown label="About" base="/about" items={ABOUT} />
+            <Dropdown label="Hospitality" base="/hospitality" items={HOSPITALITY} />
             <Dropdown label="Ministry" base="/ministry" items={MINISTRY} />
             {SIMPLE.map((item) => (
-              <NavLink key={item.to} to={item.to} className={({ isActive }) => `${linkBase} ${isActive ? linkActive : linkIdle}`}>
+              <NavLink key={item.to} to={item.to} className={({ isActive }) => navLink(isActive)}>
                 {item.label}
               </NavLink>
             ))}
           </nav>
 
           <div className="flex items-center gap-2 shrink-0">
-            <Link
-              to="/inquiry"
-              className="hidden sm:inline-flex items-center gap-2 px-4 py-2.5 rounded-lg bg-sky-700 hover:bg-sky-800 text-white font-medium text-sm shadow-sm whitespace-nowrap"
-            >
-              <CalendarCheck className="w-4 h-4" />
-              <span>Make an Inquiry</span>
+            <Link to="/inquiry" className="hidden sm:inline-flex btn btn-primary">
+              Book & Inquire
+              <ArrowRight className="w-4 h-4" />
             </Link>
             <button
               type="button"
               onClick={() => setMobileOpen((o) => !o)}
-              className="xl:hidden p-2 rounded-lg text-stone-700 hover:bg-stone-200/60"
+              className="xl:hidden inline-flex items-center justify-center w-11 h-11 rounded-full text-sky-950 hover:bg-white border border-transparent hover:border-sand"
               aria-label={mobileOpen ? 'Close menu' : 'Open menu'}
               aria-expanded={mobileOpen}
               aria-controls="mobile-menu"
@@ -232,57 +202,70 @@ export const Navbar: React.FC = () => {
             </button>
           </div>
         </div>
-      </div>
 
-      {/* Mobile drawer */}
-      {mobileOpen && (
-        <nav
-          id="mobile-menu"
-          aria-label="Mobile"
-          className="xl:hidden border-t border-stone-200 bg-[#F7F5EE] px-4 pt-3 pb-6 max-h-[calc(100vh-7rem)] overflow-y-auto space-y-3"
-        >
-          <div className="grid grid-cols-2 gap-2 pb-2 border-b border-stone-300/70">
-            {[{ to: '/', label: 'Home' }, ...SIMPLE].map((item) => (
-              <NavLink
-                key={item.to}
-                to={item.to}
-                end={item.to === '/'}
-                className={({ isActive }) =>
-                  `py-2 px-3 rounded-lg text-sm font-medium ${isActive ? 'bg-sky-100 text-sky-900' : 'bg-stone-200/60 text-stone-800'}`
-                }
-              >
-                {item.label}
-              </NavLink>
-            ))}
-          </div>
-
-          {[
-            { title: 'About Us', items: ABOUT },
-            { title: 'Hospitality & Services', items: HOSPITALITY },
-            { title: 'Catholic Ministry', items: MINISTRY },
-          ].map((group) => (
-            <div key={group.title} className="space-y-1 pt-1">
-              <div className="text-xs font-bold uppercase tracking-wider text-stone-500 px-3 py-1">{group.title}</div>
-              {group.items.map(mobileLink)}
+        {mobileOpen && (
+          <nav
+            id="mobile-menu"
+            aria-label="Mobile"
+            className="xl:hidden border-t border-sand bg-parchment h-[calc(100dvh-4.5rem)] sm:h-[calc(100dvh-5rem)] overflow-y-auto animate-in fade-in slide-in-from-top-2 duration-200"
+          >
+            <div className="container-page py-6 space-y-7">
+              <div className="grid grid-cols-2 gap-2">
+                {[{ to: '/', label: 'Home' }, ...SIMPLE].map((item) => (
+                  <NavLink
+                    key={item.to}
+                    to={item.to}
+                    end={item.to === '/'}
+                    className={({ isActive }) =>
+                      `rounded-xl px-4 py-3 text-sm font-semibold border ${isActive ? 'bg-sky-900 text-white border-sky-900' : 'bg-white text-sky-950 border-sand/70'}`
+                    }
+                  >
+                    {item.label}
+                  </NavLink>
+                ))}
+              </div>
+              {[
+                { title: 'About us', items: ABOUT },
+                { title: 'Hospitality', items: HOSPITALITY },
+                { title: 'Catholic ministry', items: MINISTRY },
+              ].map((group) => (
+                <div key={group.title}>
+                  <p className="eyebrow mb-2">{group.title}</p>
+                  <ul className="divide-y divide-sand/60 border-y border-sand/60">
+                    {group.items.map((item) => (
+                      <li key={item.to}>
+                        <NavLink
+                          to={item.to}
+                          className={({ isActive }) => `flex items-center justify-between py-3 text-[0.95rem] ${isActive ? 'text-sky-700 font-semibold' : 'text-sky-950'}`}
+                        >
+                          {item.label}
+                          <ArrowRight className="w-4 h-4 text-stone-400" />
+                        </NavLink>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
+              <div className="grid gap-3 pb-6">
+                <Link to="/inquiry" className="btn btn-primary w-full">
+                  Make a booking or inquiry
+                </Link>
+                <div className="grid grid-cols-2 gap-3">
+                  <a href={telHref(settings.phone)} className="btn btn-outline">
+                    <Phone className="w-4 h-4" /> Call
+                  </a>
+                  <a href={whatsappHref(settings)} target="_blank" rel="noopener noreferrer" className="btn btn-outline">
+                    <MessageSquare className="w-4 h-4" /> WhatsApp
+                  </a>
+                </div>
+                <Link to="/admin" className="text-center text-xs text-stone-500 pt-2">
+                  Staff login
+                </Link>
+              </div>
             </div>
-          ))}
-
-          <Link to="/inquiry" className="block w-full py-3 rounded-xl bg-sky-700 text-white font-semibold text-center text-sm shadow-md">
-            Make a Booking or Inquiry
-          </Link>
-
-          <div className="pt-2 flex items-center justify-between text-xs text-stone-600 px-1">
-            <Link to="/admin" className="inline-flex items-center gap-1 text-sky-800 font-semibold">
-              <ShieldCheck className="w-4 h-4" />
-              <span>Staff login</span>
-            </Link>
-            <a href={telHref(settings.phone)} className="inline-flex items-center gap-1 font-medium">
-              <Phone className="w-3.5 h-3.5" />
-              {settings.phone_display}
-            </a>
-          </div>
-        </nav>
-      )}
-    </header>
+          </nav>
+        )}
+      </header>
+    </>
   );
 };

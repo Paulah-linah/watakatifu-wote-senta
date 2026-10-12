@@ -8,15 +8,15 @@ export const LoadingGrid: React.FC<{ count?: number; className?: string; itemCla
 }) => (
   <div className={className} aria-busy="true" aria-label="Loading">
     {Array.from({ length: count }).map((_, i) => (
-      <div key={i} className={`${itemClassName} rounded-2xl bg-stone-200/60 animate-pulse`} />
+      <div key={i} className={`${itemClassName} rounded-3xl bg-sand/50 animate-pulse`} />
     ))}
   </div>
 );
 
 export const ErrorState: React.FC<{ message?: string; onRetry?: () => void }> = ({ message, onRetry }) => (
-  <div role="alert" className="text-center py-12 px-6 bg-white rounded-2xl border border-rose-200 max-w-lg mx-auto">
+  <div role="alert" className="text-center py-12 px-6 card border-rose-200! max-w-lg mx-auto">
     <AlertTriangle className="w-10 h-10 text-rose-400 mx-auto mb-3" />
-    <h3 className="font-serif text-lg font-bold text-stone-800">We couldn&apos;t load this section</h3>
+    <h3 className="font-serif text-xl font-semibold text-sky-950">We couldn&apos;t load this section</h3>
     <p className="text-xs text-stone-500 mt-1">{message || 'Please check your connection and try again.'}</p>
     {onRetry && (
       <button
@@ -31,9 +31,9 @@ export const ErrorState: React.FC<{ message?: string; onRetry?: () => void }> = 
 );
 
 export const EmptyState: React.FC<{ title: string; message?: string; children?: React.ReactNode }> = ({ title, message, children }) => (
-  <div className="text-center py-14 px-6 bg-white rounded-2xl border border-stone-200 max-w-lg mx-auto">
+  <div className="text-center py-14 px-6 card max-w-lg mx-auto">
     <Inbox className="w-10 h-10 text-stone-300 mx-auto mb-3" />
-    <h3 className="font-serif text-lg font-bold text-stone-800">{title}</h3>
+    <h3 className="font-serif text-xl font-semibold text-sky-950">{title}</h3>
     {message && <p className="text-xs text-stone-500 mt-1">{message}</p>}
     {children && <div className="mt-4">{children}</div>}
   </div>

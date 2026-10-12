@@ -1,12 +1,12 @@
 import React from 'react';
 import { useParams } from 'react-router-dom';
 import { BookOpen, CheckCircle2, Clock, GraduationCap, MapPin, Sparkles, TreePine } from 'lucide-react';
-import { useFormation, useMassSchedules, useRetreats, useSiteSettings } from '@/services/content';
+import { isCurrentRetreat, useFormation, useMassSchedules, useRetreats, useSiteSettings } from '@/services/content';
 import { useInquiryModal } from '@/context/InquiryModalContext';
-import { SectionHeader } from '@/components/common/SectionHeader';
+import { PageHero } from '@/components/common/PageHero';
 import { TabNav } from '@/components/common/TabNav';
 import { EmptyState, QueryState } from '@/components/common/States';
-import { formatDate } from '@/lib/dates';
+import { formatDate, todayISO } from '@/lib/dates';
 import { formatKes } from '@/lib/format';
 import { usePageMeta } from '@/lib/usePageMeta';
 import { NotFoundPage } from './NotFoundPage';
@@ -19,21 +19,21 @@ const TABS = [
 ];
 
 const Intro: React.FC<{ badge: string; badgeTone: string; title: string; text: string }> = ({ badge, badgeTone, title, text }) => (
-  <div className="bg-[#FAF8F5] rounded-3xl p-6 sm:p-10 border border-[#E3DAC9] space-y-4">
-    <span className={`text-xs font-bold uppercase tracking-wider px-3 py-1 rounded ${badgeTone}`}>{badge}</span>
-    <h2 className="font-serif text-3xl font-bold text-stone-900">{title}</h2>
-    <p className="text-sm sm:text-base text-stone-600 leading-relaxed max-w-3xl">{text}</p>
+  <div className="max-w-3xl" data-tone={badgeTone}>
+    <p className="eyebrow">{badge}</p>
+    <h2 className="mt-3 font-serif text-3xl sm:text-4xl font-semibold text-sky-950 leading-tight text-balance">{title}</h2>
+    <p className="mt-4 text-base text-stone-600 leading-relaxed">{text}</p>
   </div>
 );
 
 const Requirements: React.FC<{ title: string; items: string[] }> = ({ title, items }) =>
   items.length ? (
-    <div className="space-y-1.5 pt-2 border-t border-stone-100 text-xs text-stone-600">
-      <span className="font-bold text-[11px] text-stone-400 uppercase">{title}</span>
+    <div className="space-y-1.5 pt-4 border-t border-sand/60 text-sm text-stone-600">
+      <span className="font-bold text-[0.7rem] tracking-[0.14em] text-stone-400 uppercase">{title}</span>
       <ul className="space-y-1.5">
         {items.map((req) => (
           <li key={req} className="flex items-start gap-1.5">
-            <CheckCircle2 className="w-3.5 h-3.5 text-sky-700 shrink-0 mt-0.5" />
+            <CheckCircle2 className="w-4 h-4 text-gold-500 shrink-0 mt-0.5" />
             <span>{req}</span>
           </li>
         ))}
@@ -43,7 +43,7 @@ const Requirements: React.FC<{ title: string; items: string[] }> = ({ title, ite
 
 const Fee: React.FC<{ amount: number | null; note: string | null; label: string }> = ({ amount, note, label }) =>
   amount != null ? (
-    <div className="mt-4 p-2.5 rounded-lg bg-sky-50 text-sky-950 text-xs font-semibold">
+    <div className="mt-5 flex items-baseline justify-between gap-3 rounded-xl bg-parchment px-4 py-3 text-sm font-semibold text-sky-950">
       {label}: {formatKes(amount)} {note && <span className="font-normal text-stone-600">({note})</span>}
     </div>
   ) : null;
@@ -63,7 +63,7 @@ function MassTab() {
         {(items) => (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {items.map((mass) => (
-              <article key={mass.id} className="bg-white rounded-2xl p-6 sm:p-8 border border-stone-200 shadow-xs flex flex-col justify-between">
+              <article key={mass.id} className="card p-6 sm:p-8 flex flex-col justify-between">
                 <div className="space-y-4">
                   <div className="flex items-center justify-between gap-2">
                     <span className="text-xs font-bold uppercase tracking-wider text-sky-800 bg-sky-100 px-2.5 py-1 rounded">{mass.celebration_type}</span>
@@ -86,7 +86,7 @@ function MassTab() {
                 <button
                   type="button"
                   onClick={() => openInquiry('general', { subject: `Mass intention / concelebration: ${mass.celebration_type}` })}
-                  className="mt-6 w-full py-2.5 px-4 rounded-xl bg-stone-800 hover:bg-stone-700 text-amber-200 text-xs font-bold"
+                  className="mt-6 btn btn-outline w-full"
                 >
                   Ask about Mass intentions or concelebration
                 </button>
@@ -111,20 +111,22 @@ function RetreatsTab() {
         text="Silent retreats, guided Ignatian exercises, parish council retreats and clergy recollections. Groups can bring their own programme or join one of ours."
       />
       <QueryState query={retreats}>
-        {(items) =>
+        {(all) => {
+          const items = all.filter((r) => isCurrentRetreat(r, todayISO()));
+          return (
           items.length === 0 ? (
             <EmptyState title="No retreats published right now" message="Contact us to plan a group retreat on your own dates." />
           ) : (
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
               {items.map((r) => (
-                <article key={r.id} className="bg-white rounded-2xl border border-stone-200 overflow-hidden shadow-xs flex flex-col justify-between">
+                <article key={r.id} className="group card card-hover overflow-hidden flex flex-col justify-between">
                   <div>
                     <div className="h-48 w-full overflow-hidden bg-stone-100 relative">
-                      {r.image_url && <img src={r.image_url} alt={r.title} className="w-full h-full object-cover" loading="lazy" />}
+                      {r.image_url && <img src={r.image_url} alt={r.title} className="w-full h-full object-cover img-zoom" loading="lazy" />}
                       <div className="absolute top-3 left-3 bg-stone-950/80 text-sky-300 text-[10px] font-bold uppercase px-2 py-0.5 rounded">{r.category}</div>
                     </div>
                     <div className="p-6">
-                      <h3 className="font-serif text-xl font-bold text-stone-900 mb-2">{r.title}</h3>
+                      <h3 className="font-serif text-xl font-semibold text-sky-950 mb-2">{r.title}</h3>
                       <dl className="text-xs text-stone-500 mb-3 space-y-1">
                         {r.start_date && (
                           <div>
@@ -153,7 +155,7 @@ function RetreatsTab() {
                     <button
                       type="button"
                       onClick={() => openInquiry('retreat', { retreatId: r.id, date: r.start_date ?? undefined })}
-                      className="w-full py-2.5 px-4 rounded-xl bg-sky-700 hover:bg-sky-800 text-white text-xs font-bold"
+                      className="btn btn-primary w-full"
                     >
                       Register / inquire
                     </button>
@@ -161,8 +163,8 @@ function RetreatsTab() {
                 </article>
               ))}
             </div>
-          )
-        }
+          ));
+        }}
       </QueryState>
     </div>
   );
@@ -183,13 +185,13 @@ function FormationTab() {
         {(items) => (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {items.map((p) => (
-              <article key={p.id} className="bg-white rounded-2xl border border-stone-200 overflow-hidden shadow-xs flex flex-col justify-between">
+              <article key={p.id} className="group card card-hover overflow-hidden flex flex-col justify-between">
                 <div>
                   <div className="h-48 w-full overflow-hidden bg-stone-100">
-                    {p.image_url && <img src={p.image_url} alt={p.title} className="w-full h-full object-cover" loading="lazy" />}
+                    {p.image_url && <img src={p.image_url} alt={p.title} className="w-full h-full object-cover img-zoom" loading="lazy" />}
                   </div>
                   <div className="p-6">
-                    <h3 className="font-serif text-2xl font-bold text-stone-900 mb-2">{p.title}</h3>
+                    <h3 className="font-serif text-2xl font-semibold text-sky-950 mb-2">{p.title}</h3>
                     <dl className="text-xs text-stone-500 mb-3 space-y-1">
                       <div>
                         <dt className="inline font-bold">Format & duration: </dt>
@@ -211,7 +213,7 @@ function FormationTab() {
                   <button
                     type="button"
                     onClick={() => openInquiry('formation', { formationId: p.id })}
-                    className="w-full py-2.5 px-4 rounded-xl bg-sky-700 hover:bg-sky-800 text-white text-xs font-bold"
+                    className="btn btn-primary w-full"
                   >
                     Register for this programme
                   </button>
@@ -236,27 +238,27 @@ function PrayerTab() {
         text="A peaceful setting on Kahara Road in Ngong, with clean air, native trees and quiet walking paths for adoration, meditation and spiritual renewal."
       />
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <article className="bg-white rounded-2xl p-6 border border-stone-200 shadow-xs space-y-3">
+        <article className="card p-6 sm:p-8 space-y-3">
           <div className="w-10 h-10 rounded-xl bg-sky-100 text-sky-800 flex items-center justify-center">
             <Sparkles className="w-5 h-5" />
           </div>
-          <h3 className="font-serif text-xl font-bold text-stone-900">The Chapel</h3>
+          <h3 className="font-serif text-xl font-semibold text-sky-950">The Chapel</h3>
           <p className="text-xs sm:text-sm text-stone-600 leading-relaxed">
             The heart of Watakatifu Wote Senta. The Blessed Sacrament is reserved in the tabernacle for private adoration and prayer throughout the day.
           </p>
-          <div className="p-3 bg-stone-50 rounded-xl border border-stone-200 text-xs text-stone-600">
+          <div className="rounded-xl bg-parchment px-4 py-3 text-sm text-stone-600">
             <strong>Schedule:</strong> Daily Mass at {settings.daily_mass_time}; open for quiet prayer during the day.
           </div>
         </article>
-        <article className="bg-white rounded-2xl p-6 border border-stone-200 shadow-xs space-y-3">
+        <article className="card p-6 sm:p-8 space-y-3">
           <div className="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-800 flex items-center justify-center">
             <TreePine className="w-5 h-5" />
           </div>
-          <h3 className="font-serif text-xl font-bold text-stone-900">Prayer Grounds & Amphitheatre</h3>
+          <h3 className="font-serif text-xl font-semibold text-sky-950">Prayer Grounds & Amphitheatre</h3>
           <p className="text-xs sm:text-sm text-stone-600 leading-relaxed">
             Lawns, shaded benches and an outdoor amphitheatre for Stations of the Cross, group Rosaries and open-air discussions.
           </p>
-          <div className="p-3 bg-stone-50 rounded-xl border border-stone-200 text-xs text-stone-600">
+          <div className="rounded-xl bg-parchment px-4 py-3 text-sm text-stone-600">
             <strong>Philosophy:</strong> &ldquo;Integrity of Creation&rdquo;, caring for God&apos;s natural environment in Ngong.
           </div>
         </article>
@@ -278,15 +280,16 @@ export const CatholicMinistryPage: React.FC = () => {
   const Panel = PANELS[section];
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14 space-y-12">
-      <SectionHeader
-        level={1}
-        badge="Catholic Ministry"
-        title="Spiritual Renewal, Formation & Daily Prayer"
-        subtitle="Under the pastoral care of the Catholic Diocese of Ngong: Holy Mass, retreats, catechist formation and quiet space for prayer."
+    <div>
+      <PageHero
+        eyebrow="Catholic ministry"
+        title="Pray, reflect and grow in faith"
+        subtitle="Daily Mass, guided retreats, formation programmes and quiet grounds, under the pastoral care of the Catholic Diocese of Ngong."
+        image="https://images.unsplash.com/photo-1430747562296-5556d17a15a5?auto=format&fit=crop&w=1800&q=70"
+        crumbs={[{ label: 'Ministry', to: '/ministry' }, { label: current.label }]}
       />
       <TabNav basePath="/ministry" items={TABS} active={section} label="Ministry sections" />
-      <div key={section} className="animate-in fade-in duration-200">
+      <div key={section} className="container-page animate-in fade-in duration-300">
         <Panel />
       </div>
     </div>

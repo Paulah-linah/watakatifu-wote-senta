@@ -3,29 +3,172 @@
 
 @theme {
   --breakpoint-xs: 30rem;
+
   --font-serif: "Cormorant Garamond", Georgia, serif;
   --font-sans: "Plus Jakarta Sans", system-ui, -apple-system, sans-serif;
-  --color-wws-beige: #F7F5EE;
-  --color-wws-beige-warm: #EFE9DC;
-  --color-wws-sand: #E2D9C8;
-  --color-wws-sky: #0284C7;
-  --color-wws-sky-light: #E0F2FE;
-  --color-wws-sky-subtle: #F0F9FF;
+
+  /* Slightly larger small sizes: most body copy on the site uses text-xs/text-sm. */
+  --text-xs: 0.8125rem;
+  --text-xs--line-height: 1.55;
+  --text-sm: 0.9375rem;
+  --text-sm--line-height: 1.6;
+
+  /* "Marian blue" replaces Tailwind's bright sky palette everywhere it is used. */
+  --color-sky-50: #f3f6fb;
+  --color-sky-100: #e3ebf6;
+  --color-sky-200: #c6d6ec;
+  --color-sky-300: #9db8dc;
+  --color-sky-400: #6f93c4;
+  --color-sky-500: #4a72a9;
+  --color-sky-600: #365c91;
+  --color-sky-700: #294a79;
+  --color-sky-800: #223e65;
+  --color-sky-900: #1d3454;
+  --color-sky-950: #121f33;
+
+  /* Liturgical gold accent */
+  --color-gold-50: #fbf7ec;
+  --color-gold-100: #f5ebcd;
+  --color-gold-200: #ecd89d;
+  --color-gold-300: #e0c06c;
+  --color-gold-400: #d3a947;
+  --color-gold-500: #bd8f2f;
+  --color-gold-600: #9c7124;
+  --color-gold-700: #7b5720;
+
+  /* Warm paper neutrals */
+  --color-parchment: #faf7f1;
+  --color-parchment-deep: #f3ede1;
+  --color-sand: #e7dcc7;
+  --color-ink: #1b1a17;
+
+  --shadow-soft: 0 1px 2px rgb(27 26 23 / 0.04), 0 8px 24px -12px rgb(27 26 23 / 0.12);
+  --shadow-lift: 0 2px 4px rgb(27 26 23 / 0.05), 0 18px 40px -16px rgb(27 26 23 / 0.22);
 }
 
-html {
-  font-family: var(--font-sans);
-  scroll-behavior: smooth;
-}
+@layer base {
+  html {
+    font-family: var(--font-sans);
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
 
-h1, h2, h3, .font-serif-title {
-  font-family: var(--font-serif);
+  body {
+    background: var(--color-parchment);
+    color: var(--color-ink);
+  }
+
+  /* In the base layer so utility classes such as font-sans can still override it */
+  h1, h2, h3, .font-serif-title {
+    font-family: var(--font-serif);
+    letter-spacing: -0.01em;
+  }
 }
 
 /* Visible keyboard focus everywhere */
 :where(a, button, input, select, textarea, [tabindex]):focus-visible {
-  outline: 2px solid #0284c7;
+  outline: 2px solid var(--color-sky-600);
   outline-offset: 2px;
+}
+
+::selection {
+  background: var(--color-gold-200);
+  color: var(--color-ink);
+}
+
+/* ---------------------------------------------------------------------------
+   Reusable building blocks
+--------------------------------------------------------------------------- */
+@utility container-page {
+  width: 100%;
+  max-width: 80rem;
+  margin-inline: auto;
+  padding-inline: 1.25rem;
+  @media (width >= 40rem) { padding-inline: 1.5rem; }
+  @media (width >= 64rem) { padding-inline: 2rem; }
+}
+
+/* Small uppercase label with a gold rule, used above headings */
+@utility eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.625rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--color-gold-600);
+  &::before {
+    content: "";
+    width: 1.75rem;
+    height: 1px;
+    background: currentColor;
+  }
+}
+
+@utility card {
+  background: #fff;
+  border: 1px solid color-mix(in oklab, var(--color-sand) 70%, white);
+  border-radius: 1.25rem;
+  box-shadow: var(--shadow-soft);
+}
+
+@utility card-hover {
+  transition: transform 250ms ease, box-shadow 250ms ease, border-color 250ms ease;
+  &:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-lift);
+    border-color: var(--color-sand);
+  }
+}
+
+@utility btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border-radius: 9999px;
+  font-weight: 600;
+  font-size: 0.875rem;
+  padding: 0.7rem 1.35rem;
+  transition: background-color 200ms, color 200ms, box-shadow 200ms, transform 150ms;
+  &:active { transform: translateY(1px); }
+}
+
+@utility btn-primary {
+  background: var(--color-sky-800);
+  color: #fff;
+  box-shadow: 0 6px 16px -8px rgb(29 52 84 / 0.6);
+  &:hover { background: var(--color-sky-900); }
+}
+
+@utility btn-gold {
+  background: var(--color-gold-400);
+  color: var(--color-ink);
+  box-shadow: 0 6px 16px -8px rgb(189 143 47 / 0.7);
+  &:hover { background: var(--color-gold-300); }
+}
+
+@utility btn-outline {
+  background: transparent;
+  color: var(--color-sky-900);
+  border: 1px solid var(--color-sand);
+  &:hover { background: #fff; border-color: var(--color-sky-300); }
+}
+
+@utility btn-ghost-light {
+  background: rgb(255 255 255 / 0.1);
+  color: #fff;
+  border: 1px solid rgb(255 255 255 / 0.35);
+  backdrop-filter: blur(6px);
+  &:hover { background: rgb(255 255 255 / 0.2); }
+}
+
+/* Image that zooms gently when its group is hovered */
+@utility img-zoom {
+  transition: transform 700ms cubic-bezier(0.2, 0.7, 0.2, 1);
+  :where(.group):hover & { transform: scale(1.05); }
 }
 
 @media (prefers-reduced-motion: reduce) {

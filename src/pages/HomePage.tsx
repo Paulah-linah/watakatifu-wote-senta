@@ -1,489 +1,386 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowRight, Bed, BookOpen, Building2, CalendarCheck, CheckCircle2, ChevronDown, Clock, MessageSquare, Phone, ShoppingBag, Users, Utensils } from 'lucide-react';
-import { useFacilities, useGallery, useRetreats, useSiteSettings } from '@/services/content';
+import { ArrowRight, ArrowUpRight, CalendarDays, Clock, MapPin, Quote, Users } from 'lucide-react';
+import { isCurrentRetreat, useEvents, useFacilities, useGallery, useRetreats, useSiteSettings } from '@/services/content';
 import { useInquiryModal } from '@/context/InquiryModalContext';
 import { AvailabilityMatrix } from '@/components/availability/AvailabilityMatrix';
 import { SectionHeader } from '@/components/common/SectionHeader';
 import { LoadingGrid, QueryState } from '@/components/common/States';
-import { formatKes, shortHallName, telHref, whatsappHref } from '@/lib/format';
+import { formatDate, todayISO } from '@/lib/dates';
+import { formatKes, shortHallName } from '@/lib/format';
 import { usePageMeta } from '@/lib/usePageMeta';
+
+const img = (id: string, w = 1200) => `https://images.unsplash.com/${id}?auto=format&fit=crop&w=${w}&q=80`;
 
 const SERVICES = [
   {
     to: '/hospitality/conference',
-    icon: Building2,
-    tone: 'bg-sky-100 text-sky-800',
-    hover: 'hover:border-sky-300',
-    link: 'text-sky-800',
-    title: 'Conference Facilities',
-    text: 'Three equipped halls (St. Bakhita, St. Julian, St. Bernard) for 8 to 100 people, with Wi-Fi, projector and sound system.',
-    cta: 'View halls & rates',
+    title: 'Conference halls',
+    text: 'Three equipped halls for 8 to 100 people.',
+    image: img('photo-1431540015161-0bf868a2d407', 900),
   },
   {
     to: '/hospitality/accommodation',
-    icon: Bed,
-    tone: 'bg-amber-100 text-amber-800',
-    hover: 'hover:border-amber-300',
-    link: 'text-amber-800',
     title: 'Accommodation',
-    text: 'Quiet residential wings plus self-contained guest apartments for facilitators, clergy and retreatants.',
-    cta: 'Explore stay options',
+    text: 'Quiet rooms and six guest apartments.',
+    image: img('photo-1590490360182-c33d57733427', 900),
   },
   {
     to: '/hospitality/catering',
-    icon: Utensils,
-    tone: 'bg-orange-100 text-orange-800',
-    hover: 'hover:border-orange-300',
-    link: 'text-orange-800',
-    title: 'Catering & Dining',
-    text: 'Kenyan tea breaks, buffet lunches and celebration meals for conferences and spiritual groups.',
-    cta: 'Catering services',
+    title: 'Catering',
+    text: 'Tea breaks, buffets and feast-day meals.',
+    image: img('photo-1555244162-803834f70033', 900),
   },
   {
     to: '/ministry',
-    icon: BookOpen,
-    tone: 'bg-sky-100 text-sky-800',
-    hover: 'hover:border-sky-300',
-    link: 'text-sky-800',
-    title: 'Catholic Ministry',
-    text: 'Daily Mass in our chapel, individual and group retreats, pastoral seminars and peaceful prayer gardens.',
-    cta: 'Mass & retreats',
-  },
-  {
-    to: '/products',
-    icon: ShoppingBag,
-    tone: 'bg-purple-100 text-purple-800',
-    hover: 'hover:border-purple-300',
-    link: 'text-purple-800',
-    title: 'Products Catalogue',
-    text: 'Catholic books, Bibles, missals, rosaries and devotional gifts available at the centre.',
-    cta: 'Browse catalogue',
+    title: 'Catholic ministry',
+    text: 'Daily Mass, retreats and formation.',
+    image: img('photo-1698822079732-501a7e06860f', 900),
   },
 ];
 
-export const HomePage: React.FC = () => {
-  usePageMeta({});
+function Hero() {
   const { settings } = useSiteSettings();
   const { openInquiry } = useInquiryModal();
-  const facilities = useFacilities();
-  const retreats = useRetreats();
-  const gallery = useGallery();
-
   return (
-    <div className="space-y-16 sm:space-y-24 pb-16">
-      {/* Hero */}
-      <section className="relative min-h-[80vh] flex items-center justify-center overflow-hidden bg-[#1C1917] text-white">
-        <div className="absolute inset-0 z-0">
-          <img
-            src="https://images.unsplash.com/photo-1507692049790-de58290a4334?auto=format&fit=crop&w=2000&q=80"
-            alt=""
-            className="w-full h-full object-cover object-center opacity-40"
-            fetchPriority="high"
-          />
-          <div className="absolute inset-0 bg-linear-to-b from-[#141211]/80 via-[#1C1917]/60 to-[#1C1917]/95" />
-        </div>
+    <section className="relative isolate overflow-hidden bg-sky-950 text-white">
+      <img
+        src={img('photo-1698822079732-501a7e06860f', 2000)}
+        alt=""
+        className="absolute inset-0 -z-10 w-full h-full object-cover opacity-55 animate-in fade-in zoom-in-105 duration-[1500ms]"
+        fetchPriority="high"
+      />
+      <div className="absolute inset-0 -z-10 bg-linear-to-r from-sky-950 via-sky-950/80 to-sky-950/20" aria-hidden />
+      <div className="absolute inset-x-0 bottom-0 -z-10 h-40 bg-linear-to-t from-sky-950/80 to-transparent" aria-hidden />
 
-        <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center py-16 sm:py-20">
-          <div className="inline-flex flex-wrap justify-center items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-xs sm:text-sm font-medium text-sky-200 mb-6">
-            <span className="w-2 h-2 rounded-full bg-sky-400" aria-hidden />
-            <span>{settings.diocese}</span>
-            <span className="text-white/40" aria-hidden>•</span>
-            <span>Est. 1 November 1986</span>
-          </div>
-
-          <h1 className="font-serif text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight text-white leading-tight">
-            Hospitality, Faith & Community
+      <div className="container-page pt-20 pb-36 sm:pt-28 sm:pb-44 lg:pt-36 lg:pb-52">
+        <div className="max-w-3xl animate-in fade-in slide-in-from-bottom-4 duration-700">
+          <p className="eyebrow text-gold-300!">{settings.diocese} · Since 1986</p>
+          <h1 className="mt-5 font-serif text-[2.75rem] leading-[1.02] sm:text-6xl lg:text-7xl font-semibold text-balance">
+            A place of hospitality, <em className="text-gold-300 font-medium">prayer</em> and community
           </h1>
-          <p className="mt-6 text-lg sm:text-xl md:text-2xl text-stone-200 font-light max-w-3xl mx-auto leading-relaxed">
-            Welcome to Watakatifu Wote Senta, a peaceful Catholic conference, retreat and hospitality centre on Kahara Road in Ngong, Kenya.
+          <p className="mt-6 max-w-xl text-lg text-sky-100/85 leading-relaxed text-pretty">
+            Conference halls, peaceful accommodation, retreats and daily Mass on Kahara Road, Ngong. A Catholic centre that welcomes everyone.
           </p>
-
-          <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
-            <Link
-              to="/hospitality"
-              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-xl bg-sky-600 hover:bg-sky-500 text-white font-semibold text-base shadow-lg"
-            >
-              <span>Explore Our Services</span>
-              <ArrowRight className="w-5 h-5" />
-            </Link>
-            <button
-              type="button"
-              onClick={() => openInquiry('conference')}
-              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-xl bg-white/15 hover:bg-white/25 text-white font-semibold text-base backdrop-blur-md border border-white/30"
-            >
-              <CalendarCheck className="w-5 h-5 text-sky-300" />
-              <span>Make an Inquiry</span>
+          <div className="mt-9 flex flex-wrap gap-3">
+            <button type="button" onClick={() => openInquiry('conference')} className="btn btn-gold text-base px-6 py-3">
+              Plan your visit <ArrowRight className="w-4 h-4" />
             </button>
-          </div>
-
-          <dl className="mt-14 pt-8 border-t border-white/15 grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
-            {[
-              [settings.daily_mass_time, 'Daily Morning Mass'],
-              ['3 Halls', '8 to 100 people'],
-              ['62 Beds', '& 6 guest apartments'],
-              ['44 Parishes', 'Diocese of Ngong'],
-            ].map(([value, label]) => (
-              <div key={label} className="p-2">
-                <dd className="text-xl sm:text-2xl font-serif font-bold text-amber-200">{value}</dd>
-                <dt className="text-xs text-stone-300 font-medium mt-0.5">{label}</dt>
-              </div>
-            ))}
-          </dl>
-
-          <div className="mt-10 flex justify-center">
-            <a href="#quick-services" className="flex flex-col items-center gap-1 text-xs text-stone-400 hover:text-white transition-colors">
-              <span>Discover more</span>
-              <ChevronDown className="w-4 h-4 animate-bounce" />
-            </a>
+            <Link to="/hospitality" className="btn btn-ghost-light text-base px-6 py-3">
+              Explore our services
+            </Link>
           </div>
         </div>
-      </section>
+      </div>
+    </section>
+  );
+}
 
-      {/* Services */}
-      <section id="quick-services" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 scroll-mt-32">
-        <SectionHeader
-          badge="What We Offer"
-          title="Hospitality, Ministry & Professional Services"
-          subtitle="Conference spaces, retreat facilities, catering and Catholic spiritual programmes in one peaceful campus."
-        />
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-5">
-          {SERVICES.map(({ to, icon: Icon, tone, hover, link, title, text, cta }) => (
-            <Link
-              key={to}
-              to={to}
-              className={`group bg-white rounded-2xl p-6 border border-stone-200/90 shadow-2xs hover:shadow-md ${hover} transition-all flex flex-col justify-between`}
-            >
-              <div>
-                <div className={`w-12 h-12 rounded-xl ${tone} flex items-center justify-center mb-4 group-hover:scale-110 transition-transform`}>
-                  <Icon className="w-6 h-6" />
-                </div>
-                <h3 className="font-serif text-xl font-bold text-stone-900 mb-2">{title}</h3>
-                <p className="text-xs text-stone-600 leading-relaxed mb-4">{text}</p>
-              </div>
-              <span className={`inline-flex items-center gap-1 text-xs font-bold ${link} pt-2 border-t border-stone-100`}>
-                <span>{cta}</span>
-                <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
+function StatsCard() {
+  const { settings } = useSiteSettings();
+  const stats = [
+    { value: settings.daily_mass_time, label: 'Daily morning Mass' },
+    { value: '3 halls', label: 'For 8 to 100 people' },
+    { value: '62 beds', label: 'Plus 6 guest apartments' },
+    { value: '1986', label: 'Opened on All Saints Day' },
+  ];
+  return (
+    <div className="container-page relative z-10 -mt-20 sm:-mt-24">
+      <dl className="card grid grid-cols-2 lg:grid-cols-4 overflow-hidden">
+        {stats.map((s, i) => (
+          <div
+            key={s.label}
+            className={`p-5 sm:p-7 border-sand/70 ${i % 2 === 1 ? 'border-l' : ''} ${i >= 2 ? 'border-t lg:border-t-0 lg:border-l' : ''}`}
+          >
+            <dd className="font-serif text-3xl sm:text-4xl font-semibold text-sky-900">{s.value}</dd>
+            <dt className="mt-1 text-xs sm:text-sm text-stone-500">{s.label}</dt>
+          </div>
+        ))}
+      </dl>
+    </div>
+  );
+}
+
+function Welcome() {
+  const { settings } = useSiteSettings();
+  return (
+    <section className="container-page grid lg:grid-cols-2 gap-14 lg:gap-20 items-center">
+      <div className="relative order-2 lg:order-1">
+        <div className="grid grid-cols-5 gap-4">
+          <img
+            src={img('photo-1720383857984-7e9a9b11eba4', 900)}
+            alt="The chapel at Watakatifu Wote Senta"
+            className="col-span-3 h-80 sm:h-[26rem] w-full object-cover rounded-3xl shadow-lift"
+            loading="lazy"
+          />
+          <div className="col-span-2 flex flex-col gap-4 pt-10">
+            <img src={img('photo-1511632765486-a01980e01a18', 600)} alt="A group meeting outdoors on the grounds" className="h-44 sm:h-52 w-full object-cover rounded-3xl" loading="lazy" />
+            <div className="rounded-3xl bg-sky-900 text-white p-5">
+              <p className="font-serif text-3xl font-semibold text-gold-300">{new Date().getFullYear() - 1986}</p>
+              <p className="text-xs text-sky-100/80 mt-1">years of welcome since All Saints Day 1986</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div className="order-1 lg:order-2">
+        <p className="eyebrow">Welcome</p>
+        <h2 className="mt-3 font-serif text-3xl sm:text-4xl lg:text-[2.75rem] font-semibold leading-[1.1] text-balance">
+          Serving the Diocese of Ngong and groups from across Kenya
+        </h2>
+        <p className="mt-5 text-stone-600 leading-relaxed text-pretty">
+          Watakatifu Wote Senta, Swahili for <em>All Saints Centre</em>, opened on the Solemnity of All Saints in 1986. Parishes, religious
+          congregations, schools, organisations and government teams come here to meet, pray and rest.
+        </p>
+        {settings.mission && (
+          <figure className="mt-8 border-l-2 border-gold-400 pl-5">
+            <Quote className="w-5 h-5 text-gold-400 mb-2" aria-hidden />
+            <blockquote className="font-serif text-xl sm:text-2xl italic text-sky-950 leading-snug">{settings.mission}</blockquote>
+            <figcaption className="mt-2 text-xs uppercase tracking-[0.16em] text-stone-500">Our mission</figcaption>
+          </figure>
+        )}
+        <Link to="/about" className="mt-8 btn btn-outline">
+          Our story <ArrowRight className="w-4 h-4" />
+        </Link>
+      </div>
+    </section>
+  );
+}
+
+function Services() {
+  return (
+    <section className="container-page">
+      <SectionHeader badge="What we offer" title="Everything your group needs, in one peaceful place" />
+      <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
+        {SERVICES.map((s) => (
+          <Link key={s.to} to={s.to} className="group relative isolate h-96 overflow-hidden rounded-3xl shadow-soft">
+            <img src={s.image} alt="" className="absolute inset-0 -z-10 w-full h-full object-cover img-zoom" loading="lazy" />
+            <div className="absolute inset-0 -z-10 bg-linear-to-t from-sky-950/95 via-sky-950/30 to-transparent" aria-hidden />
+            <div className="absolute inset-x-0 bottom-0 p-6 text-white">
+              <h3 className="font-serif text-2xl font-semibold">{s.title}</h3>
+              <p className="mt-1 text-sm text-sky-100/85">{s.text}</p>
+              <span className="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-gold-300">
+                Learn more <ArrowUpRight className="w-4 h-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
               </span>
-            </Link>
-          ))}
-        </div>
-      </section>
-
-      {/* About preview */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="bg-[#FAF8F5] rounded-3xl border border-[#E3DAC9] overflow-hidden grid grid-cols-1 lg:grid-cols-12 gap-8 items-center p-6 sm:p-10 lg:p-12 shadow-xs">
-          <div className="lg:col-span-7 space-y-5">
-            <div className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-sky-900 bg-sky-100 px-3 py-1 rounded-md">
-              About Watakatifu Wote Senta
             </div>
-            <h2 className="font-serif text-3xl sm:text-4xl font-bold text-stone-900 leading-snug">
-              Serving the Diocese of Ngong & Groups Across Kenya Since 1986
-            </h2>
-            <p className="text-sm sm:text-base text-stone-600 leading-relaxed">
-              Opened on <strong>1 November 1986</strong>, the Solemnity of All Saints, Watakatifu Wote Senta is an institution of the Catholic
-              Diocese of Ngong. For nearly four decades it has welcomed parishes, religious congregations, ecumenical partners, organisations and
-              government delegations.
-            </p>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
-              {settings.mission && (
-                <div className="p-4 rounded-xl bg-white border border-stone-200">
-                  <div className="font-serif font-bold text-sm mb-1 text-sky-900">Our Mission</div>
-                  <p className="text-xs text-stone-600 italic">&ldquo;{settings.mission}&rdquo;</p>
-                </div>
-              )}
-              {settings.philosophy && (
-                <div className="p-4 rounded-xl bg-white border border-stone-200">
-                  <div className="font-serif font-bold text-sm mb-1 text-sky-900">Our Philosophy</div>
-                  <p className="text-xs text-stone-600">{settings.philosophy}</p>
-                </div>
-              )}
-            </div>
-            <Link
-              to="/about"
-              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-stone-900 hover:bg-stone-800 text-white font-medium text-xs shadow-xs"
-            >
-              <span>Learn more about our history</span>
-              <ArrowRight className="w-4 h-4" />
-            </Link>
-          </div>
-          <div className="lg:col-span-5 relative">
-            <div className="rounded-2xl overflow-hidden shadow-xl border-4 border-white">
-              <img
-                src="https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&w=1000&q=80"
-                alt="Chapel and grounds at Watakatifu Wote Senta"
-                className="w-full h-80 sm:h-96 object-cover"
-                loading="lazy"
-              />
-            </div>
-            <div className="absolute -bottom-4 -left-4 bg-sky-800 text-white p-4 rounded-xl shadow-lg text-xs max-w-[240px] border border-sky-600 hidden sm:block">
-              <div className="font-bold text-amber-200 font-serif text-sm">Feast of All Saints</div>
-              <div className="mt-1 text-stone-200">Opened 1 November 1986 on Kahara Road, Ngong.</div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Conference highlight */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
-          <div>
-            <span className="text-xs font-bold uppercase tracking-wider text-sky-800 bg-sky-100 px-3 py-1 rounded-full">Hospitality & Business Services</span>
-            <h2 className="font-serif text-3xl sm:text-4xl font-bold text-stone-900 mt-2">Conference Facilities in Ngong</h2>
-            <p className="text-sm text-stone-600 mt-1 max-w-2xl">
-              Meeting rooms with 155 chairs and tables on campus, Wi-Fi, projector, sound system and purified water.
-            </p>
-          </div>
-          <Link to="/hospitality/conference" className="inline-flex items-center gap-1.5 text-xs font-bold text-sky-800 hover:text-sky-950 self-start md:self-auto">
-            <span>View full specifications</span>
-            <ArrowRight className="w-4 h-4" />
           </Link>
-        </div>
-        <QueryState query={facilities}>
-          {(halls) => (
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {halls.map((facility) => (
-                <article key={facility.id} className="bg-white rounded-2xl border border-stone-200 overflow-hidden shadow-xs hover:shadow-md transition-shadow flex flex-col justify-between">
-                  <div>
-                    <div className="relative h-48 w-full overflow-hidden bg-stone-100">
-                      {facility.image_url && <img src={facility.image_url} alt={facility.name} className="w-full h-full object-cover" loading="lazy" />}
-                      <div className="absolute top-3 right-3 bg-stone-950/80 text-white px-3 py-1 rounded-lg text-xs font-bold">{formatKes(facility.price_kes)}</div>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function Halls() {
+  const facilities = useFacilities();
+  const { openInquiry } = useInquiryModal();
+  return (
+    <section className="container-page">
+      <SectionHeader
+        badge="Conference facilities"
+        title="Halls for meetings, seminars and assemblies"
+        subtitle="Wi-Fi, projector, sound system and purified water, with 155 chairs and tables on campus."
+        action={
+          <Link to="/hospitality/conference" className="btn btn-outline">
+            Full details <ArrowRight className="w-4 h-4" />
+          </Link>
+        }
+      />
+      <QueryState query={facilities} loading={<LoadingGrid itemClassName="h-[28rem]" />}>
+        {(halls) => (
+          <div className="grid md:grid-cols-3 gap-6">
+            {halls.map((f) => (
+              <article key={f.id} className="group card card-hover overflow-hidden flex flex-col">
+                <div className="relative h-56 overflow-hidden">
+                  {f.image_url && <img src={f.image_url} alt={f.name} className="w-full h-full object-cover img-zoom" loading="lazy" />}
+                  <span className="absolute top-4 left-4 inline-flex items-center gap-1.5 rounded-full bg-white/95 px-3 py-1 text-xs font-semibold text-sky-950">
+                    <Users className="w-3.5 h-3.5 text-gold-600" />
+                    {f.capacity_min}–{f.capacity_max} people
+                  </span>
+                </div>
+                <div className="p-6 flex flex-col grow">
+                  <h3 className="font-serif text-2xl font-semibold text-sky-950">{f.name}</h3>
+                  <p className="mt-2 text-sm text-stone-600 leading-relaxed line-clamp-3">{f.description}</p>
+                  <div className="mt-auto pt-6 flex items-end justify-between gap-4">
+                    <div>
+                      <p className="text-[0.7rem] uppercase tracking-[0.14em] text-stone-500">Day rate</p>
+                      <p className="font-serif text-2xl font-semibold text-sky-900">{formatKes(f.price_kes)}</p>
                     </div>
-                    <div className="p-5">
-                      <div className="flex items-center justify-between gap-2 text-xs text-stone-500 mb-1">
-                        <span className="font-medium inline-flex items-center gap-1">
-                          <Users className="w-3.5 h-3.5 text-sky-700" />
-                          <strong>
-                            {facility.capacity_min}–{facility.capacity_max} people
-                          </strong>
-                        </span>
-                        <span className="bg-stone-100 px-2 py-0.5 rounded text-[11px] font-semibold text-stone-700 truncate">
-                          {facility.seating_styles.join(' / ')}
-                        </span>
-                      </div>
-                      <h3 className="font-serif text-xl font-bold text-stone-900 mt-1 mb-2">{facility.name}</h3>
-                      <p className="text-xs text-stone-600 leading-relaxed mb-4">{facility.description}</p>
-                      <ul className="space-y-1.5 pb-2">
-                        {facility.features.slice(0, 3).map((feat) => (
-                          <li key={feat} className="flex items-center gap-2 text-xs text-stone-600">
-                            <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
-                            <span>{feat}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  </div>
-                  <div className="p-5 pt-0">
-                    <button
-                      type="button"
-                      onClick={() => openInquiry('conference', { facilityId: facility.id })}
-                      className="w-full py-2.5 px-4 rounded-xl bg-sky-700 hover:bg-sky-800 text-white text-xs font-bold"
-                    >
-                      Request {shortHallName(facility.name)}
+                    <button type="button" onClick={() => openInquiry('conference', { facilityId: f.id })} className="btn btn-primary">
+                      Request {shortHallName(f.name)}
                     </button>
                   </div>
-                </article>
-              ))}
-            </div>
-          )}
-        </QueryState>
-      </section>
+                </div>
+              </article>
+            ))}
+          </div>
+        )}
+      </QueryState>
+    </section>
+  );
+}
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+function Ministry() {
+  const { settings } = useSiteSettings();
+  const retreats = useRetreats();
+  const { openInquiry } = useInquiryModal();
+  return (
+    <section className="relative bg-sky-950 text-white py-20 sm:py-28 overflow-hidden">
+      <div className="absolute -right-32 -top-32 w-[32rem] h-[32rem] rounded-full bg-gold-400/10 blur-3xl" aria-hidden />
+      <div className="container-page relative">
+        <SectionHeader
+          inverted
+          badge="Spiritual life"
+          title="Daily Mass, retreats and formation"
+          subtitle="A quiet place to pray, reflect and grow in faith, under the pastoral care of the Diocese of Ngong."
+          action={
+            <Link to="/ministry" className="btn btn-ghost-light">
+              All ministry programmes <ArrowRight className="w-4 h-4" />
+            </Link>
+          }
+        />
+        <div className="grid lg:grid-cols-3 gap-6">
+          <Link to="/ministry/mass" className="group rounded-3xl bg-linear-to-br from-gold-300 to-gold-400 text-ink p-8 flex flex-col justify-between min-h-80">
+            <div>
+              <Clock className="w-7 h-7" />
+              <p className="mt-6 text-sm font-semibold uppercase tracking-[0.16em]">Every morning</p>
+              <p className="font-serif text-6xl font-semibold mt-1">{settings.daily_mass_time}</p>
+              <p className="mt-3 text-ink/75">Holy Mass in the centre&apos;s chapel. Everyone is welcome.</p>
+            </div>
+            <span className="mt-6 inline-flex items-center gap-1.5 font-semibold">
+              Mass schedule <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
+            </span>
+          </Link>
+          {retreats.isPending ? (
+            <LoadingGrid count={2} className="contents" itemClassName="h-80 bg-white/10!" />
+          ) : (
+            (retreats.data ?? []).filter((r) => isCurrentRetreat(r, todayISO())).slice(0, 2).map((r) => (
+              <article key={r.id} className="group rounded-3xl overflow-hidden bg-white/5 border border-white/10 flex flex-col">
+                <div className="h-44 overflow-hidden">{r.image_url && <img src={r.image_url} alt="" className="w-full h-full object-cover img-zoom" loading="lazy" />}</div>
+                <div className="p-6 flex flex-col grow">
+                  <p className="text-xs font-semibold uppercase tracking-[0.14em] text-gold-300">
+                    {r.start_date ? formatDate(r.start_date, { day: 'numeric', month: 'long' }) : `${r.category} retreat`}
+                  </p>
+                  <h3 className="mt-2 font-serif text-2xl font-semibold leading-snug">{r.title}</h3>
+                  <p className="mt-2 text-sm text-sky-100/70 line-clamp-2">{r.description}</p>
+                  <button
+                    type="button"
+                    onClick={() => openInquiry('retreat', { retreatId: r.id })}
+                    className="mt-auto pt-5 inline-flex items-center gap-1.5 text-sm font-semibold text-gold-300 hover:text-gold-200 self-start"
+                  >
+                    Register interest <ArrowRight className="w-4 h-4" />
+                  </button>
+                </div>
+              </article>
+            ))
+          )}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function UpcomingEvents() {
+  const events = useEvents();
+  const { openInquiry } = useInquiryModal();
+  const today = todayISO();
+  const upcoming = (events.data ?? []).filter((e) => e.event_date >= today).slice(0, 3);
+  if (!events.isPending && upcoming.length === 0) return null;
+  return (
+    <section className="container-page">
+      <SectionHeader
+        badge="Coming up"
+        title="Upcoming events"
+        action={
+          <Link to="/events" className="btn btn-outline">
+            All events <ArrowRight className="w-4 h-4" />
+          </Link>
+        }
+      />
+      <ul className="card divide-y divide-sand/70">
+        {upcoming.map((e) => (
+          <li key={e.id} className="flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-8 p-5 sm:p-7">
+            <time dateTime={e.event_date} className="shrink-0 w-20 text-center rounded-2xl bg-parchment border border-sand/70 py-2.5">
+              <span className="block text-xs font-semibold uppercase tracking-wider text-gold-600">{formatDate(e.event_date, { month: 'short' })}</span>
+              <span className="block font-serif text-3xl font-semibold text-sky-950 leading-none mt-0.5">{formatDate(e.event_date, { day: 'numeric' })}</span>
+            </time>
+            <div className="grow min-w-0">
+              <h3 className="font-serif text-2xl font-semibold text-sky-950">{e.title}</h3>
+              <p className="mt-1 flex flex-wrap gap-x-4 gap-y-1 text-sm text-stone-500">
+                {e.time_label && (
+                  <span className="inline-flex items-center gap-1.5">
+                    <Clock className="w-4 h-4" /> {e.time_label}
+                  </span>
+                )}
+                {e.location && (
+                  <span className="inline-flex items-center gap-1.5">
+                    <MapPin className="w-4 h-4" /> {e.location}
+                  </span>
+                )}
+              </p>
+            </div>
+            {e.registration_open && (
+              <button type="button" onClick={() => openInquiry('event', { eventId: e.id })} className="btn btn-outline shrink-0">
+                <CalendarDays className="w-4 h-4" /> Register
+              </button>
+            )}
+          </li>
+        ))}
+      </ul>
+    </section>
+  );
+}
+
+function GalleryMosaic() {
+  const gallery = useGallery();
+  return (
+    <section className="container-page">
+      <SectionHeader
+        badge="Gallery"
+        title="Our grounds and spaces"
+        action={
+          <Link to="/gallery" className="btn btn-outline">
+            View the gallery <ArrowRight className="w-4 h-4" />
+          </Link>
+        }
+      />
+      <QueryState query={gallery} loading={<LoadingGrid count={4} className="grid grid-cols-2 lg:grid-cols-4 gap-4" itemClassName="h-56" />}>
+        {(images) => (
+          <div className="grid grid-cols-2 lg:grid-cols-4 auto-rows-[11rem] sm:auto-rows-[13rem] gap-4">
+            {images.slice(0, 5).map((g, i) => (
+              <Link
+                key={g.id}
+                to={`/gallery?category=${encodeURIComponent(g.category)}`}
+                className={`group relative overflow-hidden rounded-3xl ${i === 0 ? 'col-span-2 row-span-2' : ''}`}
+              >
+                <img src={g.image_url} alt={g.title} className="w-full h-full object-cover img-zoom" loading="lazy" />
+                <span className="absolute inset-x-0 bottom-0 p-4 bg-linear-to-t from-black/70 to-transparent text-white text-sm font-semibold opacity-0 group-hover:opacity-100 transition-opacity">
+                  {g.title}
+                </span>
+              </Link>
+            ))}
+          </div>
+        )}
+      </QueryState>
+    </section>
+  );
+}
+
+export const HomePage: React.FC = () => {
+  usePageMeta({});
+  return (
+    <div className="space-y-24 sm:space-y-32">
+      <div>
+        <Hero />
+        <StatsCard />
+      </div>
+      <Welcome />
+      <Services />
+      <Halls />
+      <div className="container-page">
         <AvailabilityMatrix />
       </div>
-
-      {/* Accommodation & catering teaser */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div className="bg-[#FAF8F5] rounded-2xl p-6 sm:p-8 border border-[#E3DAC9] flex flex-col justify-between">
-            <div className="space-y-3">
-              <div className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-amber-800 bg-amber-100 px-2.5 py-0.5 rounded">
-                <Bed className="w-3.5 h-3.5" />
-                <span>Restful Stay</span>
-              </div>
-              <h2 className="font-serif text-2xl font-bold text-stone-900">Accommodation & Guest House</h2>
-              <p className="text-xs sm:text-sm text-stone-600 leading-relaxed">
-                Residential wings with up to 62 beds, plus <strong>6 self-contained guest house apartments</strong>. Ideal for retreatants, visiting
-                priests, workshop participants and conference delegates.
-              </p>
-            </div>
-            <div className="pt-6 flex flex-wrap items-center gap-3">
-              <button type="button" onClick={() => openInquiry('accommodation')} className="px-4 py-2.5 rounded-lg bg-amber-700 hover:bg-amber-800 text-white text-xs font-bold">
-                Request accommodation
-              </button>
-              <Link to="/hospitality/accommodation" className="px-4 py-2.5 rounded-lg bg-white hover:bg-stone-100 text-stone-700 text-xs font-semibold border border-stone-200">
-                Learn more
-              </Link>
-            </div>
-          </div>
-
-          <div className="bg-[#FAF8F5] rounded-2xl p-6 sm:p-8 border border-[#E3DAC9] flex flex-col justify-between">
-            <div className="space-y-3">
-              <div className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-orange-800 bg-orange-100 px-2.5 py-0.5 rounded">
-                <Utensils className="w-3.5 h-3.5" />
-                <span>Wholesome Dining</span>
-              </div>
-              <h2 className="font-serif text-2xl font-bold text-stone-900">Hospitality Catering Services</h2>
-              <p className="text-xs sm:text-sm text-stone-600 leading-relaxed">
-                Conference teas, Kenyan snacks, buffet meals and celebration banquets for retreatants and special gatherings. Purified water is
-                provided in every hall.
-              </p>
-            </div>
-            <div className="pt-6 flex flex-wrap items-center gap-3">
-              <button type="button" onClick={() => openInquiry('catering')} className="px-4 py-2.5 rounded-lg bg-orange-700 hover:bg-orange-800 text-white text-xs font-bold">
-                Make a catering inquiry
-              </button>
-              <Link to="/hospitality/catering" className="px-4 py-2.5 rounded-lg bg-white hover:bg-stone-100 text-stone-700 text-xs font-semibold border border-stone-200">
-                View services
-              </Link>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Ministry highlight */}
-      <section className="bg-[#1C1917] text-white py-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-10">
-            <div>
-              <span className="text-xs font-bold uppercase tracking-wider text-amber-300 bg-amber-900/50 px-3 py-1 rounded-full border border-amber-800/60">
-                Spiritual Life & Formation
-              </span>
-              <h2 className="font-serif text-3xl sm:text-4xl font-bold text-white mt-2">Catholic Ministry at Watakatifu Wote</h2>
-              <p className="text-sm text-stone-300 mt-1 max-w-2xl">A place for the sacraments, silent prayer and pastoral formation in the Diocese of Ngong.</p>
-            </div>
-            <Link to="/ministry" className="inline-flex items-center gap-1.5 text-xs font-bold text-sky-400 hover:text-sky-300 self-start md:self-auto">
-              <span>Explore all ministry programmes</span>
-              <ArrowRight className="w-4 h-4" />
-            </Link>
-          </div>
-
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            <div className="bg-stone-900/90 rounded-2xl p-6 border border-stone-800 flex flex-col justify-between">
-              <div>
-                <div className="w-10 h-10 rounded-xl bg-amber-500/20 text-amber-300 flex items-center justify-center mb-4">
-                  <Clock className="w-5 h-5" />
-                </div>
-                <span className="text-[11px] font-bold uppercase tracking-wider text-amber-300">Chapel Schedule</span>
-                <h3 className="font-serif text-2xl font-bold text-white mt-1 mb-2">Daily Morning Mass</h3>
-                <div className="text-3xl font-serif font-bold text-amber-200 mb-3">{settings.daily_mass_time} daily</div>
-                <p className="text-xs text-stone-300 leading-relaxed mb-4">
-                  Celebrated every morning in the centre&apos;s chapel. Open to retreatants, conference groups and local parishioners.
-                </p>
-              </div>
-              <Link
-                to="/ministry/mass"
-                className="w-full py-2 px-3 rounded-lg bg-stone-800 hover:bg-stone-700 text-amber-200 text-xs font-semibold border border-stone-700 text-center"
-              >
-                Mass & liturgical information
-              </Link>
-            </div>
-
-            {retreats.isPending ? (
-              <LoadingGrid count={2} className="contents" itemClassName="h-80 bg-stone-800!" />
-            ) : (
-              (retreats.data ?? []).slice(0, 2).map((ret) => (
-                <article key={ret.id} className="bg-stone-900/90 rounded-2xl overflow-hidden border border-stone-800 flex flex-col justify-between">
-                  <div>
-                    <div className="h-40 w-full overflow-hidden relative">
-                      {ret.image_url && <img src={ret.image_url} alt={ret.title} className="w-full h-full object-cover" loading="lazy" />}
-                      <div className="absolute top-3 left-3 bg-stone-950/80 text-sky-300 text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded">
-                        {ret.category} retreat
-                      </div>
-                    </div>
-                    <div className="p-5">
-                      <h3 className="font-serif text-lg font-bold text-white mb-2 line-clamp-1">{ret.title}</h3>
-                      <p className="text-xs text-stone-400 line-clamp-2 mb-3">{ret.description}</p>
-                      <div className="text-xs text-stone-300 font-medium">
-                        Duration: <strong>{ret.duration}</strong>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="p-5 pt-0">
-                    <button
-                      type="button"
-                      onClick={() => openInquiry('retreat', { retreatId: ret.id })}
-                      className="w-full py-2 px-3 rounded-lg bg-sky-700 hover:bg-sky-600 text-white text-xs font-bold"
-                    >
-                      Register / inquire
-                    </button>
-                  </div>
-                </article>
-              ))
-            )}
-          </div>
-        </div>
-      </section>
-
-      {/* Gallery preview */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-8">
-          <div>
-            <span className="text-xs font-bold uppercase tracking-wider text-sky-800 bg-sky-100 px-3 py-1 rounded-full">Visual Impressions</span>
-            <h2 className="font-serif text-3xl sm:text-4xl font-bold text-stone-900 mt-2">Our Facilities & Peaceful Grounds</h2>
-          </div>
-          <Link to="/gallery" className="inline-flex items-center gap-1.5 text-xs font-bold text-sky-800 hover:text-sky-950">
-            <span>View complete gallery</span>
-            <ArrowRight className="w-4 h-4" />
-          </Link>
-        </div>
-        <QueryState query={gallery} loading={<LoadingGrid count={4} className="grid grid-cols-2 lg:grid-cols-4 gap-4" itemClassName="h-56" />}>
-          {(images) => (
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-              {images.slice(0, 4).map((img) => (
-                <Link
-                  key={img.id}
-                  to={`/gallery?category=${encodeURIComponent(img.category)}`}
-                  className="group relative h-56 rounded-2xl overflow-hidden shadow-xs border border-stone-200"
-                >
-                  <img src={img.image_url} alt={img.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" loading="lazy" />
-                  <div className="absolute inset-0 bg-linear-to-t from-stone-950/80 via-transparent to-transparent flex flex-col justify-end p-4 text-white">
-                    <span className="text-[10px] uppercase font-bold text-sky-300 tracking-wider">{img.category}</span>
-                    <span className="font-serif font-bold text-sm text-stone-100 leading-tight mt-0.5">{img.title}</span>
-                  </div>
-                </Link>
-              ))}
-            </div>
-          )}
-        </QueryState>
-      </section>
-
-      {/* Contact CTA */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="bg-linear-to-br from-sky-900 to-sky-950 rounded-3xl p-8 sm:p-12 text-white shadow-xl">
-          <div className="max-w-3xl space-y-4">
-            <span className="inline-block px-3 py-1 rounded-full bg-sky-800 text-sky-200 text-xs font-bold uppercase tracking-wider">
-              Planning a conference, retreat or event?
-            </span>
-            <h2 className="font-serif text-3xl sm:text-4xl md:text-5xl font-bold leading-tight">Experience Catholic Hospitality on Kahara Road, Ngong</h2>
-            <p className="text-sm sm:text-base text-sky-100 leading-relaxed">
-              Whether you are organising a parish retreat, an NGO seminar, a clergy gathering or a board meeting, our team is ready to help.
-            </p>
-            <div className="pt-4 flex flex-wrap items-center gap-4">
-              <button type="button" onClick={() => openInquiry('conference')} className="px-6 py-3 rounded-xl bg-white text-sky-950 font-bold text-sm shadow-md hover:bg-stone-100">
-                Request a facility booking
-              </button>
-              <a
-                href={telHref(settings.phone)}
-                className="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-sky-800/80 hover:bg-sky-800 text-white font-semibold text-sm border border-sky-700"
-              >
-                <Phone className="w-4 h-4" />
-                <span>Call {settings.phone_display}</span>
-              </a>
-              <a
-                href={whatsappHref(settings)}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-semibold text-sm"
-              >
-                <MessageSquare className="w-4 h-4" />
-                <span>WhatsApp us</span>
-              </a>
-            </div>
-          </div>
-        </div>
-      </section>
+      <Ministry />
+      <UpcomingEvents />
+      <GalleryMosaic />
     </div>
   );
 };

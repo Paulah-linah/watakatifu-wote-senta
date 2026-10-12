@@ -1,93 +1,89 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Clock, ExternalLink, Mail, MapPin, MessageSquare, Phone, ShieldCheck } from 'lucide-react';
+import { ArrowRight, Clock, Mail, MapPin, MessageSquare, Phone } from 'lucide-react';
 import { useSiteSettings } from '@/services/content';
 import { telHref, whatsappHref } from '@/lib/format';
+import { Emblem } from '@/components/common/Emblem';
 
 const COLUMNS = [
   {
-    title: 'Hospitality & Services',
+    title: 'Hospitality',
     links: [
-      { to: '/hospitality/conference', label: 'Conference Facilities' },
+      { to: '/hospitality/conference', label: 'Conference halls' },
       { to: '/hospitality/accommodation', label: 'Accommodation' },
-      { to: '/hospitality/catering', label: 'Catering Services' },
-      { to: '/hospitality/laundry', label: 'Laundry Services' },
-      { to: '/hospitality/water', label: 'Water Services' },
+      { to: '/hospitality/catering', label: 'Catering' },
+      { to: '/hospitality/laundry', label: 'Laundry' },
+      { to: '/hospitality/water', label: 'Water services' },
     ],
   },
   {
-    title: 'Ministry & Resources',
+    title: 'Ministry',
     links: [
-      { to: '/ministry/mass', label: 'Mass Schedule' },
-      { to: '/ministry/retreats', label: 'Spiritual Retreats' },
-      { to: '/ministry/formation', label: 'Formation & Seminars' },
-      { to: '/ministry/prayer', label: 'Chapel & Prayer Grounds' },
-      { to: '/products', label: 'Products Catalogue' },
+      { to: '/ministry/mass', label: 'Mass schedule' },
+      { to: '/ministry/retreats', label: 'Retreats' },
+      { to: '/ministry/formation', label: 'Formation' },
+      { to: '/ministry/prayer', label: 'Chapel & grounds' },
       { to: '/events', label: 'Events' },
-      { to: '/gallery', label: 'Photo Gallery' },
+    ],
+  },
+  {
+    title: 'Centre',
+    links: [
+      { to: '/about', label: 'About us' },
+      { to: '/products', label: 'Books & gifts' },
+      { to: '/gallery', label: 'Gallery' },
+      { to: '/contact', label: 'Contact & directions' },
+      { to: '/admin', label: 'Staff login' },
     ],
   },
 ];
 
 export const Footer: React.FC = () => {
   const { settings } = useSiteSettings();
-  const founded = settings.founded_on ? new Date(`${settings.founded_on}T00:00:00Z`) : null;
 
   return (
-    <footer className="bg-[#1C1917] text-stone-300 border-t border-stone-800">
-      <div className="bg-[#141211] border-b border-stone-800 py-4 px-4 sm:px-6 lg:px-8 text-xs text-stone-400">
-        <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3 text-center sm:text-left">
-          <p>
-            An institution of the <span className="text-sky-400 font-medium">{settings.diocese}</span>, serving Kajiado and Narok Counties.
-          </p>
-          <div className="flex items-center gap-4">
-            <span className="inline-flex items-center gap-1.5 text-amber-300/90 font-medium">
-              <Clock className="w-3.5 h-3.5" /> Daily Mass {settings.daily_mass_time}
-            </span>
-            {founded && (
-              <>
-                <span aria-hidden>•</span>
-                <span>Established {founded.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' })}</span>
-              </>
-            )}
+    <footer className="bg-sky-950 text-sky-100/80 mt-28">
+      {/* Call to action band */}
+      <div className="container-page">
+        <div className="relative -mt-16 rounded-3xl bg-linear-to-br from-gold-300 to-gold-400 text-ink px-6 py-8 sm:px-10 sm:py-10 shadow-lift flex flex-col md:flex-row md:items-center justify-between gap-6">
+          <div>
+            <p className="font-serif text-2xl sm:text-3xl font-semibold leading-tight">Planning a retreat, conference or celebration?</p>
+            <p className="mt-1 text-sm text-ink/75">Tell us your dates and group size. We will confirm availability and rates.</p>
+          </div>
+          <div className="flex flex-wrap gap-3 shrink-0">
+            <Link to="/inquiry" className="btn bg-ink text-white hover:bg-sky-950">
+              Start an inquiry <ArrowRight className="w-4 h-4" />
+            </Link>
+            <a href={telHref(settings.phone)} className="btn border border-ink/25 hover:bg-white/40">
+              <Phone className="w-4 h-4" /> {settings.phone_display}
+            </a>
           </div>
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-16">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10">
-          <div className="lg:col-span-2 space-y-4">
+      <div className="container-page pt-14 pb-10">
+        <div className="grid grid-cols-2 lg:grid-cols-12 gap-x-8 gap-y-10">
+          <div className="col-span-2 lg:col-span-3 space-y-5">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-lg bg-sky-700 flex items-center justify-center ring-1 ring-sky-500" aria-hidden>
-                <div className="relative flex flex-col items-center">
-                  <div className="w-0.5 h-5 bg-amber-200" />
-                  <div className="w-3.5 h-0.5 bg-amber-200 absolute top-1.5" />
-                </div>
-              </div>
+              <Emblem className="w-10 h-12" />
               <div>
-                <p className="font-serif text-lg font-bold text-white tracking-wide">WATAKATIFU WOTE SENTA</p>
-                <p className="text-xs text-sky-400 tracking-wider uppercase font-medium">All Saints Conference Centre, Ngong</p>
+                <p className="font-serif text-2xl font-semibold text-white leading-none">Watakatifu Wote Senta</p>
+                <p className="mt-1.5 text-[0.7rem] uppercase tracking-[0.18em] text-gold-300">All Saints Centre · Ngong</p>
               </div>
             </div>
-            <p className="text-sm text-stone-400 leading-relaxed pr-4">
-              Opened on the Feast of All Saints in 1986. A peaceful place for hospitality, diocesan formation, spiritual retreat and professional
-              conferences in Ngong, Kenya.
+            <p className="text-sm leading-relaxed max-w-sm">
+              A place of hospitality, prayer and formation of the {settings.diocese}, welcoming groups and guests since 1986.
             </p>
-            {settings.vision && (
-              <div className="bg-stone-900/80 p-3.5 rounded-xl border border-stone-800 text-xs space-y-1">
-                <div className="text-amber-300 font-semibold font-serif text-sm">Our Vision</div>
-                <p className="italic text-stone-300">&ldquo;{settings.vision}&rdquo;</p>
-              </div>
-            )}
+            {settings.vision && <p className="font-serif text-lg italic text-gold-200/90 max-w-sm">&ldquo;{settings.vision}&rdquo;</p>}
           </div>
 
           {COLUMNS.map((col) => (
-            <nav key={col.title} aria-label={col.title} className="space-y-3">
-              <h2 className="text-xs font-bold uppercase tracking-wider text-sky-400 font-sans">{col.title}</h2>
-              <ul className="space-y-2 text-sm text-stone-400">
+            <nav key={col.title} aria-label={col.title} className="lg:col-span-2">
+              <h2 className="font-sans text-xs font-bold uppercase tracking-[0.16em] text-white mb-4">{col.title}</h2>
+              <ul className="space-y-2.5 text-sm">
                 {col.links.map((l) => (
                   <li key={l.to}>
-                    <Link to={l.to} className="hover:text-white transition-colors">
+                    <Link to={l.to} className="hover:text-gold-300 transition-colors">
                       {l.label}
                     </Link>
                   </li>
@@ -96,57 +92,32 @@ export const Footer: React.FC = () => {
             </nav>
           ))}
 
-          <div className="space-y-3">
-            <h2 className="text-xs font-bold uppercase tracking-wider text-sky-400 font-sans">Contact & Inquiries</h2>
-            <address className="not-italic space-y-2.5 text-sm text-stone-400">
-              <div className="flex items-start gap-2.5">
-                <MapPin className="w-4 h-4 text-sky-400 shrink-0 mt-0.5" />
-                <span>{settings.address}</span>
-              </div>
-              <a href={telHref(settings.phone)} className="flex items-center gap-2.5 hover:text-white font-medium text-stone-200">
-                <Phone className="w-4 h-4 text-sky-400 shrink-0" />
-                {settings.phone_display}
-              </a>
-              <a href={`mailto:${settings.email}`} className="flex items-center gap-2.5 hover:text-white break-all">
-                <Mail className="w-4 h-4 text-sky-400 shrink-0" />
+          <div className="col-span-2 lg:col-span-3">
+            <h2 className="font-sans text-xs font-bold uppercase tracking-[0.16em] text-white mb-4">Visit</h2>
+            <address className="not-italic space-y-3 text-sm">
+              <p className="flex gap-2.5">
+                <MapPin className="w-4 h-4 mt-0.5 text-gold-400 shrink-0" />
+                {settings.address}
+              </p>
+              <a href={`mailto:${settings.email}`} className="flex gap-2.5 hover:text-gold-300 break-all">
+                <Mail className="w-4 h-4 mt-0.5 text-gold-400 shrink-0" />
                 {settings.email}
               </a>
-              <a
-                href={whatsappHref(settings)}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center gap-2.5 text-emerald-400 hover:text-emerald-300 font-medium"
-              >
-                <MessageSquare className="w-4 h-4 shrink-0" />
-                <span>Chat on WhatsApp</span>
-                <ExternalLink className="w-3 h-3" />
+              <a href={whatsappHref(settings)} target="_blank" rel="noopener noreferrer" className="flex gap-2.5 hover:text-gold-300">
+                <MessageSquare className="w-4 h-4 mt-0.5 text-gold-400 shrink-0" />
+                WhatsApp us
               </a>
+              <p className="flex gap-2.5">
+                <Clock className="w-4 h-4 mt-0.5 text-gold-400 shrink-0" />
+                Daily Mass {settings.daily_mass_time}
+              </p>
             </address>
-            <Link
-              to="/inquiry"
-              className="block w-full py-2 px-3 rounded-lg bg-stone-800 hover:bg-stone-700 text-stone-200 text-xs font-medium border border-stone-700 text-center"
-            >
-              Submit a booking request
-            </Link>
           </div>
         </div>
 
-        <div className="mt-12 pt-6 border-t border-stone-800/80 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-stone-500">
-          <p>© {new Date().getFullYear()} Watakatifu Wote Senta / All Saints Conference Centre. All rights reserved.</p>
-          <div className="flex items-center gap-4">
-            <Link to="/about" className="hover:text-stone-300">
-              About
-            </Link>
-            <span aria-hidden>•</span>
-            <Link to="/contact" className="hover:text-stone-300">
-              Contact
-            </Link>
-            <span aria-hidden>•</span>
-            <Link to="/admin" className="inline-flex items-center gap-1 text-sky-400 hover:text-sky-300 font-medium">
-              <ShieldCheck className="w-3.5 h-3.5" />
-              <span>Staff login</span>
-            </Link>
-          </div>
+        <div className="mt-14 pt-6 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-sky-100/50">
+          <p>© {new Date().getFullYear()} Watakatifu Wote Senta · All Saints Conference Centre, Ngong</p>
+          <p>An institution of the {settings.diocese}</p>
         </div>
       </div>
     </footer>

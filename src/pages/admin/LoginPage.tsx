@@ -3,22 +3,44 @@ import { Link, Navigate, useNavigate, useSearchParams } from 'react-router-dom';
 import { ArrowLeft, Lock } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 import { supabase } from '@/lib/supabase';
+import { Emblem } from '@/components/common/Emblem';
 import { Button, FieldLabel, inputCls, Spinner, errorMessage } from './ui';
 
 const Frame: React.FC<{ title: string; children: React.ReactNode }> = ({ title, children }) => (
-  <div className="min-h-screen flex items-center justify-center px-4 py-12 bg-linear-to-br from-stone-100 to-sky-50">
-    <div className="w-full max-w-sm">
-      <div className="text-center mb-6">
-        <div className="w-12 h-12 mx-auto rounded-xl bg-sky-700 text-white flex items-center justify-center shadow">
-          <Lock className="w-5 h-5" />
-        </div>
-        <h1 className="font-serif text-2xl font-bold mt-3">{title}</h1>
-        <p className="text-xs text-stone-500 mt-1">Watakatifu Wote Senta staff portal</p>
-      </div>
-      <div className="bg-white rounded-2xl border border-stone-200 shadow-sm p-6">{children}</div>
-      <Link to="/" className="mt-6 flex items-center justify-center gap-1 text-xs text-stone-500 hover:text-stone-800">
-        <ArrowLeft className="w-3.5 h-3.5" /> Back to the website
+  <div className="min-h-screen grid lg:grid-cols-2 bg-parchment">
+    <aside className="relative hidden lg:flex flex-col justify-between overflow-hidden bg-sky-950 text-white p-12">
+      <img
+        src="https://images.unsplash.com/photo-1720383857984-7e9a9b11eba4?auto=format&fit=crop&w=1400&q=70"
+        alt=""
+        className="absolute inset-0 w-full h-full object-cover opacity-25"
+      />
+      <div className="absolute inset-0 bg-linear-to-t from-sky-950 via-sky-950/70 to-sky-950/30" aria-hidden />
+      <Link to="/" className="relative flex items-center gap-3">
+        <Emblem className="w-10 h-12" />
+        <span>
+          <span className="block font-serif text-2xl font-semibold leading-none">Watakatifu Wote Senta</span>
+          <span className="mt-1.5 block text-[0.7rem] uppercase tracking-[0.18em] text-gold-300">Staff portal</span>
+        </span>
       </Link>
+      <blockquote className="relative max-w-md">
+        <p className="font-serif text-3xl italic leading-snug text-gold-100">&ldquo;I was a stranger and you welcomed me.&rdquo;</p>
+        <footer className="mt-3 text-sm text-sky-100/70">Matthew 25:35</footer>
+      </blockquote>
+    </aside>
+    <div className="flex items-center justify-center px-5 py-12">
+      <div className="w-full max-w-sm">
+        <div className="mb-8">
+          <Emblem className="w-10 h-12 lg:hidden mb-5" />
+          <p className="eyebrow">
+            <Lock className="w-3.5 h-3.5" /> Staff only
+          </p>
+          <h1 className="mt-3 font-serif text-4xl font-semibold text-sky-950">{title}</h1>
+        </div>
+        <div className="card p-6 sm:p-7">{children}</div>
+        <Link to="/" className="mt-6 inline-flex items-center gap-1.5 text-sm text-stone-500 hover:text-sky-900">
+          <ArrowLeft className="w-4 h-4" /> Back to the website
+        </Link>
+      </div>
     </div>
   </div>
 );

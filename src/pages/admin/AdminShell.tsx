@@ -28,6 +28,7 @@ import { useAuth, ROLE_LABELS, type Area } from '@/context/AuthContext';
 import { supabase } from '@/lib/supabase';
 import { usePageMeta } from '@/lib/usePageMeta';
 import { Modal } from '@/components/common/Modal';
+import { Emblem } from '@/components/common/Emblem';
 import { Button, FieldLabel, inputCls, Spinner, ToastProvider, useToast, errorMessage } from './ui';
 
 interface NavEntry {
@@ -86,7 +87,7 @@ export function AdminRoot() {
   usePageMeta({ title: 'Staff Portal', noindex: true });
   return (
     <ToastProvider>
-      <div className="min-h-screen bg-stone-100 text-stone-900 font-sans">
+      <div className="min-h-screen bg-parchment text-ink font-sans">
         <Outlet />
       </div>
       <ScrollRestoration />
@@ -167,7 +168,7 @@ export function AdminShell() {
         if (!items.length) return null;
         return (
           <div key={i}>
-            {group.heading && <div className="px-3 mb-1 text-[11px] font-bold uppercase tracking-wider text-stone-400">{group.heading}</div>}
+            {group.heading && <div className="px-3 mb-1 text-[11px] font-bold uppercase tracking-[0.16em] text-gold-400/80">{group.heading}</div>}
             <ul className="space-y-0.5">
               {items.map(({ to, label, icon: Icon, end }) => (
                 <li key={to}>
@@ -176,7 +177,7 @@ export function AdminShell() {
                     end={end}
                     className={({ isActive }) =>
                       `flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
-                        isActive ? 'bg-sky-700 text-white' : 'text-stone-300 hover:bg-stone-800 hover:text-white'
+                        isActive ? 'bg-white/10 text-gold-200' : 'text-sky-100/75 hover:bg-white/5 hover:text-white'
                       }`
                     }
                   >
@@ -196,28 +197,33 @@ export function AdminShell() {
     <div className="lg:grid lg:grid-cols-[16rem_1fr] min-h-screen">
       {/* Sidebar */}
       <aside
-        className={`fixed lg:sticky top-0 z-40 h-screen w-64 bg-stone-900 text-white flex flex-col transition-transform lg:translate-x-0 ${
+        className={`fixed lg:sticky top-0 z-40 h-screen w-64 bg-sky-950 text-white flex flex-col transition-transform lg:translate-x-0 ${
           menuOpen ? 'translate-x-0' : '-translate-x-full'
         }`}
       >
-        <div className="p-4 border-b border-stone-800 flex items-center justify-between">
+        <div className="p-4 border-b border-white/10 flex items-center justify-between">
           <Link to="/admin" className="block">
-            <div className="font-serif text-lg font-bold leading-tight">WWS Staff Portal</div>
-            <div className="text-[11px] text-sky-300 uppercase tracking-wider">Watakatifu Wote Senta</div>
+            <div className="flex items-center gap-2.5">
+              <Emblem className="w-8 h-10" />
+              <div>
+                <div className="font-serif text-lg font-semibold leading-tight">Staff Portal</div>
+                <div className="text-[10px] text-gold-300 uppercase tracking-[0.16em]">Watakatifu Wote Senta</div>
+              </div>
+            </div>
           </Link>
           <button type="button" className="lg:hidden p-1" onClick={() => setMenuOpen(false)} aria-label="Close menu">
             <X className="w-5 h-5" />
           </button>
         </div>
         <div className="flex-1 overflow-y-auto p-3">{sidebar}</div>
-        <div className="p-3 border-t border-stone-800 space-y-1 text-sm">
-          <a href="/" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 px-3 py-2 rounded-lg text-stone-300 hover:bg-stone-800">
+        <div className="p-3 border-t border-white/10 space-y-1 text-sm">
+          <a href="/" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 px-3 py-2 rounded-lg text-sky-100/75 hover:bg-white/5">
             <ExternalLink className="w-4 h-4" /> View website
           </a>
-          <button type="button" onClick={() => setPwOpen(true)} className="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-stone-300 hover:bg-stone-800">
+          <button type="button" onClick={() => setPwOpen(true)} className="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-sky-100/75 hover:bg-white/5">
             <KeyRound className="w-4 h-4" /> Change password
           </button>
-          <button type="button" onClick={signOut} className="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-stone-300 hover:bg-stone-800">
+          <button type="button" onClick={signOut} className="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-sky-100/75 hover:bg-white/5">
             <LogOut className="w-4 h-4" /> Sign out
           </button>
         </div>
@@ -226,7 +232,7 @@ export function AdminShell() {
 
       {/* Main */}
       <div className="min-w-0 flex flex-col">
-        <header className="sticky top-0 z-20 bg-white/95 backdrop-blur border-b border-stone-200 px-4 sm:px-6 h-14 flex items-center justify-between gap-3">
+        <header className="sticky top-0 z-20 bg-parchment/95 backdrop-blur border-b border-sand/70 px-4 sm:px-6 h-14 flex items-center justify-between gap-3">
           <button type="button" className="lg:hidden p-2 -ml-2 rounded-lg hover:bg-stone-100" onClick={() => setMenuOpen(true)} aria-label="Open menu">
             <Menu className="w-5 h-5" />
           </button>

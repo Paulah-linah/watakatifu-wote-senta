@@ -1,7 +1,7 @@
 import React from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { CheckCircle2, Mail, MapPin, MessageSquare, Phone } from 'lucide-react';
-import { SectionHeader } from '@/components/common/SectionHeader';
+import { PageHero } from '@/components/common/PageHero';
 import { InquiryForm } from '@/components/inquiry/InquiryForm';
 import { useSiteSettings } from '@/services/content';
 import { isInquiryType, type InquiryPrefill } from '@/services/inquiries';
@@ -31,13 +31,15 @@ export const InquiryPage: React.FC = () => {
   };
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14 space-y-10">
-      <SectionHeader
-        level={1}
-        badge="Bookings & Inquiries"
-        title="Request a Facility, Retreat or Service"
-        subtitle="Choose what you are asking about, add your dates and group details, and our team in Ngong will get back to you."
+    <div>
+      <PageHero
+        eyebrow="Bookings & inquiries"
+        title="Plan your visit"
+        subtitle="Tell us what you need, your dates and your group size. We will confirm availability and rates."
+        image="https://images.unsplash.com/photo-1462826303086-329426d1aef5?auto=format&fit=crop&w=1800&q=70"
+        crumbs={[{ label: "Book & inquire" }]}
       />
+      <div className="container-page py-12 sm:py-16 space-y-10">
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
         <div className="lg:col-span-8">
@@ -45,8 +47,8 @@ export const InquiryPage: React.FC = () => {
         </div>
 
         <aside className="lg:col-span-4 space-y-6">
-          <div className="bg-[#FAF8F5] rounded-3xl p-6 border border-[#E3DAC9] space-y-4">
-            <h2 className="font-serif text-xl font-bold text-stone-900">What happens next</h2>
+          <div className="rounded-3xl bg-parchment-deep p-6 sm:p-8 space-y-4">
+            <h2 className="font-serif text-xl font-semibold text-sky-950">What happens next</h2>
             <ul className="space-y-2.5 text-xs text-stone-600">
               {[
                 'You receive a reference number as soon as you submit.',
@@ -61,8 +63,8 @@ export const InquiryPage: React.FC = () => {
             </ul>
           </div>
 
-          <div className="bg-white rounded-2xl p-6 border border-stone-200 shadow-2xs space-y-3">
-            <h2 className="font-serif text-base font-bold text-stone-900">Prefer to talk?</h2>
+          <div className="card p-6 sm:p-8 space-y-3">
+            <h2 className="font-serif text-base font-semibold text-sky-950">Prefer to talk?</h2>
             <div className="space-y-2 text-xs text-stone-600">
               <a href={telHref(settings.phone)} className="flex items-center gap-2 font-semibold text-sky-800">
                 <Phone className="w-3.5 h-3.5 text-stone-400" />
@@ -83,6 +85,7 @@ export const InquiryPage: React.FC = () => {
             </div>
           </div>
         </aside>
+      </div>
       </div>
     </div>
   );

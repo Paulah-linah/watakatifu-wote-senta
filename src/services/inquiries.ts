@@ -12,7 +12,7 @@ export const INQUIRY_TYPE_LABELS: Record<InquiryType, string> = {
   accommodation: 'Accommodation',
   catering: 'Catering',
   retreat: 'Retreat',
-  formation: 'Formation / Seminar',
+  formation: 'Formation',
   event: 'Event Registration',
   product: 'Product',
   general: 'General Inquiry',

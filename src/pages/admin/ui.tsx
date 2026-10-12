@@ -84,8 +84,8 @@ export function useConfirm() {
 // Primitives
 // ---------------------------------------------------------------------------
 const VARIANTS = {
-  primary: 'bg-sky-700 hover:bg-sky-800 text-white',
-  secondary: 'bg-white hover:bg-stone-50 text-stone-800 border border-stone-300',
+  primary: 'bg-sky-800 hover:bg-sky-900 text-white',
+  secondary: 'bg-white hover:bg-parchment text-sky-950 border border-sand',
   danger: 'bg-rose-600 hover:bg-rose-700 text-white',
   ghost: 'text-stone-600 hover:bg-stone-100',
 };
@@ -96,7 +96,7 @@ export const Button: React.FC<
   <button
     type="button"
     disabled={disabled || loading}
-    className={`inline-flex items-center justify-center gap-1.5 rounded-lg font-semibold transition-colors disabled:opacity-50 ${
+    className={`inline-flex items-center justify-center gap-1.5 rounded-full font-semibold transition-colors disabled:opacity-50 ${
       size === 'sm' ? 'px-2.5 py-1.5 text-xs' : 'px-4 py-2 text-sm'
     } ${VARIANTS[variant]} ${className}`}
     {...rest}
@@ -107,7 +107,7 @@ export const Button: React.FC<
 );
 
 export const inputCls =
-  'w-full px-3 py-2 rounded-lg border border-stone-300 bg-white text-sm text-stone-800 focus:outline-hidden focus:ring-2 focus:ring-sky-500 disabled:bg-stone-100';
+  'w-full px-3.5 py-2.5 rounded-xl border border-sand bg-white text-sm text-stone-800 focus:outline-hidden focus:border-sky-500 focus:ring-4 focus:ring-sky-500/15 disabled:bg-stone-100';
 
 export const FieldLabel: React.FC<{ label: string; htmlFor?: string; hint?: string; required?: boolean; children: React.ReactNode; className?: string }> = ({
   label,
@@ -127,13 +127,13 @@ export const FieldLabel: React.FC<{ label: string; htmlFor?: string; hint?: stri
 );
 
 export const Card: React.FC<{ children: React.ReactNode; className?: string }> = ({ children, className = '' }) => (
-  <div className={`bg-white rounded-2xl border border-stone-200 shadow-2xs ${className}`}>{children}</div>
+  <div className={`card ${className}`}>{children}</div>
 );
 
 export const PageHeader: React.FC<{ title: string; subtitle?: string; actions?: React.ReactNode }> = ({ title, subtitle, actions }) => (
   <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-3 mb-6">
     <div>
-      <h1 className="font-serif text-2xl sm:text-3xl font-bold text-stone-900">{title}</h1>
+      <h1 className="font-serif text-3xl sm:text-4xl font-semibold text-sky-950">{title}</h1>
       {subtitle && <p className="text-sm text-stone-600 mt-1">{subtitle}</p>}
     </div>
     {actions && <div className="flex flex-wrap items-center gap-2">{actions}</div>}

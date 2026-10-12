@@ -3,7 +3,7 @@ import { useSearchParams } from 'react-router-dom';
 import { Maximize2 } from 'lucide-react';
 import { useGallery, type GalleryCategory } from '@/services/content';
 import { Constants } from '@/lib/database.types';
-import { SectionHeader } from '@/components/common/SectionHeader';
+import { PageHero } from '@/components/common/PageHero';
 import { EmptyState, LoadingGrid, QueryState } from '@/components/common/States';
 import { Lightbox } from '@/components/common/Lightbox';
 import { usePageMeta } from '@/lib/usePageMeta';
@@ -20,13 +20,15 @@ export const GalleryPage: React.FC = () => {
   const images = (gallery.data ?? []).filter((img) => category === 'All' || img.category === category);
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14 space-y-10">
-      <SectionHeader
-        level={1}
-        badge="Gallery"
-        title="Centre Grounds, Facilities & Sacred Spaces"
-        subtitle="Our conference halls, chapel, accommodation, catering and gardens in Ngong."
+    <div>
+      <PageHero
+        eyebrow="Gallery"
+        title="Our grounds, halls and sacred spaces"
+        subtitle="A look around the conference halls, chapel, accommodation and gardens in Ngong."
+        image="https://images.unsplash.com/photo-1511632765486-a01980e01a18?auto=format&fit=crop&w=1800&q=70"
+        crumbs={[{ label: "Gallery" }]}
       />
+      <div className="container-page py-12 sm:py-16 space-y-10">
 
       <div className="flex items-center justify-start sm:justify-center">
         <div className="flex items-center gap-1.5 overflow-x-auto pb-2 sm:pb-0 max-w-full" role="group" aria-label="Filter photos">
@@ -36,8 +38,8 @@ export const GalleryPage: React.FC = () => {
               type="button"
               aria-pressed={category === cat}
               onClick={() => setParams(cat === 'All' ? {} : { category: cat }, { replace: true, preventScrollReset: true })}
-              className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-all shrink-0 ${
-                category === cat ? 'bg-sky-700 text-white shadow-xs' : 'bg-white text-stone-700 hover:bg-stone-100 border border-stone-200'
+              className={`px-3.5 py-1.5 rounded-full text-xs font-semibold transition-all shrink-0 ${
+                category === cat ? 'bg-sky-900 text-white' : 'bg-white text-stone-700 border border-sand hover:border-sky-300'
               }`}
             >
               {cat}
@@ -60,7 +62,7 @@ export const GalleryPage: React.FC = () => {
                     className="group relative block w-full h-64 sm:h-72 rounded-3xl overflow-hidden shadow-xs border border-stone-200 bg-stone-100 text-left"
                     aria-label={`View ${img.title}`}
                   >
-                    <img src={img.image_url} alt="" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" loading="lazy" />
+                    <img src={img.image_url} alt="" className="w-full h-full object-cover img-zoom" loading="lazy" />
                     <div className="absolute inset-0 bg-linear-to-t from-stone-950/80 via-transparent to-transparent opacity-80 group-hover:opacity-95 transition-opacity flex flex-col justify-end p-5 text-white">
                       <div className="flex items-center justify-between">
                         <span className="text-[10px] uppercase font-bold text-sky-300 tracking-wider">{img.category}</span>
@@ -80,6 +82,7 @@ export const GalleryPage: React.FC = () => {
       </QueryState>
 
       <Lightbox images={images} currentIndex={lightboxIndex} onClose={() => setLightboxIndex(null)} onNavigate={setLightboxIndex} />
+      </div>
     </div>
   );
 };

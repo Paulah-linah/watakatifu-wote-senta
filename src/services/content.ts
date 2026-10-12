@@ -94,6 +94,9 @@ export const useCatering = () => useQuery(published<CateringService>('catering',
 export const useLaundry = () => useQuery(published<LaundryService>('laundry', 'laundry_services'));
 export const useMassSchedules = () => useQuery(published<MassSchedule>('mass', 'mass_schedules'));
 export const useRetreats = () => useQuery(published<Retreat>('retreats', 'retreats'));
+
+/** Retreats still open to join: undated ones, or ones that have not finished yet. */
+export const isCurrentRetreat = (r: Retreat, today: string) => !r.start_date || (r.end_date ?? r.start_date) >= today;
 export const useFormation = () => useQuery(published<FormationProgram>('formation', 'formation_programs'));
 export const useEvents = () => useQuery(published<EventItem>('events', 'events', 'event_date'));
 export const useGallery = () => useQuery(published<GalleryImage>('gallery', 'gallery_images'));

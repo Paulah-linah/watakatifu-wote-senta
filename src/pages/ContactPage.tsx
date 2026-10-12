@@ -1,7 +1,7 @@
 import React from 'react';
 import { Clock, ExternalLink, Mail, MapPin, MessageSquare, Phone } from 'lucide-react';
 import { useSiteSettings } from '@/services/content';
-import { SectionHeader } from '@/components/common/SectionHeader';
+import { PageHero } from '@/components/common/PageHero';
 import { InquiryForm } from '@/components/inquiry/InquiryForm';
 import { telHref, whatsappHref } from '@/lib/format';
 import { usePageMeta } from '@/lib/usePageMeta';
@@ -45,13 +45,15 @@ export const ContactPage: React.FC = () => {
   ];
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14 space-y-12">
-      <SectionHeader
-        level={1}
-        badge="Get in touch"
-        title="Contact Watakatifu Wote Senta"
-        subtitle="Find us on Kahara Road in Ngong. Call, WhatsApp, email or send an inquiry online."
+    <div>
+      <PageHero
+        eyebrow="Get in touch"
+        title="We would love to hear from you"
+        subtitle="Call, WhatsApp, email or send us a message. Our office in Ngong will get back to you."
+        image="https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?auto=format&fit=crop&w=1800&q=70"
+        crumbs={[{ label: "Contact" }]}
       />
+      <div className="container-page py-12 sm:py-16 space-y-12">
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
         {channels.map(({ href, external, icon: Icon, tone, label, title, text, cta, ctaTone }) => (
@@ -59,14 +61,14 @@ export const ContactPage: React.FC = () => {
             key={label}
             href={href}
             {...(external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
-            className="bg-white rounded-2xl p-6 border border-stone-200 shadow-2xs hover:shadow-md hover:border-sky-300 transition-all flex flex-col justify-between group"
+            className="card p-6 sm:p-8 hover:shadow-md hover:border-sky-300 transition-all flex flex-col justify-between group"
           >
             <div>
               <div className={`w-12 h-12 rounded-xl ${tone} flex items-center justify-center mb-4 group-hover:scale-110 transition-transform`}>
                 <Icon className="w-6 h-6" />
               </div>
               <span className="text-xs font-bold uppercase tracking-wider text-stone-400">{label}</span>
-              <h2 className="font-serif text-lg font-bold text-stone-900 mt-1 mb-2 break-all">{title}</h2>
+              <h2 className="font-serif text-lg font-semibold text-sky-950 mt-1 mb-2 break-all">{title}</h2>
               <p className="text-xs text-stone-500">{text}</p>
             </div>
             <div className={`text-xs font-bold ${ctaTone} mt-4 pt-2 border-t border-stone-100 flex items-center gap-1`}>
@@ -75,13 +77,13 @@ export const ContactPage: React.FC = () => {
             </div>
           </a>
         ))}
-        <div className="bg-white rounded-2xl p-6 border border-stone-200 shadow-2xs flex flex-col justify-between">
+        <div className="card p-6 sm:p-8 flex flex-col justify-between">
           <div>
             <div className="w-12 h-12 rounded-xl bg-amber-100 text-amber-800 flex items-center justify-center mb-4">
               <MapPin className="w-6 h-6" />
             </div>
             <span className="text-xs font-bold uppercase tracking-wider text-stone-400">Location</span>
-            <h2 className="font-serif text-lg font-bold text-stone-900 mt-1 mb-2">Kahara Road, Ngong</h2>
+            <h2 className="font-serif text-lg font-semibold text-sky-950 mt-1 mb-2">Kahara Road, Ngong</h2>
             <p className="text-xs text-stone-500">{settings.diocese}, Kajiado County, Kenya.</p>
           </div>
           <div className="text-xs font-bold text-amber-800 mt-4 pt-2 border-t border-stone-100 flex items-center gap-1">
@@ -93,8 +95,8 @@ export const ContactPage: React.FC = () => {
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
         <div className="lg:col-span-5">
-          <div className="bg-white rounded-3xl p-6 border border-stone-200 shadow-xs space-y-4">
-            <h2 className="font-serif text-2xl font-bold text-stone-900">Visit us</h2>
+          <div className="card p-6 sm:p-8 space-y-4">
+            <h2 className="font-serif text-2xl font-semibold text-sky-950">Visit us</h2>
             <p className="text-xs sm:text-sm text-stone-600 leading-relaxed">
               The centre is on Kahara Road in Ngong, easy to reach from Nairobi, Karen and Kiserian. Secure parking is available inside the gate.
             </p>
@@ -120,6 +122,7 @@ export const ContactPage: React.FC = () => {
         <div className="lg:col-span-7">
           <InquiryForm initialType="general" source="contact" />
         </div>
+      </div>
       </div>
     </div>
   );
