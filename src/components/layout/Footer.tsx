@@ -117,7 +117,13 @@ export const Footer: React.FC = () => {
 
         <div className="mt-14 pt-6 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-sky-100/50">
           <p>© {new Date().getFullYear()} Watakatifu Wote Senta · All Saints Conference Centre, Ngong</p>
-          <p>An institution of the {settings.diocese}</p>
+          <p className="flex flex-wrap items-center justify-center gap-x-2">
+            <span>An institution of the {settings.diocese}</span>
+            <span aria-hidden>·</span>
+            <span>
+              Website by <span className="text-sky-100/80 font-medium">PN Innovations</span>
+            </span>
+          </p>
         </div>
       </div>
     </footer>
