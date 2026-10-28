@@ -115,7 +115,7 @@ export const Footer: React.FC = () => {
           </div>
         </div>
 
-        <div className="mt-14 pt-6 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-sky-100/50">
+        <div className="mt-14 pt-6 pb-16 sm:pb-0 sm:pr-36 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-sky-100/50">
           <p>© {new Date().getFullYear()} Watakatifu Wote Senta · All Saints Conference Centre, Ngong</p>
           <p className="flex flex-wrap items-center justify-center gap-x-2">
             <span>An institution of the {settings.diocese}</span>
