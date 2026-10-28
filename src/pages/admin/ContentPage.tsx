@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { ArrowDown, ArrowUp, ExternalLink, Eye, EyeOff, Pencil, Plus, Trash2 } from 'lucide-react';
+import { ArrowDown, ArrowUp, CalendarRange, ExternalLink, Eye, EyeOff, Pencil, Plus, Trash2 } from 'lucide-react';
 import { supabase } from '@/lib/supabase';
 import { useAuth } from '@/context/AuthContext';
 import { Modal } from '@/components/common/Modal';
@@ -252,6 +252,14 @@ export function ContentPage() {
             <a href={def.publicPath} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 text-xs font-semibold text-sky-700 px-2">
               View on site <ExternalLink className="w-3.5 h-3.5" />
             </a>
+            {def.pageLink && can('bookings_read') && (
+              <Link
+                to={def.pageLink.to}
+                className="inline-flex items-center gap-1.5 rounded-full border border-sand bg-white px-4 py-2 text-sm font-semibold text-sky-900 hover:border-sky-300"
+              >
+                <CalendarRange className="w-4 h-4" /> {def.pageLink.label}
+              </Link>
+            )}
             <Button onClick={() => setEditing('new')}>
               <Plus className="w-4 h-4" /> Add {def.singular}
             </Button>
@@ -305,6 +313,17 @@ export function ContentPage() {
                       >
                         {published ? <Eye className="w-3.5 h-3.5" /> : <EyeOff className="w-3.5 h-3.5" />}
                       </Button>
+                    )}
+                    {def.rowLink && can('bookings_read') && (
+                      <Link
+                        to={def.rowLink.to(row)}
+                        title={def.rowLink.label}
+                        aria-label={`${def.rowLink.label}: ${String(row[def.titleField] ?? '')}`}
+                        className="inline-flex items-center gap-1 rounded-full px-2.5 py-1.5 text-xs font-semibold text-sky-800 hover:bg-sky-50"
+                      >
+                        <CalendarRange className="w-3.5 h-3.5" />
+                        <span className="hidden md:inline">{def.rowLink.label}</span>
+                      </Link>
                     )}
                     <Button size="sm" variant="ghost" aria-label="Edit" onClick={() => setEditing(row)}>
                       <Pencil className="w-3.5 h-3.5" />

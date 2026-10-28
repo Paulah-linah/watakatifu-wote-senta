@@ -46,6 +46,10 @@ export interface ResourceDef {
   defaults: Record<string, unknown>;
   fields: FieldDef[];
   select?: string;
+  /** Extra button in the page header, e.g. "Manage availability". */
+  pageLink?: { label: string; to: string };
+  /** Extra per-row link, e.g. to the hall's availability. */
+  rowLink?: { label: string; to: (row: Row) => string };
 }
 
 const opts = (values: readonly string[]) => values.map((v) => ({ value: v, label: v.charAt(0).toUpperCase() + v.slice(1) }));
@@ -68,6 +72,8 @@ export const RESOURCES: ResourceDef[] = [
     hasPublished: true,
     reorderable: true,
     publicPath: '/hospitality/conference',
+    pageLink: { label: 'Manage availability', to: '/admin/calendar' },
+    rowLink: { label: 'Availability', to: (r) => `/admin/calendar?hall=${r.id}` },
     subtitle: (r) => `${r.capacity_min}–${r.capacity_max} people · ${formatKes(r.price_kes as number | null)}`,
     defaults: { features: [], seating_styles: ['Classroom'], is_published: true, capacity_min: 1, capacity_max: 10 },
     fields: [

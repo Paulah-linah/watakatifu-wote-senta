@@ -44,13 +44,13 @@ const NAV: { heading?: string; items: NavEntry[] }[] = [
     items: [
       { to: '/admin', label: 'Dashboard', icon: LayoutDashboard, end: true },
       { to: '/admin/inquiries', label: 'Inquiries', icon: Inbox },
-      { to: '/admin/calendar', label: 'Hall calendar', icon: CalendarRange, area: 'bookings_read' },
     ],
   },
   {
     heading: 'Hospitality',
     items: [
       { to: '/admin/content/facilities', label: 'Conference halls', icon: Building2, area: 'hospitality' },
+      { to: '/admin/calendar', label: 'Hall availability', icon: CalendarRange, area: 'bookings_read' },
       { to: '/admin/content/accommodation', label: 'Accommodation', icon: Bed, area: 'hospitality' },
       { to: '/admin/content/catering', label: 'Catering', icon: Utensils, area: 'hospitality' },
       { to: '/admin/content/laundry', label: 'Laundry', icon: Shirt, area: 'hospitality' },

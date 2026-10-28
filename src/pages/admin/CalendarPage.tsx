@@ -60,7 +60,7 @@ function BookingDialog({ draft, onClose }: { draft: Draft; onClose: () => void }
   });
 
   return (
-    <Modal isOpen onClose={onClose} title={form.id ? 'Edit booking' : 'New booking'} maxWidth="lg">
+    <Modal isOpen onClose={onClose} title={form.id ? 'Edit booking' : 'Set hall availability'} maxWidth="lg">
       <form
         className="space-y-4"
         onSubmit={(e) => {
@@ -197,12 +197,12 @@ export function CalendarPage() {
     <div>
       {dialog}
       <PageHeader
-        title="Hall calendar"
-        subtitle={editable ? 'Bookings here update the public availability calendar immediately.' : 'Read-only view of hall bookings.'}
+        title="Hall availability"
+        subtitle={editable ? 'Mark sessions as booked, pending or unavailable. Changes show on the public website immediately.' : 'Read-only view of hall bookings.'}
         actions={
           editable && (
             <Button onClick={() => setDraft(newDraft(selectedDay >= today ? selectedDay : today))}>
-              <Plus className="w-4 h-4" /> New booking
+              <Plus className="w-4 h-4" /> Book or block a session
             </Button>
           )
         }
