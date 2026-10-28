@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useForm, useWatch, type UseFormRegisterReturn } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -286,6 +286,29 @@ export const InquiryForm: React.FC<InquiryFormProps> = ({ initialType = 'confere
 
   const detailStep = lockType ? 1 : 2;
   const inModal = source === 'modal';
+  const detailsRef = useRef<HTMLDivElement>(null);
+
+  // Counts tile clicks; the effect below runs after the chosen type's fields have rendered.
+  const [scrollRequest, setScrollRequest] = useState(0);
+  const chooseType = (t: InquiryType) => {
+    setValue('type', t, { shouldValidate: false });
+    setScrollRequest((n) => n + 1);
+  };
+  useEffect(() => {
+    if (!scrollRequest) return;
+    const el = detailsRef.current;
+    if (!el) return;
+    const behavior: ScrollBehavior = window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth';
+    const dialogBody = inModal ? el.closest<HTMLElement>('[role=dialog] .overflow-y-auto') : null;
+    if (dialogBody) {
+      const top = el.getBoundingClientRect().top - dialogBody.getBoundingClientRect().top + dialogBody.scrollTop - 16;
+      dialogBody.scrollTo({ top, behavior });
+    } else {
+      el.scrollIntoView({ behavior, block: 'start' });
+    }
+    el.querySelector<HTMLElement>('input:not([type=hidden]), select, textarea')?.focus({ preventScroll: true });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [scrollRequest]);
   const err = (name: keyof FormValues) => errors[name]?.message;
   const reg = (name: keyof FormValues) => fieldProps(name, register(name), err(name));
 
@@ -423,7 +446,7 @@ export const InquiryForm: React.FC<InquiryFormProps> = ({ initialType = 'confere
                     type="button"
                     role="radio"
                     aria-checked={selected}
-                    onClick={() => setValue('type', t, { shouldValidate: false })}
+                    onClick={() => chooseType(t)}
                     className={`relative flex flex-col items-start gap-2 rounded-2xl border p-3.5 text-left transition-all ${
                       selected ? 'border-sky-700 bg-sky-50 ring-2 ring-sky-700/15' : 'border-sand bg-white hover:border-sky-300 hover:bg-parchment/60'
                     }`}
@@ -449,6 +472,7 @@ export const InquiryForm: React.FC<InquiryFormProps> = ({ initialType = 'confere
           <input id="inq-website" type="text" tabIndex={-1} autoComplete="off" {...register('website')} />
         </div>
 
+        <div ref={detailsRef} className={inModal ? 'scroll-mt-6' : 'scroll-mt-28 sm:scroll-mt-32'}>
         {type === 'conference' && (
           <Section step={detailStep} tone="bg-parchment border-sand/70" title="Conference hall details" icon={Building2}>
             <Field label="Conference hall" name="facility_id" required error={err('facility_id')}>
@@ -663,6 +687,8 @@ export const InquiryForm: React.FC<InquiryFormProps> = ({ initialType = 'confere
             </div>
           </Section>
         )}
+
+        </div>
 
         {/* Contact details */}
         <fieldset className="space-y-5">
