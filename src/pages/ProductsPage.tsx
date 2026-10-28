@@ -6,6 +6,7 @@ import { useInquiryModal } from '@/context/InquiryModalContext';
 import { PageHero } from '@/components/common/PageHero';
 import { EmptyState, LoadingGrid, QueryState } from '@/components/common/States';
 import { Modal } from '@/components/common/Modal';
+import { PaymentDetails } from '@/components/payment/PaymentDetails';
 import { formatKes, telHref } from '@/lib/format';
 import { usePageMeta } from '@/lib/usePageMeta';
 
@@ -55,7 +56,10 @@ export const ProductsPage: React.FC = () => {
           <Info className="w-5 h-5 text-sky-700 shrink-0 mt-0.5" />
           <div>
             <span className="font-bold text-stone-900 block text-sm">How to buy</span>
-            <span>This catalogue is for browsing. Purchases are completed at our office in Ngong or arranged by phone, email or an inquiry below.</span>
+            <span>
+              Ask us about an item, then pay by M-Pesa (Paybill <strong>880100</strong>, account <strong>121791</strong>) or bank transfer to NCBA, and
+              collect it at our office in Ngong. Open any item for full payment details.
+            </span>
           </div>
         </div>
         <a
@@ -181,12 +185,20 @@ export const ProductsPage: React.FC = () => {
             <div className="text-xs text-stone-500">
               Product code: <strong>{selected.sku}</strong> · {selected.is_available ? 'In stock' : 'Out of stock'}
             </div>
-            <div className="p-3 bg-stone-50 rounded-xl border border-stone-200 text-xs text-stone-600 space-y-1">
-              <div className="font-semibold text-stone-800">How to purchase</div>
-              <p>
-                Send an inquiry, or contact our resource coordinator on <strong>{settings.phone_display}</strong> or <strong>{settings.email}</strong>.
-              </p>
-            </div>
+            <PaymentDetails
+              compact
+              title="How to purchase"
+              className="pt-5 border-t border-sand/70"
+              intro={
+                <>
+                  Ask us to confirm the item is available, then pay by M-Pesa or bank transfer and collect it at our office in Ngong. For help, call{' '}
+                  <a href={telHref(settings.phone)} className="font-semibold text-sky-800 hover:underline">
+                    {settings.phone_display}
+                  </a>{' '}
+                  and quote product code <strong className="font-mono text-sky-900">{selected.sku}</strong>.
+                </>
+              }
+            />
             <button
               type="button"
               onClick={() => {

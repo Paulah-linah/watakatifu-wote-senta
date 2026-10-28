@@ -38,13 +38,23 @@ const CopyValue: React.FC<{ label: string; value: string; mono?: boolean }> = ({
 };
 
 /** "How to pay" panel: M-Pesa Paybill and bank transfer (EFT) details with copy buttons. */
-export const PaymentDetails: React.FC<{ reference?: string; compact?: boolean; className?: string }> = ({ reference, compact = false, className = '' }) => (
+export const PaymentDetails: React.FC<{
+  reference?: string;
+  compact?: boolean;
+  className?: string;
+  /** Overrides the default heading ("How to pay"). */
+  title?: string;
+  /** Overrides the default explanation paragraph. */
+  intro?: React.ReactNode;
+}> = ({ reference, compact = false, className = '', title = 'How to pay', intro }) => (
   <section aria-labelledby="payment-heading" className={className}>
     <p className="eyebrow">Payments</p>
     <h2 id="payment-heading" className={`mt-2 font-serif font-semibold text-sky-950 ${compact ? 'text-2xl' : 'text-3xl'}`}>
-      How to pay
+      {title}
     </h2>
     <p className="mt-2 text-sm text-stone-600 leading-relaxed">
+      {intro ?? (
+        <>
       Please pay once our office has confirmed your booking and the amount due.
       {reference ? (
         <>
@@ -53,6 +63,8 @@ export const PaymentDetails: React.FC<{ reference?: string; compact?: boolean; c
         </>
       ) : (
         ' Keep your M-Pesa or bank confirmation and share it with the office.'
+      )}
+        </>
       )}
     </p>
 
