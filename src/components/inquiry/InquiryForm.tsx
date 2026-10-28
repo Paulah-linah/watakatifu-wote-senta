@@ -11,6 +11,7 @@ import {
   CheckCircle,
   GraduationCap,
   HelpCircle,
+  Info,
   Loader2,
   Mail,
   Phone,
@@ -31,6 +32,7 @@ import {
 import { slotTaken, useAvailability } from '@/services/availability';
 import { INQUIRY_TYPE_LABELS, submitInquiry, type InquiryPrefill, type InquiryType } from '@/services/inquiries';
 import { formatDate, todayISO } from '@/lib/dates';
+import { PaymentDetails } from '@/components/payment/PaymentDetails';
 import { formatKes, shortHallName, telHref, TIME_SLOT_LABELS } from '@/lib/format';
 
 // ---------------------------------------------------------------------------
@@ -120,16 +122,27 @@ const schema = z
 
 type FormValues = z.infer<typeof schema>;
 
-const TYPE_TABS: { type: InquiryType; icon: React.ComponentType<{ className?: string }> }[] = [
-  { type: 'conference', icon: Building2 },
-  { type: 'accommodation', icon: Bed },
-  { type: 'catering', icon: Utensils },
-  { type: 'retreat', icon: BookOpen },
-  { type: 'formation', icon: GraduationCap },
-  { type: 'event', icon: CalendarDays },
-  { type: 'product', icon: ShoppingBag },
-  { type: 'general', icon: HelpCircle },
+const TYPE_TABS: { type: InquiryType; label: string; hint: string; icon: React.ComponentType<{ className?: string }> }[] = [
+  { type: 'conference', label: 'Conference hall', hint: 'Meetings & seminars', icon: Building2 },
+  { type: 'accommodation', label: 'Accommodation', hint: 'Rooms & apartments', icon: Bed },
+  { type: 'catering', label: 'Catering', hint: 'Meals & events', icon: Utensils },
+  { type: 'retreat', label: 'Retreat', hint: 'Individual or group', icon: BookOpen },
+  { type: 'formation', label: 'Formation', hint: 'Seminars & courses', icon: GraduationCap },
+  { type: 'event', label: 'Event', hint: 'Register to attend', icon: CalendarDays },
+  { type: 'product', label: 'Bookshop', hint: 'Books & gifts', icon: ShoppingBag },
+  { type: 'general', label: 'Other', hint: 'Any question', icon: HelpCircle },
 ];
+
+/** Numbered step heading used to break the form into clear parts. */
+const StepHeading: React.FC<{ n: number; title: string; description?: string }> = ({ n, title, description }) => (
+  <div className="flex items-start gap-3.5">
+    <span className="mt-0.5 inline-flex w-8 h-8 shrink-0 items-center justify-center rounded-full bg-sky-800 text-white text-sm font-bold">{n}</span>
+    <div>
+      <h3 className="font-serif text-2xl font-semibold text-sky-950 leading-tight">{title}</h3>
+      {description && <p className="mt-0.5 text-sm text-stone-500">{description}</p>}
+    </div>
+  </div>
+);
 
 // ---------------------------------------------------------------------------
 // Small field helpers
@@ -167,21 +180,22 @@ const fieldProps = (name: string, reg: UseFormRegisterReturn, error?: string) =>
   ...reg,
 });
 
-const Section: React.FC<{ tone: string; title: string; icon: React.ComponentType<{ className?: string }>; children: React.ReactNode; note?: string }> = ({
-  tone,
+const Section: React.FC<{ step: number; tone?: string; title: string; icon?: React.ComponentType<{ className?: string }>; children: React.ReactNode; note?: string }> = ({
+  step,
   title,
-  icon: Icon,
   children,
   note,
 }) => (
-  <fieldset className={`p-4 sm:p-6 rounded-2xl border space-y-5 ${tone}`}>
+  <fieldset className="space-y-5">
     <legend className="sr-only">{title}</legend>
-    <h3 className="font-serif font-semibold text-sky-950 text-xl flex items-center gap-2.5" aria-hidden>
-      <Icon className="w-5 h-5 text-gold-500" />
-      <span>{title}</span>
-    </h3>
-    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">{children}</div>
-    {note && <p className="text-[11px] text-stone-600 italic">{note}</p>}
+    <StepHeading n={step} title={title} />
+    <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-5 gap-y-4 sm:pl-11">{children}</div>
+    {note && (
+      <p className="sm:ml-11 flex items-start gap-2 rounded-xl bg-sky-50 px-3.5 py-2.5 text-xs text-sky-900">
+        <Info className="w-4 h-4 shrink-0 mt-px" />
+        {note}
+      </p>
+    )}
   </fieldset>
 );
 
@@ -270,6 +284,8 @@ export const InquiryForm: React.FC<InquiryFormProps> = ({ initialType = 'confere
     [events.data, today]
   );
 
+  const detailStep = lockType ? 1 : 2;
+  const inModal = source === 'modal';
   const err = (name: keyof FormValues) => errors[name]?.message;
   const reg = (name: keyof FormValues) => fieldProps(name, register(name), err(name));
 
@@ -339,91 +355,94 @@ export const InquiryForm: React.FC<InquiryFormProps> = ({ initialType = 'confere
   // -------------------------------------------------------------------------
   if (result) {
     return (
-      <div className="bg-white rounded-2xl p-6 sm:p-8 text-center max-w-lg mx-auto" role="status">
-        <div className="w-16 h-16 bg-emerald-100 text-emerald-700 rounded-full flex items-center justify-center mx-auto mb-4 ring-8 ring-emerald-50">
-          <CheckCircle className="w-9 h-9" />
+      <div className={inModal ? '' : 'card p-5 sm:p-8'} role="status">
+        <div className="text-center max-w-xl mx-auto">
+          <div className="w-16 h-16 bg-emerald-100 text-emerald-700 rounded-full flex items-center justify-center mx-auto mb-4 ring-8 ring-emerald-50">
+            <CheckCircle className="w-9 h-9" />
+          </div>
+          <h3 className="font-serif text-3xl font-semibold text-sky-950">Thank you, {result.name.split(' ')[0]}</h3>
+          <p className="mt-2 text-sm text-stone-600 leading-relaxed">
+            We have received your inquiry. Our office will contact you by phone or email to confirm availability and the amount due.
+          </p>
+          <div className="mt-5 inline-flex flex-col items-center rounded-2xl bg-parchment border border-gold-300 px-6 py-3">
+            <span className="text-[0.7rem] uppercase tracking-[0.16em] font-bold text-gold-600">Your reference</span>
+            <span className="font-mono text-xl font-bold text-sky-950">{result.reference}</span>
+          </div>
         </div>
-        <h3 className="font-serif text-3xl font-semibold text-sky-950 mb-2">Inquiry received</h3>
-        <p className="text-sm text-stone-600 mb-4 leading-relaxed">
-          Thank you, <strong>{result.name}</strong>. Our team at Watakatifu Wote Senta has received your inquiry and will contact you by phone or
-          email.
-        </p>
-        <div className="inline-block mb-6 px-5 py-3 rounded-2xl bg-parchment border border-gold-300">
-          <div className="text-[0.7rem] uppercase tracking-[0.16em] font-bold text-gold-600">Your reference</div>
-          <div className="font-mono text-lg font-bold text-sky-950">{result.reference}</div>
-        </div>
-        <div className="bg-stone-50 rounded-xl p-4 border border-stone-200 text-left text-xs text-stone-600 mb-6 space-y-1.5">
-          <div className="font-semibold text-stone-800 text-sm">Need help sooner?</div>
-          <a href={telHref(settings.phone)} className="flex items-center gap-2 hover:text-sky-800">
-            <Phone className="w-3.5 h-3.5 text-sky-700" />
-            <span>
-              Call: <strong>{settings.phone_display}</strong>
-            </span>
-          </a>
-          <a href={`mailto:${settings.email}`} className="flex items-center gap-2 hover:text-sky-800">
-            <Mail className="w-3.5 h-3.5 text-sky-700" />
-            <span>
-              Email: <strong>{settings.email}</strong>
-            </span>
-          </a>
-          <p className="pt-1 text-stone-500">Please quote your reference when you contact us.</p>
-        </div>
-        <div className="flex items-center justify-center gap-3">
-          <button
-            type="button"
-            onClick={() => {
-              reset({ ...defaultValues, type });
-              setResult(null);
-            }}
-            className="btn btn-primary"
-          >
-            Send another inquiry
-          </button>
-          {onClose && (
+
+        <PaymentDetails reference={result.reference} compact={inModal} className="mt-10 pt-8 border-t border-sand/70" />
+
+        <div className="mt-8 flex flex-col sm:flex-row items-center justify-between gap-4 rounded-2xl bg-parchment px-5 py-4">
+          <div className="text-sm text-stone-600 text-center sm:text-left">
+            Need help sooner?{' '}
+            <a href={telHref(settings.phone)} className="font-semibold text-sky-800 hover:underline">
+              <Phone className="inline w-3.5 h-3.5 mr-1" />
+              {settings.phone_display}
+            </a>{' '}
+            ·{' '}
+            <a href={`mailto:${settings.email}`} className="font-semibold text-sky-800 hover:underline">
+              <Mail className="inline w-3.5 h-3.5 mr-1" />
+              Email us
+            </a>
+          </div>
+          <div className="flex gap-2">
             <button
               type="button"
-              onClick={onClose}
+              onClick={() => {
+                reset({ ...defaultValues, type });
+                setResult(null);
+              }}
               className="btn btn-outline"
             >
-              Close
+              New inquiry
             </button>
-          )}
+            {onClose && (
+              <button type="button" onClick={onClose} className="btn btn-primary">
+                Done
+              </button>
+            )}
+          </div>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="card overflow-hidden">
-      {!lockType && (
-        <div className="bg-parchment/70 border-b border-sand/70 p-3 sm:p-5">
-          <p id="inq-type-label" className="block text-xs font-bold uppercase tracking-wider text-stone-500 mb-2 px-1">
-            What would you like to inquire about?
-          </p>
-          <div role="radiogroup" aria-labelledby="inq-type-label" className="grid grid-cols-2 sm:grid-cols-4 gap-1.5">
-            {TYPE_TABS.map(({ type: t, icon: Icon }) => {
-              const selected = type === t;
-              return (
-                <button
-                  key={t}
-                  type="button"
-                  role="radio"
-                  aria-checked={selected}
-                  onClick={() => setValue('type', t, { shouldValidate: false })}
-                  className={`py-2.5 px-3 rounded-xl text-sm font-semibold flex items-center justify-center gap-2 transition-all ${
-                    selected ? 'bg-sky-900 text-white shadow-soft' : 'bg-white hover:border-sky-300 text-stone-700 border border-sand'
-                  }`}
-                >
-                  <Icon className={`w-3.5 h-3.5 shrink-0 ${selected ? 'text-gold-300' : 'text-stone-400'}`} />
-                  <span className="truncate">{INQUIRY_TYPE_LABELS[t]}</span>
-                </button>
-              );
-            })}
-          </div>
-        </div>
-      )}
+    <div className={inModal ? '' : 'card p-5 sm:p-8'}>
+      <form onSubmit={handleSubmit(onSubmit)} noValidate className="space-y-10">
+        {!lockType && (
+          <fieldset className="space-y-5">
+            <legend className="sr-only">What would you like to book or ask about?</legend>
+            <StepHeading n={1} title="What do you need?" description="Choose one. You can send another inquiry afterwards." />
+            <div role="radiogroup" aria-label="Inquiry type" className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 sm:pl-11">
+              {TYPE_TABS.map(({ type: t, label, hint, icon: Icon }) => {
+                const selected = type === t;
+                return (
+                  <button
+                    key={t}
+                    type="button"
+                    role="radio"
+                    aria-checked={selected}
+                    onClick={() => setValue('type', t, { shouldValidate: false })}
+                    className={`relative flex flex-col items-start gap-2 rounded-2xl border p-3.5 text-left transition-all ${
+                      selected ? 'border-sky-700 bg-sky-50 ring-2 ring-sky-700/15' : 'border-sand bg-white hover:border-sky-300 hover:bg-parchment/60'
+                    }`}
+                  >
+                    <span className={`inline-flex w-9 h-9 items-center justify-center rounded-xl ${selected ? 'bg-sky-800 text-white' : 'bg-parchment text-sky-800'}`}>
+                      <Icon className="w-[1.1rem] h-[1.1rem]" />
+                    </span>
+                    <span>
+                      <span className="block text-sm font-semibold text-sky-950 leading-tight">{label}</span>
+                      <span className="block text-xs text-stone-500 mt-0.5">{hint}</span>
+                    </span>
+                    {selected && <CheckCircle className="absolute top-3 right-3 w-4 h-4 text-sky-700" aria-hidden />}
+                  </button>
+                );
+              })}
+            </div>
+          </fieldset>
+        )}
 
-      <form onSubmit={handleSubmit(onSubmit)} noValidate className="p-4 sm:p-7 space-y-5">
         {/* Honeypot: hidden from people and assistive tech; bots tend to fill it. */}
         <div className="absolute -left-[9999px] w-px h-px overflow-hidden" aria-hidden="true">
           <label htmlFor="inq-website">Website</label>
@@ -431,7 +450,7 @@ export const InquiryForm: React.FC<InquiryFormProps> = ({ initialType = 'confere
         </div>
 
         {type === 'conference' && (
-          <Section tone="bg-parchment border-sand/70" title="Conference hall details" icon={Building2}>
+          <Section step={detailStep} tone="bg-parchment border-sand/70" title="Conference hall details" icon={Building2}>
             <Field label="Conference hall" name="facility_id" required error={err('facility_id')}>
               <select {...reg('facility_id')} disabled={facilities.isPending}>
                 <option value="">{facilities.isPending ? 'Loading halls…' : 'Choose a hall'}</option>
@@ -493,7 +512,7 @@ export const InquiryForm: React.FC<InquiryFormProps> = ({ initialType = 'confere
         )}
 
         {type === 'accommodation' && (
-          <Section
+          <Section step={detailStep}
             tone="bg-parchment border-sand/70"
             title="Accommodation details"
             icon={Bed}
@@ -522,7 +541,7 @@ export const InquiryForm: React.FC<InquiryFormProps> = ({ initialType = 'confere
         )}
 
         {type === 'catering' && (
-          <Section tone="bg-parchment border-sand/70" title="Catering details" icon={Utensils}>
+          <Section step={detailStep} tone="bg-parchment border-sand/70" title="Catering details" icon={Utensils}>
             <Field label="Service" name="catering_service_id">
               <select {...reg('catering_service_id')}>
                 <option value="">Not sure / please advise</option>
@@ -546,7 +565,7 @@ export const InquiryForm: React.FC<InquiryFormProps> = ({ initialType = 'confere
         )}
 
         {type === 'retreat' && (
-          <Section tone="bg-parchment border-sand/70" title="Retreat details" icon={BookOpen}>
+          <Section step={detailStep} tone="bg-parchment border-sand/70" title="Retreat details" icon={BookOpen}>
             <Field label="Retreat" name="retreat_id" required error={err('retreat_id')}>
               <select {...reg('retreat_id')}>
                 <option value="">Choose a retreat</option>
@@ -574,7 +593,7 @@ export const InquiryForm: React.FC<InquiryFormProps> = ({ initialType = 'confere
         )}
 
         {type === 'formation' && (
-          <Section tone="bg-parchment border-sand/70" title="Formation / seminar registration" icon={GraduationCap}>
+          <Section step={detailStep} tone="bg-parchment border-sand/70" title="Formation registration" icon={GraduationCap}>
             <Field label="Programme" name="formation_id" required error={err('formation_id')}>
               <select {...reg('formation_id')}>
                 <option value="">Choose a programme</option>
@@ -595,7 +614,7 @@ export const InquiryForm: React.FC<InquiryFormProps> = ({ initialType = 'confere
         )}
 
         {type === 'event' && (
-          <Section tone="bg-parchment border-sand/70" title="Event registration" icon={CalendarDays}>
+          <Section step={detailStep} tone="bg-parchment border-sand/70" title="Event registration" icon={CalendarDays}>
             <Field label="Event" name="event_id" required error={err('event_id')}>
               <select {...reg('event_id')}>
                 <option value="">{upcomingEvents.length ? 'Choose an event' : 'No events open for registration'}</option>
@@ -613,7 +632,7 @@ export const InquiryForm: React.FC<InquiryFormProps> = ({ initialType = 'confere
         )}
 
         {type === 'product' && (
-          <Section
+          <Section step={detailStep}
             tone="bg-parchment border-sand/70"
             title="Product inquiry"
             icon={ShoppingBag}
@@ -636,7 +655,7 @@ export const InquiryForm: React.FC<InquiryFormProps> = ({ initialType = 'confere
         )}
 
         {type === 'general' && (
-          <Section tone="bg-parchment border-sand/70" title="General inquiry" icon={HelpCircle}>
+          <Section step={detailStep} tone="bg-parchment border-sand/70" title="General inquiry" icon={HelpCircle}>
             <div className="sm:col-span-2">
               <Field label="Subject" name="subject" required error={err('subject')}>
                 <input type="text" placeholder="What would you like to ask about?" {...reg('subject')} />
@@ -646,12 +665,10 @@ export const InquiryForm: React.FC<InquiryFormProps> = ({ initialType = 'confere
         )}
 
         {/* Contact details */}
-        <fieldset className="space-y-5 pt-6 border-t border-sand/70">
+        <fieldset className="space-y-5">
           <legend className="sr-only">Your contact details</legend>
-          <h3 className="font-serif font-semibold text-sky-950 text-xl" aria-hidden>
-            Your contact details
-          </h3>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <StepHeading n={detailStep + 1} title="Your contact details" description="So our office can reply with availability and rates." />
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-5 gap-y-4 sm:pl-11">
             <Field label="Full name" name="full_name" required error={err('full_name')}>
               <input type="text" autoComplete="name" placeholder="e.g. John Mwangi or Sr. Mary" {...reg('full_name')} />
             </Field>
@@ -665,28 +682,36 @@ export const InquiryForm: React.FC<InquiryFormProps> = ({ initialType = 'confere
               <input type="text" autoComplete="organization" placeholder="e.g. St. Joseph Parish" {...reg('organization')} />
             </Field>
           </div>
-          <Field label="Message or additional notes" name="message" error={err('message')}>
-            <textarea rows={3} placeholder="Anything else we should know about your visit or request…" {...reg('message')} />
-          </Field>
+          <div className="sm:pl-11">
+            <Field label="Message or additional notes" name="message" error={err('message')}>
+              <textarea rows={3} placeholder="Anything else we should know about your visit or request…" {...reg('message')} />
+            </Field>
+          </div>
         </fieldset>
 
         {serverError && (
-          <div className="flex items-start gap-2 p-3 rounded-lg bg-rose-50 border border-rose-200 text-xs text-rose-800" role="alert">
+          <div className="flex items-start gap-2 p-3.5 rounded-xl bg-rose-50 border border-rose-200 text-sm text-rose-800" role="alert">
             <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
             <span>{serverError}</span>
           </div>
         )}
 
-        <div className="pt-2 flex flex-col sm:flex-row items-center justify-between gap-3">
-          <p className="text-[11px] text-stone-500">
-            Your details are only used to respond to this inquiry. Fields marked <span className="text-rose-500">*</span> are required.
+        <div
+          className={`flex flex-col sm:flex-row items-center justify-between gap-3 ${
+            inModal
+              ? 'sticky -bottom-4 sm:-bottom-6 z-10 -mx-4 sm:-mx-6 -mb-4 sm:-mb-6 px-4 sm:px-6 py-4 bg-white/95 backdrop-blur border-t border-sand/70'
+              : 'pt-6 border-t border-sand/70'
+          }`}
+        >
+          <p className="text-xs text-stone-500 text-center sm:text-left">
+            We only use your details to reply to you. <span className="text-rose-500">*</span> Required
           </p>
           <div className="flex items-center gap-3 w-full sm:w-auto">
             {onClose && (
               <button
                 type="button"
                 onClick={onClose}
-                className="btn btn-outline w-1/2 sm:w-auto"
+                className="btn btn-outline w-1/2 sm:w-auto whitespace-nowrap"
               >
                 Cancel
               </button>
@@ -694,7 +719,7 @@ export const InquiryForm: React.FC<InquiryFormProps> = ({ initialType = 'confere
             <button
               type="submit"
               disabled={isSubmitting}
-              className="btn btn-primary w-full sm:w-auto disabled:opacity-60"
+              className="btn btn-primary w-full sm:w-auto whitespace-nowrap disabled:opacity-60"
             >
               {isSubmitting ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Send className="w-3.5 h-3.5" />}
               <span>{isSubmitting ? 'Sending…' : 'Send inquiry'}</span>

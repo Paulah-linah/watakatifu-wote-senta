@@ -6,6 +6,7 @@ import { InquiryForm } from '@/components/inquiry/InquiryForm';
 import { useSiteSettings } from '@/services/content';
 import { isInquiryType, type InquiryPrefill } from '@/services/inquiries';
 import { telHref, whatsappHref } from '@/lib/format';
+import { PaymentDetails } from '@/components/payment/PaymentDetails';
 import { usePageMeta } from '@/lib/usePageMeta';
 
 /**
@@ -47,6 +48,9 @@ export const InquiryPage: React.FC = () => {
         </div>
 
         <aside className="lg:col-span-4 space-y-6">
+          <div className="card p-6">
+            <PaymentDetails compact />
+          </div>
           <div className="rounded-3xl bg-parchment-deep p-6 sm:p-8 space-y-4">
             <h2 className="font-serif text-xl font-semibold text-sky-950">What happens next</h2>
             <ul className="space-y-2.5 text-xs text-stone-600">

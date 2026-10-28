@@ -6,6 +6,8 @@ interface ModalProps {
   isOpen: boolean;
   onClose: () => void;
   title?: string;
+  /** Optional line under the title */
+  description?: string;
   children: React.ReactNode;
   maxWidth?: 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl' | '4xl';
 }
@@ -20,7 +22,7 @@ const maxWidthClasses = {
   '4xl': 'max-w-4xl',
 };
 
-export const Modal: React.FC<ModalProps> = ({ isOpen, onClose, title, children, maxWidth = '2xl' }) => {
+export const Modal: React.FC<ModalProps> = ({ isOpen, onClose, title, description, children, maxWidth = '2xl' }) => {
   const ref = useDialog(isOpen, onClose);
   const titleId = useId();
 
@@ -41,10 +43,13 @@ export const Modal: React.FC<ModalProps> = ({ isOpen, onClose, title, children, 
         tabIndex={-1}
         className={`relative w-full ${maxWidthClasses[maxWidth]} bg-white rounded-3xl shadow-2xl border border-sand/70 overflow-hidden animate-in zoom-in-95 duration-150 max-h-[92vh] flex flex-col focus:outline-hidden`}
       >
-        <div className="flex items-center justify-between gap-4 px-5 sm:px-6 py-4 border-b border-sand/70 bg-parchment">
-          <h2 id={titleId} className="font-serif text-xl font-semibold text-sky-950 truncate">
-            {title || 'Information'}
-          </h2>
+        <div className="flex items-start justify-between gap-4 px-5 sm:px-6 py-4 border-b border-sand/70 bg-parchment">
+          <div className="min-w-0">
+            <h2 id={titleId} className="font-serif text-2xl font-semibold text-sky-950 leading-tight">
+              {title || 'Information'}
+            </h2>
+            {description && <p className="mt-0.5 text-sm text-stone-500">{description}</p>}
+          </div>
           <button
             type="button"
             onClick={onClose}

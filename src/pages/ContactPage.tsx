@@ -4,6 +4,7 @@ import { useSiteSettings } from '@/services/content';
 import { PageHero } from '@/components/common/PageHero';
 import { InquiryForm } from '@/components/inquiry/InquiryForm';
 import { telHref, whatsappHref } from '@/lib/format';
+import { PaymentDetails } from '@/components/payment/PaymentDetails';
 import { usePageMeta } from '@/lib/usePageMeta';
 
 export const ContactPage: React.FC = () => {
@@ -122,6 +123,10 @@ export const ContactPage: React.FC = () => {
         <div className="lg:col-span-7">
           <InquiryForm initialType="general" source="contact" />
         </div>
+      </div>
+
+      <div className="card p-6 sm:p-10">
+        <PaymentDetails />
       </div>
       </div>
     </div>

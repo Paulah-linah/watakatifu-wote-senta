@@ -1,7 +1,7 @@
 import React, { createContext, useCallback, useContext, useMemo, useState } from 'react';
 import { Modal } from '@/components/common/Modal';
 import { InquiryForm } from '@/components/inquiry/InquiryForm';
-import { INQUIRY_TYPE_LABELS, type InquiryPrefill, type InquiryType } from '@/services/inquiries';
+import type { InquiryPrefill, InquiryType } from '@/services/inquiries';
 
 interface InquiryModalApi {
   openInquiry: (type?: InquiryType, prefill?: InquiryPrefill) => void;
@@ -24,7 +24,8 @@ export function InquiryModalProvider({ children }: { children: React.ReactNode }
       <Modal
         isOpen={state !== null}
         onClose={close}
-        title={state ? `Booking & Inquiry: ${INQUIRY_TYPE_LABELS[state.type]}` : ''}
+        title="Make a booking or inquiry"
+        description="Tell us what you need. Our office will confirm availability and rates."
         maxWidth="3xl"
       >
         {state && (
