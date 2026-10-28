@@ -24,7 +24,7 @@ const SERVICES = [
     to: '/hospitality/accommodation',
     title: 'Accommodation',
     text: '62 beds and a guest house with six self-contained apartments.',
-    image: img('photo-1590490360182-c33d57733427', 900),
+    image: 'https://lzphdqkpswzhxlwqwxbp.supabase.co/storage/v1/object/public/media/accommodation/bedroom-1.webp',
   },
   {
     to: '/ministry/retreats',
@@ -127,7 +127,7 @@ function Welcome() {
             loading="lazy"
           />
           <div className="col-span-2 flex flex-col gap-4 pt-10">
-            <img src={img('photo-1535756736290-ec9480a7eaf0', 600)} alt="Green hills near Ngong" className="h-44 sm:h-52 w-full object-cover rounded-3xl" loading="lazy" />
+            <img src="https://lzphdqkpswzhxlwqwxbp.supabase.co/storage/v1/object/public/media/accommodation/st-desmond-block.webp" alt="The St. Desmond accommodation block" className="h-44 sm:h-52 w-full object-cover rounded-3xl" loading="lazy" />
             <div className="rounded-3xl bg-sky-900 text-white p-5">
               <p className="font-serif text-3xl font-semibold text-gold-300">{new Date().getFullYear() - 1986}</p>
               <p className="text-xs text-sky-100/80 mt-1">years of welcome since All Saints Day 1986</p>

@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { Bed, Building2, CalendarCheck, CheckCircle2, Droplet, Info, Shirt, Users, Utensils } from 'lucide-react';
-import { useAccommodation, useCatering, useFacilities, useLaundry } from '@/services/content';
+import { Bed, Building2, CalendarCheck, CheckCircle2, Droplet, Info, Maximize2, Shirt, Users, Utensils } from 'lucide-react';
+import { useAccommodation, useCatering, useFacilities, useGallery, useLaundry } from '@/services/content';
+import { Lightbox } from '@/components/common/Lightbox';
 import { useInquiryModal } from '@/context/InquiryModalContext';
 import { PageHero } from '@/components/common/PageHero';
 import { TabNav } from '@/components/common/TabNav';
@@ -114,11 +115,51 @@ function ConferenceTab() {
   );
 }
 
+/** Real photos of the residences, managed from Staff portal → Gallery (category "Accommodation"). */
+function AccommodationPhotos() {
+  const gallery = useGallery();
+  const [index, setIndex] = useState<number | null>(null);
+  const photos = (gallery.data ?? []).filter((g) => g.category === 'Accommodation');
+  if (!photos.length) return null;
+  return (
+    <section aria-labelledby="accommodation-photos">
+      <div className="flex items-end justify-between gap-4 mb-6">
+        <div>
+          <p className="eyebrow">Take a look inside</p>
+          <h2 id="accommodation-photos" className="mt-2 font-serif text-3xl font-semibold text-sky-950">
+            Our rooms & residences
+          </h2>
+        </div>
+        <span className="hidden sm:block text-sm text-stone-500">{photos.length} photos</span>
+      </div>
+      {/* Masonry columns keep each photo's own shape and fill evenly for any number of photos. */}
+      <div className="columns-2 lg:columns-3 gap-3 sm:gap-4">
+        {photos.map((p, i) => (
+          <button
+            key={p.id}
+            type="button"
+            onClick={() => setIndex(i)}
+            aria-label={`View photo: ${p.title}`}
+            className="group relative mb-3 sm:mb-4 block w-full overflow-hidden rounded-2xl bg-sand/40 break-inside-avoid"
+          >
+            <img src={p.image_url} alt="" className="w-full h-auto img-zoom" loading="lazy" />
+            <span className="absolute inset-x-0 bottom-0 flex items-end justify-between gap-2 p-3 bg-linear-to-t from-black/65 to-transparent text-left text-white text-sm font-semibold">
+              {p.title}
+              <Maximize2 className="w-4 h-4 shrink-0 opacity-80" />
+            </span>
+          </button>
+        ))}
+      </div>
+      <Lightbox images={photos} currentIndex={index} onClose={() => setIndex(null)} onNavigate={setIndex} />
+    </section>
+  );
+}
+
 function AccommodationTab() {
   const { openInquiry } = useInquiryModal();
   const options = useAccommodation();
   return (
-    <div className="space-y-8">
+    <div className="space-y-14">
       <Intro badge="Rest & reflection in Ngong" badgeTone="text-amber-800 bg-amber-100" title="Campus Accommodation & Guest House">
         <p>
           Restful, secure rooms for retreatants, visiting clergy, conference groups and researchers. Our residential wings hold up to{' '}
@@ -131,6 +172,7 @@ function AccommodationTab() {
           </span>
         </p>
       </Intro>
+      <AccommodationPhotos />
       <QueryState query={options}>
         {(items) => (
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
