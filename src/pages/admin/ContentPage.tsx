@@ -128,6 +128,21 @@ function EditDialog({ def, row, nextOrder, onClose }: { def: ResourceDef; row: R
   const save = useMutation({
     mutationFn: async () => {
       const payload = toPayload(def, values);
+      const slugField = def.fields.find((fd) => fd.type === 'slug');
+      if (slugField) {
+        if (row) {
+          // Keep the existing key so links to this item keep working after a rename.
+          delete payload[slugField.name];
+        } else {
+          // New item: key from the title, made unique if it is already taken.
+          const base = slugify(String(values[def.slugSource ?? def.titleField] ?? '')) || def.key;
+          const { data: taken } = await table(def.table).select(slugField.name).like(slugField.name, `${base}%`);
+          const existing = new Set((taken ?? []).map((r: Record<string, string>) => r[slugField.name]));
+          let slug = base;
+          for (let n = 2; existing.has(slug); n++) slug = `${base}-${n}`;
+          payload[slugField.name] = slug;
+        }
+      }
       const { error } = row ? await table(def.table).update(payload).eq('id', row.id) : await table(def.table).insert(payload);
       if (error) throw error;
     },
@@ -150,7 +165,7 @@ function EditDialog({ def, row, nextOrder, onClose }: { def: ResourceDef; row: R
         className="space-y-5"
       >
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          {def.fields.map((field) => (
+          {def.fields.filter((fd) => fd.type !== 'slug').map((field) => (
             <FieldLabel key={field.name} label={field.label} htmlFor={`f-${field.name}`} hint={field.hint} required={field.required} className={field.full || field.type === 'image' ? 'sm:col-span-2' : ''}>
               <FieldInput
                 def={def}
