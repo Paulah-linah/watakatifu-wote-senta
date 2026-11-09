@@ -25,7 +25,7 @@ export const GalleryPage: React.FC = () => {
         eyebrow="Gallery"
         title="Our grounds, halls and sacred spaces"
         subtitle="A look around the conference halls, chapel, accommodation and gardens in Ngong."
-        image="https://images.unsplash.com/photo-1511632765486-a01980e01a18?auto=format&fit=crop&w=1800&q=70"
+        image="https://lzphdqkpswzhxlwqwxbp.supabase.co/storage/v1/object/public/media/grounds/st-desmond-gardens.webp"
         crumbs={[{ label: "Gallery" }]}
       />
       <div className="container-page py-12 sm:py-16 space-y-10">

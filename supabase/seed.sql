@@ -58,7 +58,11 @@ insert into public.products (sku, name, category_id, description, price_kes, ima
   ('PR-014', 'Kitabu cha Njia Ya Msalaba (Stations of the Cross)', (select id from public.product_categories where name = 'Prayer Materials'), 'Standard prayer companion for Lenten devotions and personal Friday Stations of the Cross.', 250, 'https://images.unsplash.com/photo-1497633762265-9d179a990aa6?auto=format&fit=crop&w=800&q=80', true, false, 7);
 
 insert into public.gallery_images (title, category, image_url, caption, sort_order) values
-  ('Serene Grounds & Landscaped Walks', 'Grounds', 'https://images.unsplash.com/photo-1535756736290-ec9480a7eaf0?auto=format&fit=crop&w=1200&q=80', 'Quiet green gardens in Ngong providing an atmosphere of peaceful prayer and reflection.', 0),
+  ('Main buildings and courtyard', 'Grounds', 'https://lzphdqkpswzhxlwqwxbp.supabase.co/storage/v1/object/public/media/grounds/main-courtyard.webp', 'The Watakatifu Wote Senta and St. Julian the Hospitaller buildings around the paved courtyard.', -30),
+  ('St. Julian the Hospitaller block', 'Grounds', 'https://lzphdqkpswzhxlwqwxbp.supabase.co/storage/v1/object/public/media/grounds/st-julian-block.webp', 'One of the centre''s original residential blocks.', -29),
+  ('Gardens around St. Desmond', 'Grounds', 'https://lzphdqkpswzhxlwqwxbp.supabase.co/storage/v1/object/public/media/grounds/st-desmond-gardens.webp', 'Lawns and trees beside the St. Desmond residential block.', -28),
+  ('St. Desmond entrance', 'Accommodation', 'https://lzphdqkpswzhxlwqwxbp.supabase.co/storage/v1/object/public/media/accommodation/st-desmond-entrance.webp', 'Entrance to the St. Desmond block.', -19),
+  ('Sitting area', 'Accommodation', 'https://lzphdqkpswzhxlwqwxbp.supabase.co/storage/v1/object/public/media/accommodation/sitting-area.webp', 'A bright sitting area with sofas and a coffee table.', -11),
   ('St. Bernard Plenary Conference Hall', 'Facilities', 'https://images.unsplash.com/photo-1604328698804-8d5a31499ca6?auto=format&fit=crop&w=1200&q=80', 'Configured with 155 capacity seating, sound system, and professional podium.', 1),
   ('Daily Mass Chapel Sanctuary', 'Catholic Ministry', 'https://images.unsplash.com/photo-1720383857984-7e9a9b11eba4?auto=format&fit=crop&w=1200&q=80', 'Home to Daily Morning Mass at 7:00 AM and sacred Eucharistic Adoration.', 2),
   ('Hospitality & Buffet Catering', 'Catering', 'https://images.unsplash.com/photo-1555244162-803834f70033?auto=format&fit=crop&w=1200&q=80', 'Freshly prepared nutritious meals, tea breaks, and banquets served with warm hospitality.', 4),
@@ -66,15 +70,15 @@ insert into public.gallery_images (title, category, image_url, caption, sort_ord
   ('Outdoor Amphitheatre & Group Meetings', 'Events', 'https://images.unsplash.com/photo-1511632765486-a01980e01a18?auto=format&fit=crop&w=1200&q=80', 'Outdoor gatherings, open-air liturgies, and youth sessions on our expansive grounds.', 6),
   ('All Saints Religious Articles & Books', 'Catholic Ministry', 'https://images.unsplash.com/photo-1528357136257-0c25517acfea?auto=format&fit=crop&w=1200&q=80', 'Bibles, rosaries, daily missals, and devotional items available at our catalogue counter.', 7),
   ('St. Bakhita Executive Room', 'Facilities', 'https://images.unsplash.com/photo-1462826303086-329426d1aef5?auto=format&fit=crop&w=1200&q=80', 'Executive boardroom for 8-10 people with garden view and dedicated tea service.', 8),
-  ('St. Desmond accommodation block', 'Accommodation', 'https://lzphdqkpswzhxlwqwxbp.supabase.co/storage/v1/object/public/media/accommodation/st-desmond-block.webp', 'The two-storey St. Desmond residential block and its lawn.', 100),
-  ('St. Desmond block and garden', 'Accommodation', 'https://lzphdqkpswzhxlwqwxbp.supabase.co/storage/v1/object/public/media/accommodation/st-desmond-garden.webp', 'St. Desmond seen from the garden side.', 101),
-  ('Courtyard and residential buildings', 'Accommodation', 'https://lzphdqkpswzhxlwqwxbp.supabase.co/storage/v1/object/public/media/accommodation/courtyard-residences.webp', 'The paved courtyard between the centre''s buildings.', 102),
-  ('Guest bedroom', 'Accommodation', 'https://lzphdqkpswzhxlwqwxbp.supabase.co/storage/v1/object/public/media/accommodation/bedroom-1.webp', 'A double room with fresh linen and a Maasai shuka throw.', 103),
-  ('Bedroom with mosquito net', 'Accommodation', 'https://lzphdqkpswzhxlwqwxbp.supabase.co/storage/v1/object/public/media/accommodation/bedroom-2.webp', 'A bright double room with a canopy mosquito net.', 104),
-  ('Apartment sitting room', 'Accommodation', 'https://lzphdqkpswzhxlwqwxbp.supabase.co/storage/v1/object/public/media/accommodation/apartment-sitting-room.webp', 'Sitting area with television, armchairs and a dining table.', 105),
-  ('Sitting room', 'Accommodation', 'https://lzphdqkpswzhxlwqwxbp.supabase.co/storage/v1/object/public/media/accommodation/sitting-room.webp', 'A comfortable sitting room for guests.', 106),
-  ('Lounge', 'Accommodation', 'https://lzphdqkpswzhxlwqwxbp.supabase.co/storage/v1/object/public/media/accommodation/lounge.webp', 'Lounge area with large windows onto the grounds.', 107),
-  ('Apartment kitchen', 'Accommodation', 'https://lzphdqkpswzhxlwqwxbp.supabase.co/storage/v1/object/public/media/accommodation/apartment-kitchen.webp', 'Fitted kitchen and dining corner in a self-contained apartment.', 108),
-  ('Kitchenette', 'Accommodation', 'https://lzphdqkpswzhxlwqwxbp.supabase.co/storage/v1/object/public/media/accommodation/kitchenette.webp', 'Kitchenette with fridge, microwave and cooking area.', 109);
+  ('St. Desmond accommodation block', 'Accommodation', 'https://lzphdqkpswzhxlwqwxbp.supabase.co/storage/v1/object/public/media/accommodation/st-desmond-block.webp', 'The two-storey St. Desmond residential block and its lawn.', -20),
+  ('St. Desmond block and garden', 'Accommodation', 'https://lzphdqkpswzhxlwqwxbp.supabase.co/storage/v1/object/public/media/accommodation/st-desmond-garden.webp', 'St. Desmond seen from the garden side.', -17),
+  ('Courtyard and residential buildings', 'Accommodation', 'https://lzphdqkpswzhxlwqwxbp.supabase.co/storage/v1/object/public/media/accommodation/courtyard-residences.webp', 'The paved courtyard between the centre''s buildings.', -16),
+  ('Guest bedroom', 'Accommodation', 'https://lzphdqkpswzhxlwqwxbp.supabase.co/storage/v1/object/public/media/accommodation/bedroom-1.webp', 'A double room with fresh linen and a Maasai shuka throw.', -15),
+  ('Bedroom with mosquito net', 'Accommodation', 'https://lzphdqkpswzhxlwqwxbp.supabase.co/storage/v1/object/public/media/accommodation/bedroom-2.webp', 'A bright double room with a canopy mosquito net.', -14),
+  ('Apartment sitting room', 'Accommodation', 'https://lzphdqkpswzhxlwqwxbp.supabase.co/storage/v1/object/public/media/accommodation/apartment-sitting-room.webp', 'Sitting area with television, armchairs and a dining table.', -13),
+  ('Sitting room', 'Accommodation', 'https://lzphdqkpswzhxlwqwxbp.supabase.co/storage/v1/object/public/media/accommodation/sitting-room.webp', 'A comfortable sitting room for guests.', -12),
+  ('Lounge', 'Accommodation', 'https://lzphdqkpswzhxlwqwxbp.supabase.co/storage/v1/object/public/media/accommodation/lounge.webp', 'Lounge area with large windows onto the grounds.', -11),
+  ('Apartment kitchen', 'Accommodation', 'https://lzphdqkpswzhxlwqwxbp.supabase.co/storage/v1/object/public/media/accommodation/apartment-kitchen.webp', 'Fitted kitchen and dining corner in a self-contained apartment.', -10),
+  ('Kitchenette', 'Accommodation', 'https://lzphdqkpswzhxlwqwxbp.supabase.co/storage/v1/object/public/media/accommodation/kitchenette.webp', 'Kitchenette with fridge, microwave and cooking area.', -9);
 
 commit;

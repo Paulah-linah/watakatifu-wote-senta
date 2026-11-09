@@ -370,7 +370,7 @@ export const HospitalityPage: React.FC = () => {
         eyebrow="Hospitality & services"
         title="Meet, stay and dine in a place of peace"
         subtitle="Conference halls, quiet accommodation and wholesome catering for parishes, organisations and families in Ngong."
-        image="https://images.unsplash.com/photo-1697059361461-b81d0e98c3af?auto=format&fit=crop&w=1800&q=70"
+        image="https://lzphdqkpswzhxlwqwxbp.supabase.co/storage/v1/object/public/media/accommodation/st-desmond-block.webp"
         crumbs={[{ label: 'Hospitality', to: '/hospitality' }, { label: current.label }]}
       />
       <TabNav basePath="/hospitality" items={TABS} active={section} label="Hospitality sections" />

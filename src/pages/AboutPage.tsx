@@ -230,7 +230,7 @@ export const AboutPage: React.FC = () => {
         eyebrow="About us"
         title="Four decades of welcome in Ngong"
         subtitle="Watakatifu Wote Senta, the All Saints Conference Centre, opened on the Feast of All Saints in 1986 under the Catholic Diocese of Ngong."
-        image="https://images.unsplash.com/photo-1535756736290-ec9480a7eaf0?auto=format&fit=crop&w=1800&q=70"
+        image="https://lzphdqkpswzhxlwqwxbp.supabase.co/storage/v1/object/public/media/grounds/main-courtyard.webp"
         crumbs={[{ label: 'About', to: '/about' }, { label: current.label }]}
       />
       <TabNav basePath="/about" items={TABS} active={tab} label="About sections" />
