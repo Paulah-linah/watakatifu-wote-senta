@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowRight, ArrowUpRight, CalendarDays, Clock, MapPin, Quote, Users } from 'lucide-react';
+import { ArrowRight, ArrowUpRight, CalendarDays, Clock, MapPin, Phone, Quote, Users } from 'lucide-react';
 import { isCurrentRetreat, useEvents, useFacilities, useGallery, useRetreats, useSiteSettings } from '@/services/content';
 import { useInquiryModal } from '@/context/InquiryModalContext';
 import { AvailabilityMatrix } from '@/components/availability/AvailabilityMatrix';
@@ -212,15 +212,25 @@ function Halls() {
                 <div className="p-6 flex flex-col grow">
                   <h3 className="font-serif text-2xl font-semibold text-sky-950">{f.name}</h3>
                   <p className="mt-2 text-sm text-stone-600 leading-relaxed line-clamp-3">{f.description}</p>
-                  <div className="mt-auto pt-6 flex items-end justify-between gap-4">
-                    <div>
-                      <p className="text-[0.7rem] uppercase tracking-[0.14em] text-stone-500">Hall rates</p>
-                      <p className="font-serif text-xl font-semibold text-sky-900">On request</p>
-                      <a href={telHref(HALL_RATES_PHONE)} className="text-xs font-semibold text-sky-800 hover:underline">
+                  <div className="mt-auto pt-6">
+                    <div className="flex items-center justify-between gap-3 border-t border-sand/70 pt-4">
+                      <div className="min-w-0">
+                        <p className="text-[0.7rem] uppercase tracking-[0.14em] text-stone-500">Hall rates</p>
+                        <p className="font-serif text-xl font-semibold text-sky-900">On request</p>
+                      </div>
+                      <a
+                        href={telHref(HALL_RATES_PHONE)}
+                        className="inline-flex shrink-0 items-center gap-1.5 rounded-full bg-sky-50 px-3.5 py-2 text-xs font-semibold text-sky-800 whitespace-nowrap hover:bg-sky-100"
+                      >
+                        <Phone className="w-3.5 h-3.5" />
                         {HALL_RATES_PHONE_DISPLAY}
                       </a>
                     </div>
-                    <button type="button" onClick={() => openInquiry('conference', { facilityId: f.id })} className="btn btn-primary">
+                    <button
+                      type="button"
+                      onClick={() => openInquiry('conference', { facilityId: f.id })}
+                      className="btn btn-primary w-full mt-4"
+                    >
                       Request details & rates
                     </button>
                   </div>
