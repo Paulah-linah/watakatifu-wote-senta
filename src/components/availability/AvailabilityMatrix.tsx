@@ -4,7 +4,7 @@ import { useFacilities } from '@/services/content';
 import { dayStatus, PART_SLOTS, useAvailability, type BookingStatus } from '@/services/availability';
 import { useInquiryModal } from '@/context/InquiryModalContext';
 import { addDays, formatDate, todayISO } from '@/lib/dates';
-import { formatKes, shortHallName, TIME_SLOT_LABELS } from '@/lib/format';
+import { shortHallName, TIME_SLOT_LABELS } from '@/lib/format';
 import { ErrorState } from '@/components/common/States';
 
 type SlotState = BookingStatus | 'AVAILABLE';
@@ -153,7 +153,7 @@ export const AvailabilityMatrix: React.FC = () => {
                         <th scope="row" className="sticky left-0 z-10 bg-white px-4 sm:px-8 py-4 border-t border-sand/70 align-middle">
                           <div className="font-serif text-lg sm:text-xl font-semibold text-sky-950 leading-tight">{shortHallName(hall.name)}</div>
                           <div className="mt-0.5 text-xs text-stone-500 whitespace-nowrap">
-                            {hall.capacity_min}–{hall.capacity_max} people · <span className="font-semibold text-sky-800">{formatKes(hall.price_kes)}</span>
+                            {hall.capacity_min}–{hall.capacity_max} people
                           </div>
                         </th>
                         {days.map((d) => {

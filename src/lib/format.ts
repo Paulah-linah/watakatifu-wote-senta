@@ -5,6 +5,10 @@ export const formatKes = (amount: number | null | undefined, fallback = 'Price o
 
 export const telHref = (phone: string): string => `tel:${phone.replace(/[^+0-9]/g, '')}`;
 
+/** Conference hall rates are not published; visitors request them by inquiry or by calling this number. */
+export const HALL_RATES_PHONE = '0704346417';
+export const HALL_RATES_PHONE_DISPLAY = '0704 346 417';
+
 export const whatsappHref = (settings: Pick<SiteSettings, 'whatsapp_number' | 'whatsapp_message'>, message?: string): string =>
   `https://wa.me/${settings.whatsapp_number}?text=${encodeURIComponent(message ?? settings.whatsapp_message)}`;
 

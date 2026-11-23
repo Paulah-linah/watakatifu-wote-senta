@@ -33,7 +33,7 @@ import { slotTaken, useAvailability } from '@/services/availability';
 import { INQUIRY_TYPE_LABELS, submitInquiry, type InquiryPrefill, type InquiryType } from '@/services/inquiries';
 import { formatDate, todayISO } from '@/lib/dates';
 import { PaymentDetails } from '@/components/payment/PaymentDetails';
-import { formatKes, shortHallName, telHref, TIME_SLOT_LABELS } from '@/lib/format';
+import { shortHallName, telHref, TIME_SLOT_LABELS } from '@/lib/format';
 
 // ---------------------------------------------------------------------------
 // Validation (mirrors the checks in the submit_inquiry database function)
@@ -480,7 +480,7 @@ export const InquiryForm: React.FC<InquiryFormProps> = ({ initialType = 'confere
                 <option value="">{facilities.isPending ? 'Loading halls…' : 'Choose a hall'}</option>
                 {facilities.data?.map((f) => (
                   <option key={f.id} value={f.id}>
-                    {shortHallName(f.name)} ({f.capacity_min}–{f.capacity_max} people, {formatKes(f.price_kes)})
+                    {shortHallName(f.name)} ({f.capacity_min}–{f.capacity_max} people)
                   </option>
                 ))}
               </select>

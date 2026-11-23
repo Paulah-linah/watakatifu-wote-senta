@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { Bed, Building2, CalendarCheck, CheckCircle2, Droplet, Info, Maximize2, Shirt, Users, Utensils } from 'lucide-react';
+import { Bed, Building2, CalendarCheck, CheckCircle2, Droplet, Info, Maximize2, Phone, Shirt, Users, Utensils } from 'lucide-react';
 import { useAccommodation, useCatering, useFacilities, useGallery, useLaundry } from '@/services/content';
 import { Lightbox } from '@/components/common/Lightbox';
 import { useInquiryModal } from '@/context/InquiryModalContext';
@@ -8,7 +8,7 @@ import { PageHero } from '@/components/common/PageHero';
 import { TabNav } from '@/components/common/TabNav';
 import { EmptyState, QueryState } from '@/components/common/States';
 import { AvailabilityMatrix } from '@/components/availability/AvailabilityMatrix';
-import { formatKes, shortHallName } from '@/lib/format';
+import { HALL_RATES_PHONE, HALL_RATES_PHONE_DISPLAY, telHref } from '@/lib/format';
 import { usePageMeta } from '@/lib/usePageMeta';
 import { NotFoundPage } from './NotFoundPage';
 
@@ -65,7 +65,17 @@ function ConferenceTab() {
       <div className="space-y-8">
         <div>
           <h2 className="font-serif text-2xl font-semibold text-sky-950">Our three conference spaces</h2>
-          <p className="text-xs sm:text-sm text-stone-600 mt-1">Rates, capacities and seating layouts as confirmed by the centre.</p>
+          <p className="text-xs sm:text-sm text-stone-600 mt-1">Capacities and seating layouts as confirmed by the centre.</p>
+          <p className="mt-4 p-3.5 rounded-xl bg-amber-50/80 border border-amber-200 text-xs sm:text-sm text-amber-900 flex items-start gap-2 max-w-3xl">
+            <Info className="w-4 h-4 text-amber-700 shrink-0 mt-0.5" />
+            <span>
+              <strong>Hall rates are shared on request.</strong> Request the hall details and rates and our office will reply by email, or call{' '}
+              <a href={telHref(HALL_RATES_PHONE)} className="font-semibold underline hover:text-amber-950">
+                {HALL_RATES_PHONE_DISPLAY}
+              </a>
+              .
+            </span>
+          </p>
         </div>
         <QueryState query={facilities}>
           {(halls) => (
@@ -75,9 +85,6 @@ function ConferenceTab() {
                   <div>
                     <div className="relative h-56 w-full overflow-hidden bg-stone-100">
                       {f.image_url && <img src={f.image_url} alt={f.name} className="w-full h-full object-cover img-zoom" loading="lazy" />}
-                      <div className="absolute top-4 right-4 bg-stone-900/90 text-amber-200 font-bold px-3 py-1.5 rounded-xl text-xs shadow-md">
-                        {formatKes(f.price_kes)}
-                      </div>
                     </div>
                     <div className="p-6">
                       <div className="flex flex-wrap items-center justify-between gap-2 text-xs text-stone-500 mb-2">
@@ -88,7 +95,6 @@ function ConferenceTab() {
                         <span className="text-[11px] bg-sky-50 text-sky-800 px-2 py-0.5 rounded font-medium">{f.seating_styles.join(' • ')}</span>
                       </div>
                       <h3 className="font-serif text-2xl font-semibold text-sky-950 mb-2">{f.name}</h3>
-                      {f.price_note && <p className="text-xs font-semibold text-sky-800 mb-2">{f.price_note}</p>}
                       <p className="text-xs sm:text-sm text-stone-600 leading-relaxed mb-3">{f.description}</p>
                       <Checklist title="Included" items={f.features} tone="text-emerald-600" />
                     </div>
@@ -100,8 +106,15 @@ function ConferenceTab() {
                       className="btn btn-primary w-full"
                     >
                       <CalendarCheck className="w-4 h-4" />
-                      <span>Request {shortHallName(f.name)}</span>
+                      <span>Request details & rates</span>
                     </button>
+                    <a
+                      href={telHref(HALL_RATES_PHONE)}
+                      className="mt-3 flex items-center justify-center gap-1.5 text-xs font-semibold text-sky-800 hover:underline"
+                    >
+                      <Phone className="w-3.5 h-3.5" />
+                      Or call {HALL_RATES_PHONE_DISPLAY}
+                    </a>
                   </div>
                 </article>
               ))}

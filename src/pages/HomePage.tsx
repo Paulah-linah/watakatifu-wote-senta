@@ -7,7 +7,7 @@ import { AvailabilityMatrix } from '@/components/availability/AvailabilityMatrix
 import { SectionHeader } from '@/components/common/SectionHeader';
 import { LoadingGrid, QueryState } from '@/components/common/States';
 import { formatDate, todayISO } from '@/lib/dates';
-import { formatKes, shortHallName } from '@/lib/format';
+import { HALL_RATES_PHONE, HALL_RATES_PHONE_DISPLAY, telHref } from '@/lib/format';
 import { usePageMeta } from '@/lib/usePageMeta';
 
 const img = (id: string, w = 1200) => `https://images.unsplash.com/${id}?auto=format&fit=crop&w=${w}&q=80`;
@@ -214,11 +214,14 @@ function Halls() {
                   <p className="mt-2 text-sm text-stone-600 leading-relaxed line-clamp-3">{f.description}</p>
                   <div className="mt-auto pt-6 flex items-end justify-between gap-4">
                     <div>
-                      <p className="text-[0.7rem] uppercase tracking-[0.14em] text-stone-500">Day rate</p>
-                      <p className="font-serif text-2xl font-semibold text-sky-900">{formatKes(f.price_kes)}</p>
+                      <p className="text-[0.7rem] uppercase tracking-[0.14em] text-stone-500">Hall rates</p>
+                      <p className="font-serif text-xl font-semibold text-sky-900">On request</p>
+                      <a href={telHref(HALL_RATES_PHONE)} className="text-xs font-semibold text-sky-800 hover:underline">
+                        {HALL_RATES_PHONE_DISPLAY}
+                      </a>
                     </div>
                     <button type="button" onClick={() => openInquiry('conference', { facilityId: f.id })} className="btn btn-primary">
-                      Request {shortHallName(f.name)}
+                      Request details & rates
                     </button>
                   </div>
                 </div>
